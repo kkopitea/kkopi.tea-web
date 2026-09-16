@@ -1,0 +1,198 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+}
+
+header h1 {
+    font-size: 40px;;
+    font-weight: regular;
+}
+
+.KKOPI {
+    color: #FF9E48;
+   font-family: 'Baloo Thambi', sans-serif;
+}
+
+.TEA {
+    color: #000000;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+nav {
+    display: flex;
+    gap: 70px;
+    margin-left: 400px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 20px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.home {
+    color: #FF7700;
+    font-weight: bold;
+}
+
+header button {
+    background-color: #FF7700;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+header button:hover {
+    background-color: #E57D32;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 60px;
+    background-color: #FFF1E6;
+    margin: 10px 0px;
+}
+
+.hero-content p {
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-family: 'Baloo Da 2', sans-serif;
+    color: #000000;
+}
+
+.h-c {
+    font-size: 50px;
+    font-weight: bold;
+    color: #000000;
+    padding: 0px 20px;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+.h-g {
+    font-size: 50px;
+    color: #FF9E48;
+    padding: 0px 20px;
+    font-family: 'Baloo Thambi', sans-serif;
+    font-weight: bold;
+}
+
+.h-g, .h-c {
+   line-height: 1.5;
+}
+
+.hero-image img {
+    width: 700px;
+    height: auto;
+    margin-right: 50px;
+}
+
+.hero button {
+    background-color: #FF7700;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-family: 'Baloo Thambi', sans-serif;
+     margin-left: 19px;
+}
+
+.branches-section h2 {
+    font-size: 36px;
+    color: #FF9E48;
+    text-align: center;
+    font-family: 'Baloo Thambi', sans-serif;
+    padding: 30px 0 20px;
+}
+
+.branches-section {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 60px 60px;
+}
+
+.branches-row {
+    display: flex;
+    justify-content: center;
+    gap: 45px;
+    flex-wrap: wrap;
+    padding: 0 10px;
+}
+
+.branches {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 360px;
+    max-width: 470px;
+    border: 2px solid #FF9E48;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: #FFF1E6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.branches h3 {
+    width: 100%;
+    margin-bottom: 12px;
+    font-size: 26px;
+    color: #000;
+    font-family: 'Baloo Thambi', sans-serif;
+    text-align: center;
+}
+
+.branch-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0;
+    width: 100%;
+}
+
+.info-icon {
+    font-size: 18px;
+    line-height: 1.3;
+    min-width: 22px;
+}
+
+.branch-info p {
+    margin: 0;
+    text-align: left;
+    font-size: 16px;
+    color: #626262;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+.branches img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-top: 15px;
+    align-self: flex-start;
+}
+
+footer {
+    background-color: #FF9E48;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 25px 20px;
+    margin-top: 40px;
+}
