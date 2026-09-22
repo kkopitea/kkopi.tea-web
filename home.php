@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kkopi.tea</title>
-    <link rel="stylesheet" href="css/home.css">
+    <title>Kkopi.tea | Home</title>
+    <link rel="stylesheet" href="css/home.css?v4">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&display=swap" rel="stylesheet">
+</head>
 <body>
     <header>
         <h1>
@@ -14,10 +15,10 @@
         </h1>
 
         <nav>
-            <a href="home.html"><span class="home">Home</span></a>
-            <a href="about.html">About</a>
-            <a href="branches.html">Branches</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.php"><span class="home">Home</span></a>
+            <a href="about.php">About</a>
+            <a href="branches.php">Branch</a>
+            <a href="contact.php">Contact</a>
         </nav>
         <button class="admin-login">ADMIN LOGIN</button>
         </header>
@@ -27,7 +28,8 @@
          <h2 class="h-c">COFFEE.MILK.TEA</h2>
          <h2 class="h-g">GOOD VIBES</h2>
             <p>Your everyday coffee and milk tea made with love. </p>
-        <button>Learn More</button>
+        <button class="learn-more">Learn More</button>
+
         </div>
 
         <div class="hero-image"> 
@@ -36,27 +38,7 @@
     </section>
 
     <section class ="branches-section"> 
-        <h2>Our Branches</h2>
-
-        <div class="branches-row">
-            <!-- Urdaneta City Branch -->
-            <div class="branches">
-                <h3>Urdaneta City Branch</h3>
-                <div class="branch-info">
-                    <span class="info-icon">📍</span>
-                    <p>Purok San Jose, Brgy. Pobo, Urdaneta, Pangasinan</p>
-                </div>
-                <div class="branch-info">
-                    <span class="info-icon">📞</span>
-                    <p>0900 123 4567</p>
-                </div>
-                <div class="branch-info">
-                    <span class="info-icon">🕒</span>
-                    <p>7:00 AM - 9:00 PM</p>
-                </div>
-                <img src="Images/Storefront.png" alt="Urdaneta City Branch">
-            </div>
-
+        <h2>Our Branch</h2>
             <!-- Manaoag Branch -->
             <div class="branches">
                 <h3>Manaoag Branch</h3>
@@ -74,11 +56,11 @@
                 </div>
                 <img src="Images/Storefront.png" alt="Manaoag Branch">
             </div>
-        </div>
     </section>
 
     <footer>
         <p>&copy; 2024 Kkopi.tea. All rights reserved.</p>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>

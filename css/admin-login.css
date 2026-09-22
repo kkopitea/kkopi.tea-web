@@ -1,0 +1,440 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Baloo Thambi", sans-serif;
+    background-color: #e9e7e9;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+}
+
+.login-container {
+    display: flex;
+    width: 100%;
+    max-width: 1380px;
+    min-height: 765px;
+
+    background-color: white;
+    border-radius: 35px;
+    overflow: hidden;
+}
+
+
+/* LEFT SECTION */
+
+.welcome-section {
+    width: 51%;
+    background-color: #ff851b;
+
+    padding: 120px 65px 60px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.welcome-section h1 {
+    font-size: 60px;
+    margin-bottom: 25px;
+    letter-spacing: -2px;
+}
+
+.KKOPI {
+    color: white;
+}
+
+.TEA {
+    color: black;
+}
+
+.welcome-section img {
+    width: 100%;
+    max-width: 430px;
+    height: auto;
+    object-fit: contain;
+}
+
+.welcome-text {
+    width: 100%;
+    max-width: 530px;
+    margin-top: 25px;
+}
+
+.welcome-text h2 {
+    font-size: 22px;
+    color: black;
+    margin-bottom: 8px;
+}
+
+.welcome-text p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #313131;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+
+/* RIGHT SECTION */
+
+.login-section {
+    width: 49%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 575px;
+}
+
+.login-content > h2 {
+    text-align: center;
+
+    font-family: Arial, sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+
+    color: black;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 18px;
+
+    margin-top: 5px;
+    margin-bottom: 35px;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+
+/* FORM */
+
+form label {
+    display: block;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    color: #383838;
+    margin-bottom: 8px;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    font-family: 'Baloo Da 2', sans-serif;
+    width: 100%;
+    height: 56px;
+
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+
+    background-color: #f8f8f8;
+
+    padding: 0 15px;
+    margin-bottom: 23px;
+}
+
+.input-box > span {
+    font-size: 20px;
+    color: #888;
+    margin-right: 15px;
+}
+
+.input-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-family: inherit;
+    font-size: 18px;
+    color: #555;
+}
+
+.input-box input::placeholder {
+    color: #777;
+}
+
+.toggle-password {
+    border: none;
+    background: none;
+
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+/* OPTIONS */
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: -10px;
+    margin-bottom: 28px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 14px;
+    color: #ff7200;
+}
+
+.remember input {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+.forgot {
+    color: #ff7200;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}
+
+
+/* LOGIN BUTTON */
+
+.login-button {
+    display: block;
+
+    width: 80%;
+    height: 58px;
+
+    margin: 0 auto;
+
+    border: none;
+    border-radius: 11px;
+
+    background-color: #ff7900;
+    color: white;
+
+    font-family: inherit;
+    font-size: 21px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 3px 5px #c9c9c9;
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    background-color: #e96800;
+    transform: translateY(-2px);
+}
+
+
+/* LOGIN MESSAGE */
+
+.login-message {
+    text-align: center;
+    margin-top: 15px;
+
+    font-size: 15px;
+    color: #d9534f;
+}
+
+
+/* NOTICE */
+
+.login-notice {
+    margin-top: 55px;
+    text-align: left;
+}
+
+.login-notice h3 {
+    font-family: "Baloo Da 2", sans-serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: #111;
+    max-width: 400px;
+}
+
+.login-section {
+    width: 49%;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px;
+}
+
+.security-badge {
+    position: absolute;
+    bottom: 35px;
+    right: 45px;
+}
+
+.security-badge img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+
+    body {
+        padding: 20px;
+    }
+
+    .login-container {
+        min-height: auto;
+    }
+
+    .welcome-section {
+        padding: 70px 35px 40px;
+    }
+
+    .welcome-section h1 {
+        font-size: 43px;
+    }
+
+    .login-section {
+        padding: 35px;
+    }
+
+    .login-content > h2 {
+        font-size: 32px;
+    }
+
+    .login-notice {
+        margin-top: 60px;
+    }
+
+    .login-notice h3 {
+        font-size: 18px;
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .login-container {
+        flex-direction: column;
+        border-radius: 25px;
+    }
+
+    .welcome-section,
+    .login-section {
+        width: 100%;
+    }
+
+    .welcome-section {
+        padding: 45px 25px 35px;
+    }
+
+    .welcome-section h1 {
+        font-size: 45px;
+    }
+
+    .welcome-section img {
+        max-width: 330px;
+    }
+
+    .welcome-text {
+        text-align: center;
+    }
+
+    .welcome-text h2 {
+        font-size: 20px;
+    }
+
+    .welcome-text p {
+        font-size: 16px;
+    }
+
+    .login-section {
+        padding: 45px 25px;
+    }
+
+    .login-content > h2 {
+        font-size: 32px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+    .login-button {
+        width: 100%;
+    }
+
+    .login-notice {
+        margin-top: 55px;
+        text-align: center;
+    }
+
+    .login-notice h3 {
+        font-size: 18px;
+    }
+
+    .security-badge {
+        position: static;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+}
+
+
+/* SMALL MOBILE */
+
+@media (max-width: 400px) {
+
+    .welcome-section h1 {
+        font-size: 36px;
+    }
+
+    .login-content > h2 {
+        font-size: 28px;
+    }
+
+    .login-options {
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .forgot,
+    .remember {
+        font-size: 12px;
+    }
+
+}

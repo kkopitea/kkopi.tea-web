@@ -1,0 +1,594 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FFFFFF;
+    color: #626262;
+    font-family: 'Baloo Da 2', sans-serif;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background-color: #FFFFFF;
+}
+
+header h1 {
+    font-size: 40px;
+    font-weight: regular;
+}
+
+.KKOPI {
+    color: #FF9E48;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+.TEA {
+    color: #000000;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+nav {
+    display: flex;
+    gap: 70px;
+    margin-left: 400px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 20px;
+    font-family: 'Lucida Sans', sans-serif;
+}
+
+.branches-nav {
+    color: #FF7700;
+}
+
+header button {
+    background-color: #FF7700;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-family: 'Baloo Thambi', sans-serif;
+}
+
+header button:hover {
+    background-color: #E57D32;
+}
+
+
+.branches-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 360px;
+    margin: 10px 0;
+
+    background-color: #FFF1E6;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    background-image: url("../Images/hero-background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.branches-hero-content {
+    width: 53%;
+    padding-left: 70px;
+}
+
+.branches-hero-content h2 {
+    color: #000000;
+
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 58px;
+    font-weight: bold;
+    line-height: 1.15;
+}
+
+.branches-hero-content .orange-text {
+    color: #FF7700;
+}
+
+.branches-hero-content p {
+    margin-top: 25px;
+
+    color: #626262;
+
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.branches-hero-image {
+    width: 47%;
+    height: 360px;
+
+    overflow: hidden;
+    opacity: 0.8;
+}
+
+.branches-hero-image img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    object-fit: cover;
+
+    border-radius: 18px 0 0 18px;
+}
+
+
+/* BRANCHES SECTION */
+
+.branches-section {
+    width: 100%;
+    padding: 40px 20px;
+}
+
+.branches-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+}
+
+
+/* BOX/BOARDER */
+
+.branches {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+
+    width: 100%;
+    max-width: 470px;
+    margin: 0 auto;
+    padding: 20px;
+
+    border: 2px solid #FF9E48;
+    border-radius: 20px;
+
+    background-color: #FFF1E6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+
+/* BRANCH IMG */
+
+.branches > img {
+    display: block;
+
+    width: 100%;
+    height: 190px;
+
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+
+/* DETAILS  */
+
+.branch-details {
+    width: 100%;
+}
+
+.branches h3 {
+    width: 100%;
+    margin: 0 0 5px;
+
+    color: #000000;
+
+    text-align: center;
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+
+/* BRANCH INFO */
+
+.branch-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    width: 100%;
+    margin: 6px 0;
+}
+
+.info-icon {
+    min-width: 24px;
+    font-size: 20px;
+}
+
+.main-icon {
+    position: relative;
+    left: -5px;
+    font-size: 24px;
+}
+
+.branch-info p {
+    color: #626262;
+
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+
+/* MAP BUTTON */
+
+.view-map {
+    display: block;
+    width: fit-content;
+
+    margin: 18px auto 0;
+    padding: 11px 15px;
+
+    border-radius: 10px;
+
+    background-color: #FF7700;
+    color: #FFFFFF;
+
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.view-map:hover {
+    background-color: #E57D32;
+}
+
+
+/* MORE BRANCHES */
+.more-branches {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    min-height: 187px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding: 0 54px;
+
+    background-color: #FFF1E6;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.more-branches-text {
+    flex: 1;
+}
+
+.more-branches-text h2 {
+    color: #000000;
+
+    font-family: 'Baloo Thambi', sans-serif;
+    font-size: 42px;
+    font-weight: bold;
+    line-height: 1.05;
+}
+
+.more-branches-text h2 span {
+    color: #FF7700;
+}
+
+.more-branches-text p {
+    margin-top: 8px;
+
+    color: #626262;
+
+    font-family: 'Baloo Da 2', sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.more-branches-map {
+    width: 48%;
+    height: 250px;
+
+    overflow: hidden;
+    opacity: 0.6;
+}
+
+.more-branches-map img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* FOOTER */
+
+footer {
+    margin-top: 0;
+    padding: 25px 20px;
+
+    background-color: #FF9E48;
+    color: #FFFFFF;
+
+    text-align: center;
+}
+
+
+
+/* TABLET */
+@media (max-width: 768px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 36px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px 20px;
+        margin: 0;
+    }
+
+    nav a {
+        font-size: 16px;
+    }
+
+    header button {
+        font-size: 13px;
+    }
+
+    /* HERO */
+
+    .branches-hero {
+        flex-direction: column;
+        height: auto;
+        margin: 8px 0;
+    }
+
+    .branches-hero-content {
+        width: 100%;
+        padding: 45px 25px 30px;
+        text-align: center;
+    }
+
+    .branches-hero-content h2 {
+        font-size: 52px;
+    }
+
+    .branches-hero-content p {
+        margin-top: 18px;
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    .branches-hero-content p br {
+        display: none;
+    }
+
+    .branches-hero-image {
+        width: 100%;
+        height: 280px;
+    }
+
+    .branches-hero-image img {
+        border-radius: 0;
+    }
+
+    /* BRANCH BOX */
+
+    .branches-section {
+        padding: 30px 22px;
+    }
+
+    .branches-row {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .branches {
+        max-width: 470px;
+        padding: 18px;
+    }
+
+    .branches > img {
+        height: 190px;
+    }
+
+    .branches h3 {
+        font-size: 26px;
+    }
+
+    .branch-info {
+        gap: 10px;
+        margin: 6px 0;
+    }
+
+    .branch-info p {
+        font-size: 16px;
+    }
+
+    /* MORE BRANCHES */
+
+    .more-branches {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 25px;
+        margin-top: 15px;
+        margin-bottom: 40px;
+        padding: 40px 25px 0;
+    }
+
+    .more-branches-text {
+        text-align: center;
+    }
+
+    .more-branches-text h2 {
+        font-size: 38px;
+        line-height: 1.1;
+    }
+
+    .more-branches-text p {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    .more-branches-text p br {
+        display: none;
+    }
+
+    .more-branches-map {
+        width: 100%;
+        height: 260px;
+        margin-top: 5px;
+    }
+
+    /* FOOTER */
+
+    footer {
+        padding: 25px 15px;
+    }
+
+    footer p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+    header {
+        padding: 18px 12px;
+    }
+
+    header h1 {
+        font-size: 32px;
+    }
+
+    nav {
+        gap: 12px 15px;
+    }
+
+    nav a {
+        font-size: 14px;
+    }
+
+    header button {
+        padding: 9px 15px;
+    }
+
+    /* HERO */
+
+    .branches-hero-content {
+        padding: 35px 18px 25px;
+    }
+
+    .branches-hero-content h2 {
+        font-size: 42px;
+    }
+
+    .branches-hero-content p {
+        font-size: 16px;
+    }
+
+    .branches-hero-image {
+        height: 220px;
+    }
+
+    /* BRANCH BOX */
+
+    .branches-section {
+        padding: 25px 15px 10px;
+    }
+
+    .branches {
+        padding: 18px;
+        border-radius: 20px;
+        gap: 15px;
+    }
+
+    .branches > img {
+        height: 190px;
+        border-radius: 20px;
+    }
+
+    .branches h3 {
+        font-size: 24px;
+    }
+
+    .branch-info {
+        gap: 10px;
+        margin: 8px 0;
+    }
+
+    .info-icon {
+        min-width: 23px;
+        font-size: 18px;
+    }
+
+    .branch-info p {
+        font-size: 15px;
+    }
+
+    .view-map {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* MORE BRANCHES */
+
+    .more-branches {
+        gap: 22px;
+        margin-bottom: 30px;
+        padding: 32px 18px 0;
+    }
+
+    .more-branches-text h2 {
+        font-size: 32px;
+    }
+
+    .more-branches-text p {
+        font-size: 16px;
+    }
+
+    .more-branches-map {
+        height: 220px;
+    }
+
+    /* FOOTER */
+
+    footer {
+        padding: 22px 12px;
+    }
+
+    footer p {
+        font-size: 13px;
+    }
+}

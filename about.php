@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kkopi.tea</title>
+    <title>Kkopi.tea | About</title>
     <link rel="stylesheet" href="css/about.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&display=swap" rel="stylesheet">
 </head>
@@ -14,12 +14,12 @@
             <span class="TEA">.TEA</span>
         </h1>
         <nav>
-            <a href="home.html">Home</a>
-            <a href="about.html"><span class="about">About</span></a>
-            <a href="branches.html">Branches</a>
-            <a href="contact.html">Contact</a>
+            <a href="home.php">Home</a>
+            <a href="about.php"><span class="about">About</span></a>
+            <a href="branches.php">Branch</a>
+            <a href="contact.php">Contact</a>
         </nav>
-        <button>ADMIN LOGIN</button>
+      <button class="admin-login">ADMIN LOGIN</button>
         </header>
     
     <section class="hero">
@@ -81,5 +81,6 @@
         <footer>
         <p>&copy; 2024 Kkopi.tea. All rights reserved.</p>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
