@@ -1,6 +1,6 @@
 
 <?php
-// Firebase Authentication will be connected by the backend team.
+// Firebase Authentication and Firestore enforce access in the client module.
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +103,7 @@
                             <span>Remember me</span>
                         </label>
 
-                        <a href="#" class="forgot">
+                        <a href="#" class="forgot" id="forgotPassword">
                             Forgot password?
                         </a>
 

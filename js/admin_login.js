@@ -5,6 +5,7 @@ import {
     setPersistence,
     browserLocalPersistence,
     browserSessionPersistence,
+    sendPasswordResetEmail,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
@@ -19,8 +20,29 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const rememberCheckbox = document.getElementById("remember");
 const loginMessage = document.getElementById("loginMessage");
+const forgotPasswordLink = document.getElementById("forgotPassword");
 
 const togglePassword = document.getElementById("togglePassword");
+
+forgotPasswordLink?.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        loginMessage.textContent = "Enter your email address first.";
+        emailInput.focus();
+        return;
+    }
+
+    try {
+        await sendPasswordResetEmail(auth, email);
+        loginMessage.textContent = "Password reset instructions sent to your email.";
+    } catch (error) {
+        console.error("Password reset error:", error);
+        loginMessage.textContent = "We could not send password reset instructions.";
+    }
+});
 
 
 // ========================================
