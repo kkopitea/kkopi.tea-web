@@ -81,6 +81,6 @@
         <footer>
         <p>&copy; 2024 Kkopi.tea. All rights reserved.</p>
     </footer>
-    <script src="script.js"></script>
+    <script src="functions.js"></script>
 </body>
 </html>

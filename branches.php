@@ -141,7 +141,7 @@
 
     </footer>
 
-    <script src="script.js"></script>
+    <script src="functions.js"></script>
 
 </body>
 </html>

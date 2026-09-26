@@ -1,17 +1,32 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Kkopi.tea | Contact</title>
 
-    <link rel="stylesheet" href="css/contact.css">
+    <link
+        rel="stylesheet"
+        href="css/contact.css?v=2"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&family=Baloo+Thambi&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;500;600;700;800&family=Baloo+Thambi&display=swap"
+        rel="stylesheet"
+    >
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
 </head>
 
 <body>
@@ -19,20 +34,46 @@
 <header>
 
     <h1>
-        <span class="KKOPI">KKOPI</span>
-        <span class="TEA">.TEA</span>
+
+        <span class="KKOPI">
+            KKOPI
+        </span>
+
+        <span class="TEA">
+            .TEA
+        </span>
+
     </h1>
 
+
     <nav>
-        <a href="home.php">Home</a>
-        <a href="about.php">About</a>
-        <a href="branches.php">Branch</a>
-        <a href="contact.php">
-            <span class="contact">Contact</span>
+
+        <a href="home.php">
+            Home
         </a>
+
+        <a href="about.php">
+            About
+        </a>
+
+        <a href="branches.php">
+            Branch
+        </a>
+
+        <a href="contact.php">
+
+            <span class="contact">
+                Contact
+            </span>
+
+        </a>
+
     </nav>
 
-    <button class="admin-login">ADMIN LOGIN</button>
+
+    <button class="admin-login">
+        ADMIN LOGIN
+    </button>
 
 </header>
 
@@ -44,20 +85,37 @@
     <div class="hero-content">
 
         <h2>
-            <span>GET IN </span><span class="orange-text">TOUCH</span>
+
+            <span>
+                GET IN
+            </span>
+
+            <span class="orange-text">
+                TOUCH
+            </span>
+
         </h2>
 
+
         <p>
+
             We'd love to hear from you! Send us a message, visit our
+
             <br class="desktop-break">
+
             branches, or reach out through our social media.
+
         </p>
 
     </div>
 
+
     <div class="hero-image">
 
-        <img src="Images/login.png" alt="KKOPI.TEA Drinks">
+        <img
+            src="Images/login.png"
+            alt="KKOPI.TEA Drinks"
+        >
 
     </div>
 
@@ -78,66 +136,110 @@
 
         <section class="contact-information">
 
-            <h2>Contact Information</h2>
+            <h2>
+                Contact Information
+            </h2>
 
             <div class="section-line"></div>
 
+
             <div class="information-layout">
+
 
                 <div class="information-list">
 
+
+                    <!-- ADDRESS -->
+
                     <div class="information-item">
 
                         <div class="icon-circle">
+
                             <i class="fa-solid fa-location-dot"></i>
+
                         </div>
 
+
                         <div>
-                            <strong>Main Office</strong>
-                            <p>Manaoag, Pangasinan</p>
+
+                            <strong>
+                                Main Office
+                            </strong>
+
+                            <p id="store-address">
+                                Loading...
+                            </p>
+
                         </div>
 
                     </div>
 
 
+                    <!-- PHONE -->
+
                     <div class="information-item">
 
                         <div class="icon-circle">
+
                             <i class="fa-solid fa-phone"></i>
+
                         </div>
 
+
                         <div>
-                            <p>0948 394 4854</p>
-                           
+
+                            <p id="store-contact">
+                                Loading...
+                            </p>
+
                         </div>
 
                     </div>
 
 
+                    <!-- EMAIL -->
+
                     <div class="information-item">
 
                         <div class="icon-circle">
+
                             <i class="fa-solid fa-envelope"></i>
+
                         </div>
 
+
                         <div>
-                            <p>kapatidsfoodhub@gmail.com</p>
+
+                            <p id="store-email">
+                                Loading...
+                            </p>
+
                         </div>
 
                     </div>
 
+
+                    <!-- HOURS -->
 
                     <div class="information-item">
 
                         <div class="icon-circle">
+
                             <i class="fa-regular fa-clock"></i>
+
                         </div>
 
+
                         <div>
-                            <p>7:00 AM - 9:00 PM</p>
+
+                            <p id="store-hours">
+                                Loading...
+                            </p>
+
                         </div>
 
                     </div>
+
 
                 </div>
 
@@ -145,17 +247,26 @@
                 <div class="contact-message">
 
                     <h3>
+
                         Great conversations<br>
+
                         start with good drinks.
+
                     </h3>
 
+
                     <p>
+
                         Whether you have a question,<br>
+
                         feedback, or a collaboration in mind,<br>
+
                         we're always happy to hear from you!
+
                     </p>
 
                 </div>
+
 
             </div>
 
@@ -166,13 +277,20 @@
 
         <section class="map-section">
 
-            <h2>Find Us on the Map</h2>
+            <h2>
+                Find Us on the Map
+            </h2>
 
             <div class="section-line"></div>
 
-            <img src="Images/maps-google.jpg" alt="KKOPI.TEA Location Map">
+
+            <img
+                src="Images/maps-google.jpg"
+                alt="KKOPI.TEA Location Map"
+            >
 
         </section>
+
 
     </div>
 
@@ -181,11 +299,15 @@
 
     <section class="message-section">
 
-        <h2>Send us a Message</h2>
+        <h2>
+            Send us a Message
+        </h2>
 
         <div class="section-line"></div>
 
+
         <form id="contactForm">
+
 
             <div class="form-row">
 
@@ -195,6 +317,7 @@
                     placeholder="Your Name"
                     required
                 >
+
 
                 <input
                     type="email"
@@ -206,23 +329,34 @@
             </div>
 
 
-            <select name="subject" required>
+            <select
+                name="subject"
+                required
+            >
 
-                <option value="" disabled selected>
+                <option
+                    value=""
+                    disabled
+                    selected
+                >
                     Subject
                 </option>
+
 
                 <option value="General Inquiry">
                     General Inquiry
                 </option>
 
+
                 <option value="Feedback">
                     Feedback
                 </option>
 
+
                 <option value="Collaboration">
                     Collaboration
                 </option>
+
 
                 <option value="Other">
                     Other
@@ -238,17 +372,24 @@
             ></textarea>
 
 
-            <button type="submit" class="send-button">
+            <button
+                type="submit"
+                class="send-button"
+            >
 
-                <span>Send Message</span>
+                <span>
+                    Send Message
+                </span>
 
                 <i class="fa-solid fa-arrow-right"></i>
 
             </button>
 
+
         </form>
 
     </section>
+
 
 </main>
 
@@ -256,10 +397,19 @@
 <!-- FOOTER -->
 
 <footer>
-        <p>&copy; 2024 Kkopi.tea. All rights reserved.</p>
-    </footer>
 
-<script src="script.js"></script>
+    <p>
+        &copy; 2024 Kkopi.tea. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script
+    type="module"
+    src="js/contact.js?v=1"
+></script>
 
 </body>
+
 </html>

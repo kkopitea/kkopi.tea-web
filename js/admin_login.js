@@ -142,7 +142,7 @@ loginForm.addEventListener("submit", async (event) => {
 
 
         // Check account status
-        if (adminData.active !== true) {
+        if (adminData.isActive !== true) {
 
             await signOut(auth);
 
