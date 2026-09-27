@@ -90,6 +90,11 @@ $menuItems = [
         href="css/admin-reports.css?v=2"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=1"
+    >
+
 </head>
 
 <body>
@@ -625,7 +630,7 @@ $menuItems = [
 
         <script
             type="module"
-            src="js/reports.js?v=1"
+            src="js/reports.js?v=2"
         ></script>
         <script src="js/theme.js?v=2"></script>
 

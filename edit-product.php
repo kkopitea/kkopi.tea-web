@@ -495,6 +495,18 @@ $menuItems = [
                                     Coffee
                                 </option>
 
+                                <option value="snacks">
+                                    Snacks
+                                </option>
+
+                                <option value="frappe">
+                                    Frappe
+                                </option>
+
+                                <option value="fruittea">
+                                    Fruit Tea
+                                </option>
+
                             </select>
 
 

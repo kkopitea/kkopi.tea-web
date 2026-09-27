@@ -449,7 +449,7 @@ function getSizes() {
 
         {
             name: "Small",
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     smallAdditional
                 )
@@ -457,7 +457,7 @@ function getSizes() {
 
         {
             name: "Medium",
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     mediumAdditional
                 )
@@ -465,7 +465,7 @@ function getSizes() {
 
         {
             name: "Large",
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     largeAdditional
                 )
@@ -611,7 +611,7 @@ async function loadProduct() {
 
                 const additional =
                     Number(
-                        size.additional ?? 0
+                        size.additionalPrice ?? size.additional ?? 0
                     );
 
 

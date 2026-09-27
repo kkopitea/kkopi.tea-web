@@ -1,6 +1,7 @@
 import {
     collection,
-    getDocs
+    getDocs,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 import {
@@ -379,42 +380,13 @@ async function loadReportsData() {
 
     try {
 
-        const [
-            ordersSnapshot,
-            inventorySnapshot
-        ] = await Promise.all([
-            getDocs(
-                collection(
-                    db,
-                    "orders"
-                )
-            ),
-
-            getDocs(
+        const inventorySnapshot =
+            await getDocs(
                 collection(
                     db,
                     "inventory"
                 )
-            )
-        ]);
-
-
-        allOrders = [];
-
-        ordersSnapshot.forEach(
-            function (
-                documentSnapshot
-            ) {
-
-                allOrders.push({
-                    id:
-                        documentSnapshot.id,
-
-                    ...documentSnapshot.data()
-                });
-
-            }
-        );
+            );
 
 
         allInventory = [];
@@ -435,7 +407,59 @@ async function loadReportsData() {
         );
 
 
-        renderReports();
+        onSnapshot(
+            collection(
+                db,
+                "orders"
+            ),
+            function (
+                ordersSnapshot
+            ) {
+
+                allOrders = [];
+
+                ordersSnapshot.forEach(
+                    function (
+                        documentSnapshot
+                    ) {
+
+                        allOrders.push({
+                            id:
+                                documentSnapshot.id,
+
+                            ...documentSnapshot.data()
+                        });
+
+                    }
+                );
+
+
+                renderReports();
+
+            },
+            function (error) {
+
+                console.error(
+                    "Error loading orders:",
+                    error
+                );
+
+
+                periodText.textContent =
+                    "Unable to load report data";
+
+                hideChartLoading();
+
+                showChartEmpty(
+                    salesChartEmpty
+                );
+
+                showChartEmpty(
+                    productsChartEmpty
+                );
+
+            }
+        );
 
     } catch (error) {
 
@@ -916,15 +940,15 @@ function renderSalesChart(
                             data:
                                 dailySales,
 
-                            borderRadius: 7,
-
-                            borderSkipped: false,
-
                             backgroundColor:
-                                "#ff9a4d",
+                                "#ff8a26",
 
                             hoverBackgroundColor:
-                                "#ec6e0b"
+                                "#e96b08",
+
+                            borderRadius: 4,
+
+                            borderSkipped: false
                         }
                     ]
                 },
@@ -990,11 +1014,11 @@ function renderSalesChart(
                         },
 
                         y: {
-                                min: 500,
-                                max: 20000,
+                                min: 0,
+                                max: 5000,
 
                                 ticks: {
-                                    stepSize: 5000,
+                                    stepSize: 1000,
 
                                     color: "#999999",
 

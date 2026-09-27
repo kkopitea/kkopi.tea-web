@@ -90,6 +90,11 @@ $menuItems = [
         href="css/menu-management.css?v=1"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=1"
+    >
+
 </head>
 
 <body>
@@ -333,6 +338,18 @@ $menuItems = [
 
                         <option value="coffee">
                             Coffee
+                        </option>
+
+                        <option value="snacks">
+                            Snacks
+                        </option>
+
+                        <option value="frappe">
+                            Frappe
+                        </option>
+
+                        <option value="fruittea">
+                            Fruit Tea
                         </option>
 
                     </select>

@@ -90,6 +90,11 @@ $menuItems = [
         href="css/admin-users.css?v=3"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=1"
+    >
+
 </head>
 
 <body>

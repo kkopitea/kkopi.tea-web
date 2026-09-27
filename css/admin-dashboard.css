@@ -414,6 +414,27 @@ input {
     padding: 25px 48px 60px;
 }
 
+.dashboard-content[hidden],
+.dashboard-message[hidden] {
+    display: none !important;
+}
+
+.dashboard-message {
+    margin: 20px 48px 0;
+    padding: 12px 15px;
+    border: 1px solid #f1d1ae;
+    border-radius: 10px;
+    color: #805018;
+    background: #fff7ed;
+    font-size: 12px;
+}
+
+.dashboard-message-error {
+    border-color: #f1c5c5;
+    color: #a53636;
+    background: #fff1f1;
+}
+
 
 /* STATISTICS */
 
@@ -565,6 +586,10 @@ input {
     font-size: 11px;
 
     font-weight: 900;
+}
+
+.stat-change span.negative {
+    color: #d64e4e;
 }
 
 .stat-change small {
@@ -730,6 +755,38 @@ input {
     height: 100%;
 }
 
+.dashboard-chart-bars {
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    right: 0;
+    bottom: 29px;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--chart-columns, 7), minmax(0, 1fr));
+    align-items: stretch;
+    gap: 3px;
+    padding: 0 2px;
+}
+
+.dashboard-chart-column {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-width: 0;
+}
+
+.dashboard-chart-bar {
+    width: min(68%, 26px);
+    border-radius: 5px 5px 0 0;
+    background: var(--orange);
+    transition: height 220ms ease, background-color 160ms ease;
+}
+
+.dashboard-chart-bar:hover {
+    background: var(--orange-dark);
+}
+
 .chart-grid-line {
     position: absolute;
 
@@ -783,6 +840,10 @@ input {
     white-space: nowrap;
 }
 
+.chart-empty[hidden] {
+    display: none !important;
+}
+
 .chart-empty strong {
     color: #7d7d7d;
 
@@ -819,13 +880,134 @@ input {
     right: 0;
     bottom: 0;
 
-    display: flex;
+    display: grid;
 
-    justify-content: space-between;
+    grid-template-columns: repeat(var(--chart-columns, 7), minmax(0, 1fr));
+
+    justify-items: center;
 
     color: #888888;
 
     font-size: 9px;
+}
+
+.dashboard-list-row {
+    min-height: 43px;
+    padding: 8px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.dashboard-list-row:last-child {
+    border-bottom: 0;
+}
+
+.dashboard-row-details {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dashboard-row-details strong {
+    overflow: hidden;
+    color: var(--text);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-row-details span {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.dashboard-rank {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    color: var(--orange-dark);
+    background: var(--orange-light);
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.dashboard-status-row {
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.dashboard-status-row span::before {
+    width: 7px;
+    height: 7px;
+    margin-right: 6px;
+    display: inline-block;
+    border-radius: 50%;
+    background: var(--status-color);
+    content: "";
+}
+
+.dashboard-status-row strong {
+    color: var(--text);
+    font-size: 10px;
+}
+
+.dashboard-order-row {
+    align-items: flex-start;
+}
+
+.dashboard-order-summary {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.dashboard-order-summary > strong {
+    color: var(--text);
+    font-size: 10px;
+}
+
+.dashboard-status {
+    padding: 3px 6px;
+    border-radius: 10px;
+    color: #805018;
+    background: #fff3e4;
+    font-size: 8px;
+    text-transform: capitalize;
+}
+
+.dashboard-status.status-completed {
+    color: #24723c;
+    background: #eaf8ee;
+}
+
+.dashboard-status.status-cancelled {
+    color: #a53636;
+    background: #fff1f1;
+}
+
+.dashboard-stock-count {
+    flex: 0 0 auto;
+    color: #ad650c;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.dashboard-stock-count.out-of-stock {
+    color: #d64e4e;
 }
 
 
@@ -1415,6 +1597,10 @@ input {
 
     .chart-days {
         font-size: 8px;
+    }
+
+    .dashboard-message {
+        margin: 14px 18px 0;
     }
 
     .order-overview {

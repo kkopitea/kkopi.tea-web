@@ -387,7 +387,7 @@ function getSizes() {
         {
             name: "Small",
 
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     smallAdditional
                 )
@@ -396,7 +396,7 @@ function getSizes() {
         {
             name: "Medium",
 
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     mediumAdditional
                 )
@@ -405,7 +405,7 @@ function getSizes() {
         {
             name: "Large",
 
-            additional:
+            additionalPrice:
                 getAdditionalPrice(
                     largeAdditional
                 )

@@ -399,6 +399,33 @@ function getCategoryName(category) {
     }
 
 
+    if (
+        category === "snacks"
+    ) {
+
+        return "Snacks";
+
+    }
+
+
+    if (
+        category === "frappe"
+    ) {
+
+        return "Frappe";
+
+    }
+
+
+    if (
+        category === "fruittea"
+    ) {
+
+        return "Fruit Tea";
+
+    }
+
+
     return "Unknown";
 
 }

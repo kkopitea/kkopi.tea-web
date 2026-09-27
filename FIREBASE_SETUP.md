@@ -22,11 +22,12 @@ role: "admin"
 active: true
 ```
 
-The document must be `admins/{firebase-auth-user-uid}`. The login will reject accounts when the document is missing, the role is not `admin`, or `active` is not exactly `true`.
+The document must be `admins/{firebase-auth-user-uid}`. New records should use `active: true`. For compatibility, existing records with `isActive: true` and no `active` field are also accepted. When present, `active` takes precedence. The login rejects accounts when the document is missing, the role is not `admin`, or its active status is not exactly `true`.
 
 ## 3. Apply Firestore rules
 
 Deploy the rules in `firestore.rules`, or copy them into **Firestore Database** > **Rules**. These rules allow an authenticated user to read only their own admin record and prevent browser clients from changing admin status.
+Active admins can also read and manage orders, products, inventory, and store settings. Access to those collections is checked against the active admin record on each request.
 
 Do not add a public admin-registration form. Admin users and their records should be created from the Firebase console or a trusted server process.
 

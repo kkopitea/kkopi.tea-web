@@ -1,6 +1,6 @@
 import {
     collection,
-    getDocs
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 import {
@@ -440,19 +440,13 @@ function getOrderId(order) {
 
 /* LOAD ORDERS */
 
-async function loadOrders() {
+function loadOrders() {
 
     showLoading();
 
-    try {
-
-        const snapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "orders"
-                )
-            );
+    return onSnapshot(
+        collection(db, "orders"),
+        (snapshot) => {
 
         allOrders = [];
 
@@ -468,8 +462,8 @@ async function loadOrders() {
         );
 
         renderOrders();
-
-    } catch (error) {
+        },
+        (error) => {
 
         console.error(
             "Error loading orders:",
@@ -481,7 +475,8 @@ async function loadOrders() {
             "There was a problem retrieving the order records."
         );
 
-    }
+        }
+    );
 
 }
 
@@ -693,6 +688,10 @@ function createOrderRow(order) {
                     `
                     : ""
             }
+
+            <span class="customer-email">
+                ${escapeHtml(order.fulfillment || "Pickup")}
+            </span>
 
         </td>
 

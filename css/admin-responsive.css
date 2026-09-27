@@ -1,0 +1,101 @@
+@media (max-width: 768px) {
+    .sidebar {
+        width: 68px !important;
+        padding: 0 7px;
+    }
+
+    .sidebar-logo {
+        height: 78px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .sidebar-logo .logo-black,
+    .sidebar-logo .logo-white {
+        display: none;
+    }
+
+    .sidebar-logo::after {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: var(--orange, #ec6e0b);
+        background: #ffffff;
+        content: "K";
+        font-family: "Baloo Thambi", cursive;
+        font-size: 21px;
+    }
+
+    .navigation-title {
+        display: none;
+    }
+
+    .menu-item {
+        height: 48px;
+        margin: 5px 0;
+        padding: 0;
+        justify-content: center;
+        gap: 0;
+        font-size: 0;
+    }
+
+    .menu-item:hover {
+        transform: none;
+    }
+
+    .menu-icon {
+        width: 100%;
+        flex: 0 0 100%;
+        font-size: 18px;
+    }
+
+    .menu-text {
+        display: block !important;
+    }
+
+    .menu-text {
+        position: absolute;
+        z-index: 200;
+        top: 50%;
+        left: calc(100% + 9px);
+        width: max-content;
+        max-width: 190px;
+        padding: 8px 10px;
+        transform: translateY(-50%);
+        border-radius: 6px;
+        color: #ffffff;
+        background: #262626;
+        box-shadow: 0 5px 16px rgba(0, 0, 0, 0.18);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.2;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 120ms ease, visibility 120ms ease;
+    }
+
+    .menu-item:hover .menu-text,
+    .menu-item:focus-visible .menu-text {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .menu-item:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+    }
+
+    .sidebar-bottom {
+        margin: 0;
+        padding: 12px 0 15px;
+    }
+
+    .main-content {
+        width: calc(100% - 68px) !important;
+        margin-left: 68px !important;
+    }
+}

@@ -90,6 +90,11 @@ $menuItems = [
         href="css/admin-dashboard.css?v=1"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=1"
+    >
+
 </head>
 
 <body>
@@ -173,6 +178,7 @@ $menuItems = [
                 <a
                     href="admin-login.php"
                     class="menu-item logout"
+                    id="logoutButton"
                 >
 
                     <span class="menu-icon">
@@ -232,7 +238,7 @@ $menuItems = [
 
                     <div class="admin-information">
 
-                        <strong>
+                        <strong id="adminGreeting">
                             <?php echo $adminName; ?>
                         </strong>
 
@@ -261,7 +267,19 @@ $menuItems = [
 
             <!-- DASHBOARD -->
 
-            <section class="dashboard-content">
+            <div
+                class="dashboard-message"
+                id="dashboardMessage"
+                role="status"
+                hidden
+            ></div>
+
+
+            <section
+                class="dashboard-content"
+                id="dashboardContent"
+                hidden
+            >
 
 
                 <!-- STATISTICS -->
@@ -526,6 +544,13 @@ $menuItems = [
                                 <div class="chart-grid-line line-5"></div>
 
 
+                                <div
+                                    class="dashboard-chart-bars"
+                                    id="sales-chart-bars"
+                                    aria-label="Sales by period"
+                                ></div>
+
+
                                 <div class="chart-empty">
 
                                     <div class="chart-empty-icon">
@@ -582,7 +607,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="menu_management.php">
+                            <a href="menu-management.php">
                                 View All
                             </a>
 
@@ -712,7 +737,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="orders.php">
+                            <a href="admin-orders.php">
                                 View All
                             </a>
 
@@ -769,7 +794,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="inventory.php">
+                            <a href="admin-inventory.php">
                                 View All
                             </a>
 
@@ -953,7 +978,7 @@ $menuItems = [
 
             <script
                 type="module"
-                src="js/admin-dashboard.js?v=1"
+                src="js/admin_dashboard.js?v=2"
             ></script>
             <script src="js/theme.js?v=1"></script>
 

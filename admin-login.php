@@ -133,7 +133,7 @@
 
     </main>
 
-    <script type="module" src="js/admin_login.js"></script>
+    <script type="module" src="js/admin_login.js?v=2"></script>
 
 </body>
 </html>
