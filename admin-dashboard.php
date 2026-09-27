@@ -87,7 +87,7 @@ $menuItems = [
 
     <link
         rel="stylesheet"
-        href="css/admin-dashboard.css?v=1"
+        href="css/admin-dashboard.css?v=10"
     >
 
     <link
