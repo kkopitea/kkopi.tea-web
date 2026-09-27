@@ -8,51 +8,158 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 
-const editItemForm = document.getElementById("edit-item-form");
-
-const itemName = document.getElementById("item-name");
-const itemCategory = document.getElementById("product-category");
-const itemUnit = document.getElementById("product-unit");
-const itemStock = document.getElementById("product-stock");
-const itemStatus = document.getElementById("product-status");
-const itemDescription = document.getElementById("product-description");
-
-const imageUploadBox = document.getElementById("image-upload-box");
-const imageUploadContent = document.getElementById("image-upload-content");
-const imageInput = document.getElementById("product-image");
-const uploadButton = document.getElementById("upload-button");
-
-const imagePreview = document.getElementById("image-preview");
-const previewImage = document.getElementById("preview-image");
-const removeImageButton = document.getElementById("remove-image-button");
-const changeImageButton = document.querySelector(".change-image-button");
-
-const nameError = document.getElementById("name-error");
-const categoryError = document.getElementById("category-error");
-const unitError = document.getElementById("unit-error");
-const stockError = document.getElementById("stock-error");
-const imageError = document.getElementById("image-error");
-
-const formMessage = document.getElementById("form-message");
-const formMessageText = document.getElementById("form-message-text");
-
-const characterCounter = document.getElementById("character-counter");
-const saveButton = document.getElementById("save-product-button");
-
+/* CLOUDINARY */
 
 const CLOUDINARY_CLOUD_NAME = "c1kodukt";
 const CLOUDINARY_UPLOAD_PRESET = "Kkopi.tea";
 
 
-const urlParams = new URLSearchParams(window.location.search);
-const itemId = urlParams.get("id");
+/* FORM */
 
+const editItemForm =
+    document.getElementById("edit-product-form");
+
+
+/* INPUTS */
+
+const itemName =
+    document.getElementById("item-name");
+
+const itemCategory =
+    document.getElementById("product-category");
+
+const itemUnit =
+    document.getElementById("product-unit");
+
+const itemStock =
+    document.getElementById("product-stock");
+
+const itemStatus =
+    document.getElementById("product-status");
+
+const itemDescription =
+    document.getElementById("product-description");
+
+
+/* IMAGE */
+
+const imageUploadBox =
+    document.getElementById("image-upload-box");
+
+const imageUploadContent =
+    document.getElementById("image-upload-content");
+
+const imageInput =
+    document.getElementById("product-image");
+
+const uploadButton =
+    document.getElementById("upload-button");
+
+const imagePreview =
+    document.getElementById("image-preview");
+
+const previewImage =
+    document.getElementById("preview-image");
+
+const removeImageButton =
+    document.getElementById("remove-image-button");
+
+const changeImageButton =
+    document.querySelector(".change-image-button");
+
+
+/* ERRORS */
+
+const nameError =
+    document.getElementById("name-error");
+
+const categoryError =
+    document.getElementById("category-error");
+
+const unitError =
+    document.getElementById("unit-error");
+
+const stockError =
+    document.getElementById("stock-error");
+
+const imageError =
+    document.getElementById("image-error");
+
+
+/* MESSAGE */
+
+const formMessage =
+    document.getElementById("form-message");
+
+const formMessageText =
+    document.getElementById("form-message-text");
+
+
+/* OTHER */
+
+const characterCounter =
+    document.getElementById("character-counter");
+
+const saveButton =
+    document.getElementById("save-product-button");
+
+
+/* GET ITEM ID */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const itemId =
+    urlParams.get("id");
+
+
+/* IMAGE STATE */
 
 let existingImageUrl = "";
+
 let existingCloudinaryPublicId = "";
 
 let selectedImageFile = null;
+
 let removeExistingImage = false;
+
+
+/* DEBUG */
+
+console.log(
+    "================================="
+);
+
+console.log(
+    "EDIT ITEM JS LOADED"
+);
+
+console.log(
+    "Current URL:",
+    window.location.href
+);
+
+console.log(
+    "Item ID:",
+    itemId
+);
+
+console.log(
+    "================================="
+);
+
+
+/* INITIAL CHECK */
+
+if (!editItemForm) {
+
+    console.error(
+        "Edit form was not found."
+    );
+
+}
 
 
 /* LOAD ITEM */
@@ -63,25 +170,44 @@ async function loadItem() {
 
         showMessage(
             "error",
-            "No item ID was provided."
+            "No item ID was provided. Please open this page using the Edit button in Inventory."
         );
 
         disableForm();
 
         return;
+
     }
+
 
     try {
 
-        const itemReference = doc(
-            db,
-            "inventory",
+        console.log(
+            "Loading inventory item:",
             itemId
         );
 
-        const itemSnapshot = await getDoc(itemReference);
+
+        const itemReference =
+            doc(
+                db,
+                "inventory",
+                itemId
+            );
+
+
+        const itemSnapshot =
+            await getDoc(
+                itemReference
+            );
+
 
         if (!itemSnapshot.exists()) {
+
+            console.error(
+                "Inventory item does not exist:",
+                itemId
+            );
 
             showMessage(
                 "error",
@@ -91,62 +217,127 @@ async function loadItem() {
             disableForm();
 
             return;
+
         }
 
-        const item = itemSnapshot.data();
+
+        const item =
+            itemSnapshot.data();
 
 
-        /* ITEM NAME */
+        console.log(
+            "Inventory item loaded:",
+            item
+        );
 
-        itemName.value =
-            item.name ||
-            item.item ||
-            "";
+
+        /* NAME */
+
+        if (itemName) {
+
+            itemName.value =
+                item.name ||
+                item.item ||
+                "";
+
+        }
 
 
         /* CATEGORY */
 
-        itemCategory.value =
-            item.category ||
-            "other";
+        if (itemCategory) {
+
+            const category =
+                item.category ||
+                "other";
+
+
+            const categoryExists =
+                Array.from(
+                    itemCategory.options
+                ).some(
+                    option =>
+                        option.value ===
+                        category
+                );
+
+
+            if (categoryExists) {
+
+                itemCategory.value =
+                    category;
+
+            } else {
+
+                itemCategory.value =
+                    "tea";
+
+            }
+
+        }
 
 
         /* UNIT */
 
-        itemUnit.value =
-            item.unit ||
-            "";
+        if (itemUnit) {
+
+            itemUnit.value =
+                item.unit ||
+                "";
+
+        }
 
 
         /* STOCK */
 
-        itemStock.value =
-            item.stock !== undefined
-                ? item.stock
-                : 0;
+        if (itemStock) {
+
+            itemStock.value =
+                item.stock !== undefined
+                    ? item.stock
+                    : 0;
+
+        }
 
 
         /* STATUS */
 
-        if (item.status) {
+        if (itemStatus) {
 
-            itemStatus.value = item.status;
+            let status =
+                item.status;
 
-        } else {
+
+            if (
+                status !== "active" &&
+                status !== "inactive"
+            ) {
+
+                status =
+                    Number(
+                        item.stock || 0
+                    ) > 0
+                        ? "active"
+                        : "inactive";
+
+            }
+
 
             itemStatus.value =
-                Number(item.stock || 0) > 0
-                    ? "active"
-                    : "inactive";
+                status;
 
         }
 
 
         /* DESCRIPTION */
 
-        itemDescription.value =
-            item.description ||
-            "";
+        if (itemDescription) {
+
+            itemDescription.value =
+                item.description ||
+                "";
+
+        }
 
 
         /* IMAGE */
@@ -166,51 +357,125 @@ async function loadItem() {
                 existingImageUrl
             );
 
+        } else {
+
+            showUploadArea();
+
         }
 
 
         updateCharacterCounter();
 
+
+        console.log(
+            "Item loaded successfully."
+        );
+
+
     } catch (error) {
 
         console.error(
-            "Error loading inventory item:",
+            "ERROR LOADING ITEM:",
             error
         );
 
+
         showMessage(
             "error",
-            "Unable to load the item. Please try again."
+            `Unable to load item: ${error.message}`
         );
 
+
         disableForm();
+
     }
+
 }
 
 
 /* SHOW EXISTING IMAGE */
 
-function showExistingImage(imageUrl) {
+function showExistingImage(
+    imageUrl
+) {
 
-    previewImage.src = imageUrl;
+    if (previewImage) {
 
-    imagePreview.hidden = false;
-    imageUploadContent.hidden = true;
+        previewImage.src =
+            imageUrl;
+
+    }
+
+
+    if (imagePreview) {
+
+        imagePreview.hidden =
+            false;
+
+    }
+
+
+    if (imageUploadContent) {
+
+        imageUploadContent.hidden =
+            true;
+
+    }
 
 }
 
 
-/* IMAGE UPLOAD BUTTON */
+/* SHOW UPLOAD AREA */
+
+function showUploadArea() {
+
+    if (imagePreview) {
+
+        imagePreview.hidden =
+            true;
+
+    }
+
+
+    if (imageUploadContent) {
+
+        imageUploadContent.hidden =
+            false;
+
+    }
+
+}
+
+
+/* OPEN FILE SELECTOR */
+
+function openImageSelector() {
+
+    if (!imageInput) {
+
+        return;
+
+    }
+
+
+    imageInput.click();
+
+}
+
+
+/* UPLOAD BUTTON */
 
 if (uploadButton) {
 
     uploadButton.addEventListener(
         "click",
-        (event) => {
+        function (event) {
+
+            event.preventDefault();
 
             event.stopPropagation();
 
-            imageInput.click();
+            openImageSelector();
 
         }
     );
@@ -218,39 +483,48 @@ if (uploadButton) {
 }
 
 
-/* IMAGE BOX CLICK */
+/* IMAGE BOX */
 
 if (imageUploadBox) {
 
     imageUploadBox.addEventListener(
         "click",
-        (event) => {
+        function (event) {
 
             if (
                 event.target.closest(
                     "#remove-image-button"
                 )
             ) {
+
                 return;
+
             }
+
 
             if (
                 event.target.closest(
-                    ".upload-button"
+                    "#upload-button"
                 )
             ) {
+
                 return;
+
             }
+
 
             if (
                 event.target.closest(
                     ".change-image-button"
                 )
             ) {
+
                 return;
+
             }
 
-            imageInput.click();
+
+            openImageSelector();
 
         }
     );
@@ -258,22 +532,28 @@ if (imageUploadBox) {
 }
 
 
-/* IMAGE FILE CHANGE */
+/* IMAGE INPUT */
 
 if (imageInput) {
 
     imageInput.addEventListener(
         "change",
-        () => {
+        function () {
 
             const file =
                 imageInput.files[0];
 
+
             if (!file) {
+
                 return;
+
             }
 
-            handleSelectedImage(file);
+
+            handleSelectedImage(
+                file
+            );
 
         }
     );
@@ -283,9 +563,13 @@ if (imageInput) {
 
 /* HANDLE SELECTED IMAGE */
 
-function handleSelectedImage(file) {
+function handleSelectedImage(
+    file
+) {
 
-    clearError(imageError);
+    clearError(
+        imageError
+    );
 
 
     const allowedTypes = [
@@ -295,45 +579,85 @@ function handleSelectedImage(file) {
     ];
 
 
-    if (!allowedTypes.includes(file.type)) {
+    if (
+        !allowedTypes.includes(
+            file.type
+        )
+    ) {
 
         showFieldError(
             imageError,
             "Please select a JPG or PNG image."
         );
 
-        imageInput.value = "";
+        imageInput.value =
+            "";
 
         return;
+
     }
 
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (
+        file.size >
+        5 * 1024 * 1024
+    ) {
 
         showFieldError(
             imageError,
             "Image size must not exceed 5MB."
         );
 
-        imageInput.value = "";
+        imageInput.value =
+            "";
 
         return;
+
     }
 
 
-    selectedImageFile = file;
+    selectedImageFile =
+        file;
 
-    removeExistingImage = false;
+
+    removeExistingImage =
+        false;
 
 
     const imageUrl =
-        URL.createObjectURL(file);
+        URL.createObjectURL(
+            file
+        );
 
 
-    previewImage.src = imageUrl;
+    if (previewImage) {
 
-    imagePreview.hidden = false;
-    imageUploadContent.hidden = true;
+        previewImage.src =
+            imageUrl;
+
+    }
+
+
+    if (imagePreview) {
+
+        imagePreview.hidden =
+            false;
+
+    }
+
+
+    if (imageUploadContent) {
+
+        imageUploadContent.hidden =
+            true;
+
+    }
+
+
+    console.log(
+        "New image selected:",
+        file.name
+    );
 
 }
 
@@ -344,20 +668,43 @@ if (removeImageButton) {
 
     removeImageButton.addEventListener(
         "click",
-        (event) => {
+        function (event) {
+
+            event.preventDefault();
 
             event.stopPropagation();
 
-            selectedImageFile = null;
 
-            removeExistingImage = true;
+            selectedImageFile =
+                null;
 
-            imageInput.value = "";
 
-            previewImage.src = "";
+            removeExistingImage =
+                true;
 
-            imagePreview.hidden = true;
-            imageUploadContent.hidden = false;
+
+            if (imageInput) {
+
+                imageInput.value =
+                    "";
+
+            }
+
+
+            if (previewImage) {
+
+                previewImage.src =
+                    "";
+
+            }
+
+
+            showUploadArea();
+
+
+            console.log(
+                "Image marked for removal."
+            );
 
         }
     );
@@ -371,11 +718,13 @@ if (changeImageButton) {
 
     changeImageButton.addEventListener(
         "click",
-        (event) => {
+        function (event) {
+
+            event.preventDefault();
 
             event.stopPropagation();
 
-            imageInput.click();
+            openImageSelector();
 
         }
     );
@@ -389,7 +738,7 @@ if (imageUploadBox) {
 
     imageUploadBox.addEventListener(
         "dragover",
-        (event) => {
+        function (event) {
 
             event.preventDefault();
 
@@ -403,7 +752,7 @@ if (imageUploadBox) {
 
     imageUploadBox.addEventListener(
         "dragleave",
-        () => {
+        function () {
 
             imageUploadBox.classList.remove(
                 "dragging"
@@ -415,9 +764,10 @@ if (imageUploadBox) {
 
     imageUploadBox.addEventListener(
         "drop",
-        (event) => {
+        function (event) {
 
             event.preventDefault();
+
 
             imageUploadBox.classList.remove(
                 "dragging"
@@ -427,12 +777,17 @@ if (imageUploadBox) {
             const file =
                 event.dataTransfer.files[0];
 
+
             if (!file) {
+
                 return;
+
             }
 
 
-            handleSelectedImage(file);
+            handleSelectedImage(
+                file
+            );
 
         }
     );
@@ -454,12 +809,19 @@ if (itemDescription) {
 
 function updateCharacterCounter() {
 
-    if (!itemDescription || !characterCounter) {
+    if (
+        !itemDescription ||
+        !characterCounter
+    ) {
+
         return;
+
     }
+
 
     const currentLength =
         itemDescription.value.length;
+
 
     characterCounter.textContent =
         `${currentLength} / 300`;
@@ -473,9 +835,27 @@ if (editItemForm) {
 
     editItemForm.addEventListener(
         "submit",
-        async (event) => {
+        async function (event) {
 
             event.preventDefault();
+
+
+            console.log(
+                "================================="
+            );
+
+            console.log(
+                "SAVE CHANGES CLICKED"
+            );
+
+            console.log(
+                "Item ID:",
+                itemId
+            );
+
+            console.log(
+                "================================="
+            );
 
 
             clearErrors();
@@ -483,22 +863,43 @@ if (editItemForm) {
             hideMessage();
 
 
-            const validationResult =
-                validateForm();
+            if (!itemId) {
 
+                showMessage(
+                    "error",
+                    "No item ID was provided. Please return to Inventory and click Edit."
+                );
 
-            if (!validationResult) {
                 return;
+
             }
 
 
-            setLoading(true);
+            const isValid =
+                validateForm();
+
+
+            if (!isValid) {
+
+                console.log(
+                    "Validation failed."
+                );
+
+                return;
+
+            }
+
+
+            setLoading(
+                true
+            );
 
 
             try {
 
                 let imageUrl =
                     existingImageUrl;
+
 
                 let cloudinaryPublicId =
                     existingCloudinaryPublicId;
@@ -507,6 +908,11 @@ if (editItemForm) {
                 /* UPLOAD NEW IMAGE */
 
                 if (selectedImageFile) {
+
+                    console.log(
+                        "Uploading new image..."
+                    );
+
 
                     const uploadResult =
                         await uploadToCloudinary(
@@ -525,15 +931,20 @@ if (editItemForm) {
                 }
 
 
-                /* REMOVE EXISTING IMAGE */
+                /* REMOVE IMAGE */
 
                 if (removeExistingImage) {
 
-                    imageUrl = "";
-                    cloudinaryPublicId = "";
+                    imageUrl =
+                        "";
+
+                    cloudinaryPublicId =
+                        "";
 
                 }
 
+
+                /* UPDATED DATA */
 
                 const updatedItem = {
 
@@ -569,13 +980,32 @@ if (editItemForm) {
                 };
 
 
-                await updateDoc(
+                console.log(
+                    "Data being saved:",
+                    updatedItem
+                );
+
+
+                /* FIRESTORE REFERENCE */
+
+                const itemReference =
                     doc(
                         db,
                         "inventory",
                         itemId
-                    ),
+                    );
+
+
+                /* UPDATE FIRESTORE */
+
+                await updateDoc(
+                    itemReference,
                     updatedItem
+                );
+
+
+                console.log(
+                    "Firestore update successful."
                 );
 
 
@@ -586,7 +1016,7 @@ if (editItemForm) {
 
 
                 setTimeout(
-                    () => {
+                    function () {
 
                         window.location.href =
                             "admin-inventory.php";
@@ -599,18 +1029,31 @@ if (editItemForm) {
             } catch (error) {
 
                 console.error(
-                    "Error updating inventory item:",
+                    "================================="
+                );
+
+                console.error(
+                    "UPDATE FAILED"
+                );
+
+                console.error(
                     error
+                );
+
+                console.error(
+                    "================================="
                 );
 
 
                 showMessage(
                     "error",
-                    "Unable to update the item. Please try again."
+                    `Unable to update item: ${error.message}`
                 );
 
 
-                setLoading(false);
+                setLoading(
+                    false
+                );
 
             }
 
@@ -624,18 +1067,29 @@ if (editItemForm) {
 
 function validateForm() {
 
-    let isValid = true;
+    let isValid =
+        true;
 
 
     const name =
-        itemName.value.trim();
+        itemName
+            ? itemName.value.trim()
+            : "";
+
 
     const unit =
-        itemUnit.value.trim();
+        itemUnit
+            ? itemUnit.value.trim()
+            : "";
+
 
     const stock =
-        itemStock.value;
+        itemStock
+            ? itemStock.value
+            : "";
 
+
+    /* NAME */
 
     if (!name) {
 
@@ -644,22 +1098,31 @@ function validateForm() {
             "Item name is required."
         );
 
-        isValid = false;
+        isValid =
+            false;
 
     }
 
 
-    if (!itemCategory.value) {
+    /* CATEGORY */
+
+    if (
+        !itemCategory ||
+        !itemCategory.value
+    ) {
 
         showFieldError(
             categoryError,
             "Please select a category."
         );
 
-        isValid = false;
+        isValid =
+            false;
 
     }
 
+
+    /* UNIT */
 
     if (!unit) {
 
@@ -668,14 +1131,22 @@ function validateForm() {
             "Unit is required."
         );
 
-        isValid = false;
+        isValid =
+            false;
 
     }
 
 
+    /* STOCK */
+
+    const stockNumber =
+        Number(stock);
+
+
     if (
         stock === "" ||
-        Number(stock) < 0
+        Number.isNaN(stockNumber) ||
+        stockNumber < 0
     ) {
 
         showFieldError(
@@ -683,7 +1154,8 @@ function validateForm() {
             "Please enter a valid stock quantity."
         );
 
-        isValid = false;
+        isValid =
+            false;
 
     }
 
@@ -695,7 +1167,9 @@ function validateForm() {
 
 /* CLOUDINARY UPLOAD */
 
-async function uploadToCloudinary(file) {
+async function uploadToCloudinary(
+    file
+) {
 
     const formData =
         new FormData();
@@ -725,8 +1199,12 @@ async function uploadToCloudinary(file) {
 
     if (!response.ok) {
 
+        const errorText =
+            await response.text();
+
+
         throw new Error(
-            "Cloudinary upload failed."
+            `Cloudinary upload failed: ${errorText}`
         );
 
     }
@@ -745,8 +1223,11 @@ function showFieldError(
 ) {
 
     if (!element) {
+
         return;
+
     }
+
 
     element.textContent =
         message;
@@ -756,26 +1237,46 @@ function showFieldError(
 
 /* CLEAR FIELD ERROR */
 
-function clearError(element) {
+function clearError(
+    element
+) {
 
     if (!element) {
+
         return;
+
     }
 
-    element.textContent = "";
+
+    element.textContent =
+        "";
 
 }
 
 
-/* CLEAR ALL ERRORS */
+/* CLEAR ERRORS */
 
 function clearErrors() {
 
-    clearError(nameError);
-    clearError(categoryError);
-    clearError(unitError);
-    clearError(stockError);
-    clearError(imageError);
+    clearError(
+        nameError
+    );
+
+    clearError(
+        categoryError
+    );
+
+    clearError(
+        unitError
+    );
+
+    clearError(
+        stockError
+    );
+
+    clearError(
+        imageError
+    );
 
 }
 
@@ -787,8 +1288,13 @@ function showMessage(
     message
 ) {
 
-    if (!formMessage || !formMessageText) {
+    if (
+        !formMessage ||
+        !formMessageText
+    ) {
+
         return;
+
     }
 
 
@@ -806,22 +1312,36 @@ function showMessage(
 
 function hideMessage() {
 
-    if (!formMessage) {
+    if (
+        !formMessage ||
+        !formMessageText
+    ) {
+
         return;
+
     }
+
 
     formMessage.className =
         "form-message";
 
+
+    formMessageText.textContent =
+        "";
+
 }
 
 
-/* LOADING STATE */
+/* LOADING */
 
-function setLoading(isLoading) {
+function setLoading(
+    isLoading
+) {
 
     if (!saveButton) {
+
         return;
+
     }
 
 
@@ -863,7 +1383,9 @@ function setLoading(isLoading) {
 function disableForm() {
 
     if (!editItemForm) {
+
         return;
+
     }
 
 
@@ -874,9 +1396,10 @@ function disableForm() {
 
 
     formElements.forEach(
-        (element) => {
+        function (element) {
 
-            element.disabled = true;
+            element.disabled =
+                true;
 
         }
     );
@@ -887,4 +1410,5 @@ function disableForm() {
 /* INITIALIZE */
 
 loadItem();
+
 updateCharacterCounter();

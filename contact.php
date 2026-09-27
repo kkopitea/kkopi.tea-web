@@ -410,6 +410,8 @@
     src="js/contact.js?v=1"
 ></script>
 
+<script src="functions.js"></script>
+
 </body>
 
 </html>

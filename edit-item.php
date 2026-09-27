@@ -686,12 +686,7 @@ $menuItems = [
                 </a>
 
 
-                <button
-                    type="submit"
-                    class="save-product-button"
-                    id="save-product-button"
-                >
-
+               <button type="submit" id="save-product-button" class="save-product-button">
                     <span class="button-icon">
                         <i class="fa-solid fa-pen"></i>
                     </span>
@@ -699,11 +694,9 @@ $menuItems = [
                     <span>
                         Save Changes
                     </span>
-
                 </button>
 
             </div>
-
 
         </form>
 

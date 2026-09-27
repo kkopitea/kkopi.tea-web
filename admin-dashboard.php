@@ -87,7 +87,7 @@ $menuItems = [
 
     <link
         rel="stylesheet"
-        href="css/admin-dashboard.css?v=1"
+        href="css/admin-dashboard.css?v=10"
     >
 
 </head>
@@ -582,7 +582,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="menu_management.php">
+                            <a href="menu-management.php">
                                 View All
                             </a>
 
@@ -712,7 +712,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="orders.php">
+                            <a href="admin-orders.php">
                                 View All
                             </a>
 
@@ -769,7 +769,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="inventory.php">
+                            <a href="admin-inventory.php">
                                 View All
                             </a>
 
