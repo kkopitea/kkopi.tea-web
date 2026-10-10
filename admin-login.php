@@ -56,7 +56,7 @@
                     Please login your admin account.
                 </p>
 
-                <form id="loginForm">
+                <form id="loginForm" autocomplete="on">
 
                     <label for="email">Email Address</label>
 
@@ -68,6 +68,7 @@
                             id="email"
                             name="email"
                             placeholder="Enter your email"
+                            autocomplete="username"
                             required
                         >
                     </div>
@@ -83,6 +84,7 @@
                             id="password"
                             name="password"
                             placeholder="Enter your password"
+                            autocomplete="current-password"
                             required
                         >
 
@@ -96,6 +98,7 @@
                     </div>
 
 
+                    
                     <div class="login-options">
 
                         <label class="remember">
@@ -103,7 +106,7 @@
                             <span>Remember me</span>
                         </label>
 
-                        <a href="#" class="forgot" id="forgotPassword">
+                        <a href="forgot_pass.php" class="forgot">
                             Forgot password?
                         </a>
 
@@ -133,7 +136,7 @@
 
     </main>
 
-    <script type="module" src="js/admin_login.js?v=2"></script>
+    <script type="module" src="js/admin_login.js?v=5"></script>
 
 </body>
 </html>

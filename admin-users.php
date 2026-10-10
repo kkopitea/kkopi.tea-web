@@ -209,13 +209,13 @@ $menuItems = [
 
                     <div class="admin-information">
 
-                        <strong>
-                            <?php echo $adminName; ?>
-                        </strong>
+                          <strong id="adminGreeting">
+                        <?php echo $adminName; ?>
+                    </strong>
 
-                        <span>
-                            <?php echo $adminRole; ?>
-                        </span>
+                    <span id="adminRole">
+                        <?php echo $adminRole; ?>
+                    </span>
 
                         <small>
                             <?php echo $currentDate; ?>
@@ -350,15 +350,12 @@ $menuItems = [
                     </div>
 
 
+                    
                     <div class="users-toolbar">
 
-
                         <div class="users-search">
-
                             <div class="search-icon">
-
                                 <i class="fa-solid fa-magnifying-glass"></i>
-
                             </div>
 
                             <input
@@ -368,22 +365,21 @@ $menuItems = [
                                 autocomplete="off"
                             >
 
-                            <span class="search-shortcut">
-                                Search
-                            </span>
-
+                            <span class="search-shortcut">Search</span>
                         </div>
 
+                        <div class="users-toolbar-actions">
 
-                        <div class="role-filter">
+                            <a href="add-users.php" class="add-user-button">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <span>Add Users</span>
+                            </a>
 
-                            <select id="role-filter">
-
-                                <option value="all">
-                                    All Roles
-                                </option>
-
-                            </select>
+                            <div class="role-filter">
+                                <select id="role-filter">
+                                    <option value="all">All Roles</option>
+                                </select>
+                            </div>
 
                         </div>
 

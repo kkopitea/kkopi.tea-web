@@ -238,13 +238,13 @@ $menuItems = [
 
                     <div class="admin-information">
 
-                        <strong id="adminGreeting">
-                            <?php echo $adminName; ?>
-                        </strong>
+                    <strong id="adminGreeting">
+                        <?php echo $adminName; ?>
+                    </strong>
 
-                        <span>
-                            <?php echo $adminRole; ?>
-                        </span>
+                    <span id="adminRole">
+                        <?php echo $adminRole; ?>
+                    </span>
 
                         <small>
                             <?php echo $currentDate; ?>

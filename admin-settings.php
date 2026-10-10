@@ -224,11 +224,11 @@ $menuItems = [
 
                 <div class="admin-information">
 
-                    <strong>
+                      <strong id="adminGreeting">
                         <?php echo $adminName; ?>
                     </strong>
 
-                    <span>
+                    <span id="adminRole">
                         <?php echo $adminRole; ?>
                     </span>
 

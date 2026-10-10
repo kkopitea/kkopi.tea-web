@@ -1381,50 +1381,42 @@ input {
 
 }
 
-
-/* ACTION BUTTON */
-
-.order-action {
-
-    width: 32px;
-
-    height: 32px;
-
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border: 1px solid #e7e1db;
-
-    border-radius: 9px;
-
-    color: #888888;
-
-    background: #ffffff;
-
-    cursor: pointer;
-
-    transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
-
+/* PRODUCTS */
+.order-products {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 140px;
 }
 
+.order-product {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 9px;
+    border-radius: 8px;
+    background: #fff3e8;
+}
 
-.order-action:hover {
+.order-product-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: #343434;
+    font-size: 12px;
+    font-weight: 700;
+}
 
-    color: var(--orange-dark);
+.order-product-quantity {
+    flex-shrink: 0;
+    color: #e87920;
+    font-size: 12px;
+    font-weight: 800;
+}
 
-    border-color: #f2c49e;
-
-    background: var(--orange-light);
-
-    transform: translateY(-1px);
-
+.no-order-products {
+    color: #999;
+    font-size: 12px;
 }
 
 

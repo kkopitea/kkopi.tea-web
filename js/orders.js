@@ -1,12 +1,15 @@
+import { auth, db } from "./firebase-config.js";
+
 import {
     collection,
-    onSnapshot
+    onSnapshot,
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 import {
-    db
-} from "./firebase-config.js";
-
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 /* ELEMENTS */
 
@@ -732,20 +735,51 @@ function createOrderRow(order) {
         </td>
 
 
-        <td>
+       
+<td>
+    <div class="order-products">
+        ${
+            Array.isArray(order.items) && order.items.length
+                ? (() => {
+                    const groupedProducts = new Map();
 
-            <button
-                type="button"
-                class="order-action"
-                title="View Order"
-                data-order-id="${escapeHtml(order.id)}"
-            >
+                    order.items.forEach(item => {
+                        const name =
+                            item.name ||
+                            item.productName ||
+                            item.title ||
+                            "Unnamed Product";
 
-                <i class="fa-solid fa-eye"></i>
+                        const key = name.trim().toLowerCase();
+                        const quantity = Number(item.quantity ?? item.qty ?? 1) || 1;
 
-            </button>
+                        if (groupedProducts.has(key)) {
+                            groupedProducts.get(key).quantity += quantity;
+                        } else {
+                            groupedProducts.set(key, {
+                                name,
+                                quantity
+                            });
+                        }
+                    });
 
-        </td>
+                    return Array.from(groupedProducts.values())
+                        .map(item => `
+                            <div class="order-product">
+                                <span class="order-product-name">
+                                    ${escapeHtml(item.name)}
+                                </span>
+                                <span class="order-product-quantity">
+                                    × ${item.quantity}
+                                </span>
+                            </div>
+                        `)
+                        .join("");
+                })()
+                : `<span class="no-order-products">No product details</span>`
+        }
+    </div>
+</td>
 
     `;
 
@@ -910,6 +944,45 @@ function escapeHtml(value) {
         );
 
 }
+
+/* Load admin profile */
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        return;
+    }
+
+    try {
+        const adminSnapshot = await getDoc(
+            doc(db, "admins", user.uid)
+        );
+
+        if (!adminSnapshot.exists()) {
+            console.error("Admin document not found.");
+            return;
+        }
+
+        const adminData = adminSnapshot.data();
+
+        const adminGreeting =
+            document.getElementById("adminGreeting");
+
+        const adminRole =
+            document.getElementById("adminRole");
+
+        if (adminGreeting) {
+            adminGreeting.textContent =
+                adminData.name || user.email || "Admin";
+        }
+
+        if (adminRole) {
+            adminRole.textContent =
+                adminData.role || "Administrator";
+        }
+    } catch (error) {
+        console.error("Error loading admin profile:", error);
+    }
+});
 
 
 /* START */

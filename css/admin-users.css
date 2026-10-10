@@ -820,6 +820,63 @@ input {
     border-bottom: 1px solid #eee9e4;
 }
 
+.users-toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* ADD USERS BUTTON */
+
+.add-user-button {
+    height: 44px;
+    padding: 0 17px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    border: 1px solid #f87818;
+    border-radius: 11px;
+
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff922f, #f87818);
+
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+
+    box-shadow: 0 5px 12px rgba(255, 134, 38, 0.16);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.add-user-button i {
+    font-size: 13px;
+}
+
+.add-user-button:hover {
+    background: linear-gradient(135deg, #f87818, #e96b0b);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(255, 134, 38, 0.22);
+}
+
+.add-user-button:active {
+    transform: translateY(0);
+}
+
+.add-user-button:focus-visible {
+    outline: 3px solid rgba(255, 134, 38, 0.35);
+    outline-offset: 3px;
+}
+
+
 
 /* SEARCH */
 

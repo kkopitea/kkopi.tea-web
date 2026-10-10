@@ -1,10 +1,15 @@
-import { db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 import {
     collection,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 
@@ -894,6 +899,45 @@ function escapeAttribute(value) {
 
 }
 
+
+/* Load admin profile */
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        return;
+    }
+
+    try {
+        const adminSnapshot = await getDoc(
+            doc(db, "admins", user.uid)
+        );
+
+        if (!adminSnapshot.exists()) {
+            console.error("Admin document not found.");
+            return;
+        }
+
+        const adminData = adminSnapshot.data();
+
+        const adminGreeting =
+            document.getElementById("adminGreeting");
+
+        const adminRole =
+            document.getElementById("adminRole");
+
+        if (adminGreeting) {
+            adminGreeting.textContent =
+                adminData.name || user.email || "Admin";
+        }
+
+        if (adminRole) {
+            adminRole.textContent =
+                adminData.role || "Administrator";
+        }
+    } catch (error) {
+        console.error("Error loading admin profile:", error);
+    }
+});
 
 /* Start */
 

@@ -189,11 +189,11 @@ $menuItems = [
 
                 <div class="admin-information">
 
-                    <strong>
+                      <strong id="adminGreeting">
                         <?php echo $adminName; ?>
                     </strong>
 
-                    <span>
+                    <span id="adminRole">
                         <?php echo $adminRole; ?>
                     </span>
 
@@ -551,7 +551,7 @@ $menuItems = [
                                 </th>
 
                                 <th>
-                                    Action
+                                    Products
                                 </th>
 
                             </tr>
@@ -635,7 +635,7 @@ $menuItems = [
 
 <script
     type="module"
-    src="js/orders.js?v=4"
+    src="js/orders.js?v=5"
 ></script>
 <script src="js/theme.js?v=5"></script>
 

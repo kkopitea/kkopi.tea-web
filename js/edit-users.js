@@ -1,330 +1,191 @@
+import { auth, db } from "./firebase-config.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 import {
     doc,
     getDoc,
-    updateDoc
+    updateDoc,
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-import { db } from "./firebase-config.js";
-
-
-/* FORM ELEMENTS */
 
 const form = document.getElementById("edit-admin-form");
-
 const nameInput = document.getElementById("admin-name");
-const emailInput = document.getElementById("admin-email");
-const positionInput = document.getElementById("admin-position");
 const roleInput = document.getElementById("admin-role");
 const statusInput = document.getElementById("admin-status");
 const idInput = document.getElementById("admin-id");
-
 const message = document.getElementById("edit-message");
 const saveButton = document.getElementById("save-admin");
 
-
-/* GET USER ID FROM URL */
-
-const urlParams = new URLSearchParams(window.location.search);
-const adminId = urlParams.get("id");
-
-
-/* SHOW MESSAGE */
+const adminId = new URLSearchParams(window.location.search).get("id");
 
 function showMessage(text, type) {
-
     message.textContent = text;
-
-    message.className =
-        `form-message ${type}`;
-
+    message.className = `form-message ${type}`;
     message.hidden = false;
 }
 
-
-/* HIDE MESSAGE */
-
 function hideMessage() {
-
     message.hidden = true;
     message.textContent = "";
 }
 
-
-/* NORMALIZE ROLE */
-
 function normalizeRole(role) {
+    const roles = ["Administrator", "Manager", "Cashier", "Inventory"];
 
-    const roles = [
-        "Administrator",
-        "Manager",
-        "Cashier",
-        "Inventory"
-    ];
-
-    if (!role) {
-        return "Administrator";
-    }
-
-    const matchedRole = roles.find(
-        item =>
-            item.toLowerCase() ===
-            String(role).toLowerCase()
-    );
-
-    return matchedRole || "Administrator";
+    return roles.find(
+        item => item.toLowerCase() === String(role || "").toLowerCase()
+    ) || "Administrator";
 }
-
-
-/* NORMALIZE STATUS */
 
 function normalizeStatus(status) {
-
-    if (
-        status === false ||
+    return status === false ||
         String(status).toLowerCase() === "inactive"
-    ) {
-        return "inactive";
-    }
-
-    return "active";
+        ? "inactive"
+        : "active";
 }
 
-
-/* LOAD USER */
-
-async function loadUser() {
-
-    if (!adminId) {
-
-        showMessage(
-            "No user ID was provided.",
-            "error"
-        );
-
-        saveButton.disabled = true;
-
+/* Display the signed-in administrator's name and role */
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.replace("admin-login.php");
         return;
     }
 
     try {
-
-        const userRef = doc(
-            db,
-            "admins",
-            adminId
+        const adminSnapshot = await getDoc(
+            doc(db, "admins", user.uid)
         );
 
-        const userSnapshot =
-            await getDoc(userRef);
+        if (!adminSnapshot.exists()) {
+            window.location.replace("admin-login.php");
+            return;
+        }
+
+        const adminData = adminSnapshot.data();
+
+        const isActive =
+            adminData.active === true ||
+            adminData.isActive === true ||
+            String(adminData.status || "").toLowerCase() === "active";
+
+        const role = String(adminData.role || "")
+            .trim()
+            .toLowerCase();
+
+        if (
+            !isActive ||
+            !["admin", "administrator", "manager", "staff"].includes(role)
+        ) {
+            window.location.replace("admin-login.php");
+            return;
+        }
+
+        const adminGreeting = document.getElementById("adminGreeting");
+        const adminRole = document.getElementById("adminRole");
+
+        if (adminGreeting) {
+            adminGreeting.textContent =
+                adminData.name || user.email || "Admin";
+        }
+
+        if (adminRole) {
+            adminRole.textContent =
+                adminData.role || "Administrator";
+        }
+    } catch (error) {
+        console.error("Admin profile verification failed:", error);
+    }
+});
+function restoreSaveButton() {
+    saveButton.disabled = false;
+    saveButton.innerHTML = '<i class="fa-solid fa-check"></i> Save Changes';
+}
+
+async function loadUser() {
+    if (!adminId) {
+        showMessage("No user ID was provided.", "error");
+        saveButton.disabled = true;
+        return;
+    }
+
+    try {
+        const userRef = doc(db, "admins", adminId);
+        const userSnapshot = await getDoc(userRef);
 
         if (!userSnapshot.exists()) {
-
-            showMessage(
-                "User account was not found.",
-                "error"
-            );
-
+            showMessage("User account was not found.", "error");
             saveButton.disabled = true;
-
             return;
         }
 
         const user = userSnapshot.data();
 
-
-        /* GET USER INFORMATION */
-
-        const name =
+        nameInput.value =
             user.name ||
             user.fullName ||
             user.displayName ||
             user.adminName ||
             "";
 
-        const email =
-            user.email ||
-            user.adminEmail ||
-            "";
+        roleInput.value = normalizeRole(user.role || user.adminRole);
+        statusInput.value = normalizeStatus(user.status);
 
-        const position =
-            user.position ||
-            user.jobTitle ||
-            user.title ||
-            user.job_position ||
-            "";
-
-        const role =
-            normalizeRole(
-                user.role ||
-                user.adminRole
-            );
-
-        const status =
-            normalizeStatus(
-                user.status
-            );
-
-
-        /* FILL FORM */
-
-        nameInput.value = name;
-        emailInput.value = email;
-        positionInput.value = position;
-        roleInput.value = role;
-        statusInput.value = status;
         idInput.value =
             user.adminId ||
             user.userId ||
             user.accountId ||
             adminId;
-
     } catch (error) {
-
-        console.error(
-            "Error loading user:",
-            error
-        );
-
-        showMessage(
-            "Unable to load user information.",
-            "error"
-        );
+        console.error("Error loading user:", error);
+        showMessage("Unable to load user information.", "error");
+        saveButton.disabled = true;
     }
 }
 
+form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    hideMessage();
 
-/* SAVE USER */
+    const name = nameInput.value.trim();
+    const role = roleInput.value;
+    const status = statusInput.value;
 
-form.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-        hideMessage();
-
-
-        /* GET FORM VALUES */
-
-        const name =
-            nameInput.value.trim();
-
-        const email =
-            emailInput.value.trim();
-
-        const position =
-            positionInput.value.trim();
-
-        const role =
-            roleInput.value;
-
-        const status =
-            statusInput.value;
-
-
-        /* VALIDATION */
-
-        if (
-            !name ||
-            !email ||
-            !position
-        ) {
-
-            showMessage(
-                "Please fill in all required fields.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        /* DISABLE BUTTON */
-
-        saveButton.disabled = true;
-
-        saveButton.innerHTML =
-            `<i class="fa-solid fa-spinner fa-spin"></i>
-             Saving...`;
-
-
-        try {
-
-            const userRef = doc(
-                db,
-                "admins",
-                adminId
-            );
-
-
-            /* UPDATE FIRESTORE */
-
-            await updateDoc(
-                userRef,
-                {
-                    name: name,
-                    email: email,
-                    position: position,
-                    role: role,
-                    status: status
-                }
-            );
-
-
-            /* SUCCESS */
-
-            showMessage(
-                "User information updated successfully.",
-                "success"
-            );
-
-
-            saveButton.innerHTML =
-                `<i class="fa-solid fa-check"></i>
-                 Saved`;
-
-
-            /* RESTORE BUTTON */
-
-            setTimeout(
-                function () {
-
-                    saveButton.disabled = false;
-
-                    saveButton.innerHTML =
-                        `<i class="fa-solid fa-check"></i>
-                         Save Changes`;
-
-                },
-                1500
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Error updating user:",
-                error
-            );
-
-            showMessage(
-                "Unable to save changes. Please try again.",
-                "error"
-            );
-
-
-            /* RESTORE BUTTON */
-
-            saveButton.disabled = false;
-
-            saveButton.innerHTML =
-                `<i class="fa-solid fa-check"></i>
-                 Save Changes`;
-        }
-
+    if (!name) {
+        showMessage("Please enter the user's full name.", "error");
+        return;
     }
-);
 
+    if (!adminId) {
+        showMessage("No user ID was provided.", "error");
+        return;
+    }
 
-/* LOAD USER WHEN PAGE OPENS */
+    saveButton.disabled = true;
+    saveButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+    try {
+        const userRef = doc(db, "admins", adminId);
+
+        await updateDoc(userRef, {
+            name,
+            role,
+            status
+        });
+
+        showMessage("User information updated successfully.", "success");
+        saveButton.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
+
+        window.setTimeout(() => {
+            window.location.href = "admin-users.php";
+        }, 1000);
+    } catch (error) {
+        console.error("Error updating user:", error);
+        showMessage("Unable to save changes. Please try again.", "error");
+        restoreSaveButton();
+    }
+});
 
 loadUser();

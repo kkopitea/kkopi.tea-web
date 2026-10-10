@@ -1,11 +1,9 @@
+
 <?php
 
 $pageTitle = "Users";
-
 $adminName = "Admin";
-
 $adminRole = "Administrator";
-
 $currentDate = date("F j, Y");
 
 $menuItems = [
@@ -52,7 +50,6 @@ $menuItems = [
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -60,14 +57,9 @@ $menuItems = [
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Edit User | KKOPI.TEA
-    </title>
+    <title>Edit User | KKOPI.TEA</title>
 
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link
         rel="preconnect"
@@ -87,7 +79,7 @@ $menuItems = [
 
     <link
         rel="stylesheet"
-        href="css/edit-users.css?v=1"
+        href="css/edit-users.css?v=2"
     >
 
 </head>
@@ -96,47 +88,29 @@ $menuItems = [
 
     <div class="users-container">
 
-
         <!-- SIDEBAR -->
 
         <aside class="sidebar">
 
-
-            <!-- LOGO -->
-
             <div class="sidebar-logo">
-
-                <span class="logo-black">
-                    KKOPI
-                </span>
-
-                <span class="logo-white">
-                    .TEA
-                </span>
-
+                <span class="logo-black">KKOPI</span>
+                <span class="logo-white">.TEA</span>
             </div>
-
-
-            <!-- MAIN NAVIGATION -->
 
             <nav class="sidebar-menu">
 
                 <div class="navigation-section">
 
-                    <span class="navigation-title">
-                        MAIN
-                    </span>
+                    <span class="navigation-title">MAIN</span>
 
                     <?php foreach ($menuItems as $item): ?>
 
                         <?php
-
                         $activeClass = "";
 
                         if ($item["name"] === $pageTitle) {
                             $activeClass = "active";
                         }
-
                         ?>
 
                         <a
@@ -145,11 +119,7 @@ $menuItems = [
                         >
 
                             <span class="menu-icon">
-
-                                <i
-                                    class="fa-solid <?php echo $item["icon"]; ?>"
-                                ></i>
-
+                                <i class="fa-solid <?php echo $item["icon"]; ?>"></i>
                             </span>
 
                             <span class="menu-text">
@@ -164,25 +134,15 @@ $menuItems = [
 
             </nav>
 
-
-            <!-- SIDEBAR BOTTOM -->
-
             <div class="sidebar-bottom">
 
-                <a
-                    href="admin-login.php"
-                    class="menu-item logout"
-                >
+                <a href="admin-login.php" class="menu-item logout">
 
                     <span class="menu-icon">
-
                         <i class="fa-solid fa-right-from-bracket"></i>
-
                     </span>
 
-                    <span class="menu-text">
-                        Logout
-                    </span>
+                    <span class="menu-text">Logout</span>
 
                 </a>
 
@@ -190,117 +150,80 @@ $menuItems = [
 
         </aside>
 
-
         <!-- MAIN CONTENT -->
 
         <main class="main-content">
-
 
             <!-- TOP HEADER -->
 
             <header class="top-header">
 
-
-                <!-- HEADER TITLE -->
-
                 <div class="header-title">
 
                     <div class="welcome-badge">
-
                         <span class="welcome-dot"></span>
-
                         ADMIN
-
                     </div>
 
-                    <h1>
-                        Edit User
-                    </h1>
+                    <h1>Edit User</h1>
 
-                    <p>
-                        manage your system users with ease.
-                    </p>
+                    <p>manage your system users with ease.</p>
 
                 </div>
-
-
-                <!-- ADMIN PROFILE -->
 
                 <div class="admin-profile">
 
                     <div class="admin-information">
 
-                        <strong>
-                            <?php echo $adminName; ?>
-                        </strong>
+                          <strong id="adminGreeting">
+                        <?php echo $adminName; ?>
+                    </strong>
 
-                        <span>
-                            <?php echo $adminRole; ?>
-                        </span>
+                    <span id="adminRole">
+                        <?php echo $adminRole; ?>
+                    </span>
 
-                        <small>
-                            <?php echo $currentDate; ?>
-                        </small>
+                        <small><?php echo $currentDate; ?></small>
 
                     </div>
 
                     <div class="admin-avatar">
-
                         <i class="fa-solid fa-user"></i>
-
                     </div>
 
                 </div>
 
             </header>
 
-
             <!-- EDIT USER -->
 
             <section class="edit-user-section">
-
-
-                <!-- TOP AREA -->
 
                 <div class="edit-user-top">
 
                     <div class="breadcrumb">
 
-                        <a href="admin-users.php">
-                            Users
-                        </a>
+                        <a href="admin-users.php">Users</a>
 
                         <i class="fa-solid fa-chevron-right"></i>
 
-                        <span>
-                            Edit User
-                        </span>
+                        <span>Edit User</span>
 
                     </div>
-
 
                     <a
                         href="admin-users.php"
                         class="back-user-button"
                     >
-
                         <i class="fa-solid fa-arrow-left"></i>
-
-                        <span>
-                            Back to Users
-                        </span>
-
+                        <span>Back to Users</span>
                     </a>
 
                 </div>
 
-
                 <!-- MAIN CARD -->
 
                 <div class="edit-user-card">
-
-
-                    <!-- FORM HEADING -->
 
                     <div class="form-heading">
 
@@ -309,19 +232,11 @@ $menuItems = [
                         </div>
 
                         <div>
-
-                            <h2>
-                                User Information
-                            </h2>
-
-                            <p>
-                                Edit the details of this system user.
-                            </p>
-
+                            <h2>User Information</h2>
+                            <p>Edit the details of this system user.</p>
                         </div>
 
                     </div>
-
 
                     <!-- FORM -->
 
@@ -330,242 +245,136 @@ $menuItems = [
                         class="edit-user-form"
                     >
 
+                        <!-- TWO-COLUMN, TWO-ROW FIELD LAYOUT -->
 
                         <div class="user-form-layout">
 
+                            <div class="form-group">
 
-                            <!-- LEFT SIDE -->
+                                <label
+                                    for="admin-name"
+                                    class="form-label"
+                                >
+                                    Full Name
+                                    <span class="required-mark">*</span>
+                                </label>
 
-                            <div class="user-details-form">
+                                <div class="input-wrapper">
 
+                                    <i class="fa-solid fa-user input-icon"></i>
 
-                                <!-- FULL NAME -->
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="admin-name"
-                                        class="form-label"
+                                    <input
+                                        type="text"
+                                        id="admin-name"
+                                        name="name"
+                                        placeholder="Enter full name"
+                                        maxlength="80"
+                                        autocomplete="off"
+                                        required
                                     >
-                                        Full Name
-                                        <span class="required-mark">*</span>
-                                    </label>
-
-
-                                    <div class="input-wrapper">
-
-                                        <i class="fa-solid fa-user input-icon"></i>
-
-                                        <input
-                                            type="text"
-                                            id="admin-name"
-                                            name="name"
-                                            placeholder="Enter full name"
-                                            maxlength="80"
-                                            autocomplete="off"
-                                            required
-                                        >
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- EMAIL -->
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="admin-email"
-                                        class="form-label"
-                                    >
-                                        Email Address
-                                        <span class="required-mark">*</span>
-                                    </label>
-
-
-                                    <div class="input-wrapper">
-
-                                        <i class="fa-solid fa-envelope input-icon"></i>
-
-                                        <input
-                                            type="email"
-                                            id="admin-email"
-                                            name="email"
-                                            placeholder="Enter email address"
-                                            maxlength="100"
-                                            autocomplete="off"
-                                            required
-                                        >
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- POSITION -->
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="admin-position"
-                                        class="form-label"
-                                    >
-                                        Position
-                                        <span class="required-mark">*</span>
-                                    </label>
-
-
-                                    <div class="input-wrapper">
-
-                                        <i class="fa-solid fa-briefcase input-icon"></i>
-
-                                        <input
-                                            type="text"
-                                            id="admin-position"
-                                            name="position"
-                                            placeholder="Enter position"
-                                            maxlength="80"
-                                            autocomplete="off"
-                                            required
-                                        >
-
-                                    </div>
 
                                 </div>
 
                             </div>
 
+                            <div class="form-group">
 
-                            <!-- RIGHT SIDE -->
+                                <label
+                                    for="admin-role"
+                                    class="form-label"
+                                >
+                                    Role
+                                    <span class="required-mark">*</span>
+                                </label>
 
-                            <div class="user-details-form">
+                                <div class="input-wrapper">
 
+                                    <i class="fa-solid fa-shield-halved input-icon"></i>
 
-                                <!-- ROLE -->
-
-                                <div class="form-group">
-
-                                    <label
-                                        for="admin-role"
-                                        class="form-label"
+                                    <select
+                                        id="admin-role"
+                                        name="role"
+                                        required
                                     >
-                                        Role
-                                        <span class="required-mark">*</span>
-                                    </label>
+                                        <option value="Administrator">
+                                            Administrator
+                                        </option>
 
+                                        <option value="Manager">
+                                            Manager
+                                        </option>
 
-                                    <div class="input-wrapper">
+                                        <option value="Staff">
+                                             Staff
+                                        </option>
+                                    </select>
 
-                                        <i class="fa-solid fa-shield-halved input-icon"></i>
-
-
-                                        <select
-                                            id="admin-role"
-                                            name="role"
-                                            required
-                                        >
-
-                                            <option value="Administrator">
-                                                Administrator
-                                            </option>
-
-                                            <option value="Manager">
-                                                Manager
-                                            </option>
-
-                                            <option value="Cashier">
-                                                Cashier
-                                            </option>
-
-                                            <option value="Inventory">
-                                                Inventory
-                                            </option>
-
-                                        </select>
-
-
-                                        <i class="fa-solid fa-chevron-down select-icon"></i>
-
-                                    </div>
+                                    <i class="fa-solid fa-chevron-down select-icon"></i>
 
                                 </div>
 
+                            </div>
 
-                                <!-- STATUS -->
+                            <div class="form-group">
 
-                                <div class="form-group">
+                                <label
+                                    for="admin-status"
+                                    class="form-label"
+                                >
+                                    Status
+                                    <span class="required-mark">*</span>
+                                </label>
 
-                                    <label
-                                        for="admin-status"
-                                        class="form-label"
+                                <div class="input-wrapper">
+
+                                    <i class="fa-solid fa-circle-check input-icon"></i>
+
+                                    <select
+                                        id="admin-status"
+                                        name="status"
+                                        required
                                     >
-                                        Status
-                                        <span class="required-mark">*</span>
-                                    </label>
+                                        <option value="active">
+                                            Active
+                                        </option>
 
+                                        <option value="inactive">
+                                            Inactive
+                                        </option>
+                                    </select>
 
-                                    <div class="input-wrapper">
-
-                                        <i class="fa-solid fa-circle-check input-icon"></i>
-
-
-                                        <select
-                                            id="admin-status"
-                                            name="status"
-                                            required
-                                        >
-
-                                            <option value="active">
-                                                Active
-                                            </option>
-
-                                            <option value="inactive">
-                                                Inactive
-                                            </option>
-
-                                        </select>
-
-
-                                        <i class="fa-solid fa-chevron-down select-icon"></i>
-
-                                    </div>
+                                    <i class="fa-solid fa-chevron-down select-icon"></i>
 
                                 </div>
 
+                            </div>
 
-                                <!-- USER ID -->
+                            <div class="form-group">
 
-                                <div class="form-group">
+                                <label
+                                    for="admin-id"
+                                    class="form-label"
+                                >
+                                    User ID
+                                </label>
 
-                                    <label
-                                        for="admin-id"
-                                        class="form-label"
+                                <div class="input-wrapper readonly">
+
+                                    <i class="fa-solid fa-fingerprint input-icon"></i>
+
+                                    <input
+                                        type="text"
+                                        id="admin-id"
+                                        name="adminId"
+                                        placeholder="User ID"
+                                        readonly
                                     >
-                                        User ID
-                                    </label>
-
-
-                                    <div class="input-wrapper readonly">
-
-                                        <i class="fa-solid fa-fingerprint input-icon"></i>
-
-                                        <input
-                                            type="text"
-                                            id="admin-id"
-                                            name="adminId"
-                                            placeholder="User ID"
-                                            readonly
-                                        >
-
-                                    </div>
 
                                 </div>
 
                             </div>
 
                         </div>
-
 
                         <!-- FORM MESSAGE -->
 
@@ -580,8 +389,7 @@ $menuItems = [
 
                         </div>
 
-
-                        <!-- FORM ACTIONS -->
+                        <!-- BUTTONS BELOW THE FIELDS -->
 
                         <div class="form-actions">
 
@@ -592,7 +400,6 @@ $menuItems = [
                                 Cancel
                             </a>
 
-
                             <button
                                 type="submit"
                                 class="save-user-button"
@@ -600,14 +407,10 @@ $menuItems = [
                             >
 
                                 <span class="button-icon">
-
                                     <i class="fa-solid fa-pen"></i>
-
                                 </span>
 
-                                <span>
-                                    Save Changes
-                                </span>
+                                <span>Save Changes</span>
 
                             </button>
 
@@ -619,11 +422,9 @@ $menuItems = [
 
             </section>
 
-
         </main>
 
     </div>
-
 
     <script src="js/theme.js?v=2"></script>
 
@@ -631,7 +432,6 @@ $menuItems = [
         type="module"
         src="js/edit-users.js?v=1"
     ></script>
-    <script src="js/theme.js?v=2"></script>
 
 </body>
 

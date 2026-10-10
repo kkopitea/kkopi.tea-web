@@ -574,16 +574,33 @@ onAuthStateChanged(auth, async (user) => {
         const adminData = adminSnapshot.exists() ? adminSnapshot.data() : null;
         const adminIsActive = adminData && (
             adminData.active === true ||
-            (adminData.active === undefined && adminData.isActive === true)
+            adminData.isActive === true ||
+            String(adminData.status || "").toLowerCase() === "active"
         );
 
-        if (!adminData || adminData.role !== "admin" || !adminIsActive) {
+
+        const userRole = String(adminData?.role || "")
+            .trim()
+            .toLowerCase();
+
+        const allowedRoles = [
+            "admin",
+            "administrator",
+            "manager",
+            "staff"
+        ];
+
+        if (!adminData || !allowedRoles.includes(userRole) || !adminIsActive) {
             await signOut(auth);
             redirectToLogin();
             return;
         }
+        document.getElementById("adminGreeting").textContent =
+        adminData.name || user.email || "Admin";
 
-        adminGreeting.textContent = adminData.name || user.email || "Admin";
+        document.getElementById("adminRole").textContent =
+            adminData.role || "Administrator";
+
         dashboardContent.hidden = false;
         dashboardMessage.hidden = true;
         subscribeToDashboardData();
