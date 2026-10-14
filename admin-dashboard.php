@@ -602,7 +602,7 @@ $menuItems = [
                                 </h2>
 
                                 <p>
-                                    Best performing items
+                                    Best performing products
                                 </p>
 
                             </div>
