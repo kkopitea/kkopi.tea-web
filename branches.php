@@ -137,7 +137,7 @@
     <!-- FOOTER -->
     <footer>
 
-        <p>&copy; 2024 Kkopi.tea. All rights reserved.</p>
+        <p>&copy; 2022 Kkopi.tea. All rights reserved.</p>
 
     </footer>
 
