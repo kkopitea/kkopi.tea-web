@@ -679,7 +679,7 @@ $menuItems = [
             <div class="form-actions">
 
                 <a
-                    href="menu-management.php"
+                    href="admin-inventory.php"
                     class="cancel-button"
                 >
                     Cancel
