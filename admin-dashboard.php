@@ -607,7 +607,7 @@ $menuItems = [
 
                             </div>
 
-                            <a href="menu-management.php">
+                            <a href="admin-orders.php">
                                 View All
                             </a>
 

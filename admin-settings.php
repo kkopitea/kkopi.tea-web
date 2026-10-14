@@ -449,9 +449,6 @@ $menuItems = [
                                 Connected to your website
                             </strong>
 
-                            <p>
-                                Changes made here will also appear on your public Contact page.
-                            </p>
 
                         </div>
 
