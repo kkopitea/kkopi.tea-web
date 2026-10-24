@@ -367,19 +367,14 @@ function getCategoryName(category) {
     const categoryNames = {
 
         tea: "Tea",
-
         syrup: "Syrup",
-
         milk: "Milk",
-
         toppings: "Toppings",
-
         powder: "Powder",
-
+        packaging: "Packaging Supplies",
         other: "Other"
 
     };
-
 
     return (
         categoryNames[category] ||

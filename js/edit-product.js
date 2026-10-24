@@ -84,19 +84,14 @@ const imageError =
     document.getElementById("image-error");
 
 
-const smallAdditional =
+const size16ozAdditional =
     document.querySelector(
-        'input[name="small_additional"]'
+        'input[name="16oz_additional"]'
     );
 
-const mediumAdditional =
+const size22ozAdditional =
     document.querySelector(
-        'input[name="medium_additional"]'
-    );
-
-const largeAdditional =
-    document.querySelector(
-        'input[name="large_additional"]'
+        'input[name="22oz_additional"]'
     );
 
 const sugarLevelInputs =
@@ -491,26 +486,18 @@ function getSizes() {
     return [
 
         {
-            name: "Small",
+            name: "16oz",
             additionalPrice:
                 getAdditionalPrice(
-                    smallAdditional
+                    size16ozAdditional
                 )
         },
 
         {
-            name: "Medium",
+            name: "22oz",
             additionalPrice:
                 getAdditionalPrice(
-                    mediumAdditional
-                )
-        },
-
-        {
-            name: "Large",
-            additionalPrice:
-                getAdditionalPrice(
-                    largeAdditional
+                    size22ozAdditional
                 )
         }
 
@@ -659,35 +646,19 @@ async function loadProduct() {
 
 
                 if (
-                    sizeName === "small" &&
-                    smallAdditional
+                    (sizeName === "16oz" || sizeName === "medium" || sizeName === "small") &&
+                    size16ozAdditional
                 ) {
-
-                    smallAdditional.value =
+                    size16ozAdditional.value =
                         additional;
-
                 }
 
-
                 if (
-                    sizeName === "medium" &&
-                    mediumAdditional
+                    (sizeName === "22oz" || sizeName === "large") &&
+                    size22ozAdditional
                 ) {
-
-                    mediumAdditional.value =
+                    size22ozAdditional.value =
                         additional;
-
-                }
-
-
-                if (
-                    sizeName === "large" &&
-                    largeAdditional
-                ) {
-
-                    largeAdditional.value =
-                        additional;
-
                 }
 
             }

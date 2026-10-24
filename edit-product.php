@@ -637,16 +637,16 @@ $menuItems = [
             <div class="size-option-row">
 
                 <label class="circle-option">
-                    <input type="checkbox" name="sizes[]" value="small">
+                    <input type="checkbox" name="sizes[]" value="16oz">
                     <span class="circle-check"></span>
-                    <span class="circle-option-text">Small</span>
+                    <span class="circle-option-text">16oz</span>
                 </label>
 
                 <div class="additional-price-input">
                     <span>₱</span>
                     <input
                         type="number"
-                        name="small_additional"
+                        name="16oz_additional"
                         min="0"
                         step="0.01"
                         value="0"
@@ -659,38 +659,16 @@ $menuItems = [
             <div class="size-option-row">
 
                 <label class="circle-option">
-                    <input type="checkbox" name="sizes[]" value="medium">
+                    <input type="checkbox" name="sizes[]" value="22oz">
                     <span class="circle-check"></span>
-                    <span class="circle-option-text">Medium</span>
+                    <span class="circle-option-text">22oz</span>
                 </label>
 
                 <div class="additional-price-input">
                     <span>₱</span>
                     <input
                         type="number"
-                        name="medium_additional"
-                        min="0"
-                        step="0.01"
-                        value="0"
-                        placeholder="0"
-                    >
-                </div>
-
-            </div>
-
-            <div class="size-option-row">
-
-                <label class="circle-option">
-                    <input type="checkbox" name="sizes[]" value="large">
-                    <span class="circle-check"></span>
-                    <span class="circle-option-text">Large</span>
-                </label>
-
-                <div class="additional-price-input">
-                    <span>₱</span>
-                    <input
-                        type="number"
-                        name="large_additional"
+                        name="22oz_additional"
                         min="0"
                         step="0.01"
                         value="0"
@@ -845,7 +823,7 @@ $menuItems = [
 </section>
 
 
-<script type="module" src="js/edit-product.js?v=2"></script>
+<script type="module" src="js/edit-product.js?v=3"></script>
 <script src="js/theme.js?v=2"></script>
         </main>
     </body>

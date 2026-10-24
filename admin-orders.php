@@ -383,6 +383,24 @@ $menuItems = [
 
                     <div class="orders-filters">
 
+                    <!-- ORDER TYPE FILTER -->
+                        <div class="order-type-filter">
+                            <i class="fa-solid fa-store"></i>
+
+                            <select id="order-type-filter" aria-label="Filter by order type">
+                                <option value="all">All Types</option>
+                                <option value="walk-in">Walk-in</option>
+                                <option value="online">Online</option>
+                            </select>
+                        </div>
+
+                        
+                        <a href="manual-orders.php" class="manual-order-button">
+                            <i class="fa-solid fa-plus"></i>
+                            Manual Order
+                        </a>
+
+
 
                         <!-- MONTH -->
 
@@ -489,7 +507,8 @@ $menuItems = [
                     </div>
 
                 </div>
-
+                
+                
 
                 <!-- SELECTED PERIOD -->
 
@@ -526,37 +545,19 @@ $menuItems = [
 
                             <tr>
 
-                                <th>
-                                    Order
-                                </th>
 
-                                <th>
-                                    Customer
-                                </th>
-
-                                <th>
-                                    Date
-                                </th>
-
-                                <th>
-                                    Items
-                                </th>
-
-                                <th>
-                                    Total
-                                </th>
-
-                                <th>
-                                    Status
-                                </th>
-
-                                <th>
-                                    Products
-                                </th>
-
-                            </tr>
-
-                        </thead>
+                    <thead>
+                        <tr>
+                            <th>Order Type</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Products</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
 
 
                         <tbody id="orders-table-body">
@@ -565,7 +566,7 @@ $menuItems = [
 
                             <tr id="orders-loading-row">
 
-                                <td colspan="7">
+                                <td colspan="8">
 
                                     <div class="orders-loading">
 
@@ -594,7 +595,7 @@ $menuItems = [
                                 hidden
                             >
 
-                                <td colspan="7">
+                                <td colspan="9">
 
                                     <div class="empty-orders">
 

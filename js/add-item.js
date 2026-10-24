@@ -440,18 +440,6 @@ function validateForm() {
 
     }
 
-
-    if (!selectedImage) {
-
-        showImageError(
-            "Please upload an item image."
-        );
-
-        isValid = false;
-
-    }
-
-
     return isValid;
 
 }
@@ -568,7 +556,6 @@ function restoreButton() {
 /* Submit item */
 
 form.addEventListener("submit", async (event) => {
-
     event.preventDefault();
 
     hideMessage();
@@ -600,48 +587,32 @@ form.addEventListener("submit", async (event) => {
 
     try {
 
-        setButtonLoading(
-            "Uploading image..."
-        );
+       let imageUrl = "";
+let cloudinaryPublicId = "";
 
+if (selectedImage) {
+    setButtonLoading("Uploading image...");
 
-        const cloudinaryResult =
-            await uploadImageToCloudinary(
-                selectedImage
-            );
+    const cloudinaryResult =
+        await uploadImageToCloudinary(selectedImage);
 
+    imageUrl = cloudinaryResult.imageUrl;
+    cloudinaryPublicId = cloudinaryResult.publicId;
+}
 
-        setButtonLoading(
-            "Saving item..."
-        );
+setButtonLoading("Saving item...");
 
-
-        await addDoc(
-            collection(db, "inventory"),
-            {
-                name: name,
-
-                category: category,
-
-                unit: unit,
-
-                stock: stock,
-
-                status: status,
-
-                description: description,
-
-                imageUrl:
-                    cloudinaryResult.imageUrl,
-
-                cloudinaryPublicId:
-                    cloudinaryResult.publicId,
-
-                createdAt:
-                    serverTimestamp()
-            }
-        );
-
+await addDoc(collection(db, "inventory"), {
+    name,
+    category,
+    unit,
+    stock,
+    status,
+    description,
+    imageUrl,
+    cloudinaryPublicId,
+    createdAt: serverTimestamp()
+});
 
         showMessage(
             "Item added successfully!",

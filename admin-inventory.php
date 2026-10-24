@@ -251,38 +251,50 @@ $menuItems = [
                     <div class="menu-page-title">
 
                         <div class="section-icon">
-
                             <i class="fa-solid fa-boxes-stacked"></i>
-
                         </div>
 
                         <div>
-
                             <h2>
                                 Items
                             </h2>
-
                         </div>
 
                     </div>
 
+                    <div class="inventory-header-actions">
 
-                    <a
-                        href="add-item.php"
-                        class="add-product-button"
-                    >
+                        <a
+                            href="measure.php"
+                            class="add-product-button"
+                        >
 
-                        <span class="add-product-icon">
+                            <span class="add-product-icon">
+                                <i class="fa-solid fa-ruler"></i>
+                            </span>
 
-                            <i class="fa-solid fa-plus"></i>
+                            <span>
+                                Set Measure
+                            </span>
 
-                        </span>
+                        </a>
 
-                        <span>
-                            Add New Item
-                        </span>
+                        <a
+                            href="add-item.php"
+                            class="add-product-button"
+                        >
 
-                    </a>
+                            <span class="add-product-icon">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+
+                            <span>
+                                Add New Item
+                            </span>
+
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -324,20 +336,28 @@ $menuItems = [
                                     </option>
 
                                     <option value="tea">
-                                        Tea
-                                    </option>
+                                    Tea
+                                </option>
 
-                                    <option value="syrup">
-                                        Syrup
-                                    </option>
+                                <option value="syrup">
+                                    Syrup
+                                </option>
 
-                                    <option value="milk">
-                                        Milk
-                                    </option>
+                                <option value="milk">
+                                    Milk
+                                </option>
 
-                                    <option value="toppings">
-                                        Toppings
-                                    </option>
+                                <option value="toppings">
+                                    Toppings
+                                </option>
+
+                                <option value="powder">
+                                    Powder
+                                </option>
+
+                                <option value="packaging">
+                                    Packaging Supplies
+                                </option>
 
                                 </select>
 

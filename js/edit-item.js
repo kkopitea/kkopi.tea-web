@@ -248,36 +248,29 @@ async function loadItem() {
 
         /* CATEGORY */
 
-        if (itemCategory) {
+if (itemCategory) {
 
-            const category =
-                item.category ||
-                "other";
+    let category = item.category || "other";
 
+    // Support items saved using the old category value.
+    if (category === "coffee") {
+        category = "syrup";
+    }
 
-            const categoryExists =
-                Array.from(
-                    itemCategory.options
-                ).some(
-                    option =>
-                        option.value ===
-                        category
-                );
+    const categoryExists =
+        Array.from(
+            itemCategory.options
+        ).some(
+            option => option.value === category
+        );
 
+    if (categoryExists) {
+        itemCategory.value = category;
+    } else {
+        itemCategory.value = "tea";
+    }
 
-            if (categoryExists) {
-
-                itemCategory.value =
-                    category;
-
-            } else {
-
-                itemCategory.value =
-                    "tea";
-
-            }
-
-        }
+}
 
 
         /* UNIT */

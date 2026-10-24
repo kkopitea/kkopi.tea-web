@@ -67,7 +67,7 @@
             <!-- MANAOAG BRANCH -->
             <div class="branches">
 
-                <img src="Images/Storefront.png"
+                <img src="Images/kkopi.jpg"
                      alt="Manaoag Branch">
 
                 <div class="branch-details">

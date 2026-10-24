@@ -325,10 +325,10 @@ $menuItems = [
 
                 <div class="image-form-group">
 
-                    <label class="form-label">
-                        Item Image
-                        <span class="required-mark">*</span>
-                    </label>
+                 <label class="form-label">
+                    Item Image
+                    <span class="optional-text">Optional</span>
+                </label>
 
 
                     <div
@@ -488,21 +488,28 @@ $menuItems = [
                             >
 
                                 <option value="tea">
-                                     Tea
-                                </option>
+                                Tea
+                            </option>
 
-                                <option value="coffee">
-                                    Syrups
-                                </option>
+                            <option value="syrup">
+                                Syrup
+                            </option>
 
-                                <option value="milk">
-                                    Milk
-                                </option>
+                            <option value="milk">
+                                Milk
+                            </option>
 
-                                <option value="toppings">
-                                    Toppings
-                                </option>
+                            <option value="toppings">
+                                Toppings
+                            </option>
 
+                            <option value="powder">
+                                Powder
+                            </option>
+
+                            <option value="packaging">
+                                Packaging Supplies
+                            </option>
                             </select>
 
 
@@ -540,7 +547,7 @@ $menuItems = [
                             type="text"
                             id="product-unit"
                             name="unit"
-                            placeholder="Enter unit (kg, L)"
+                            placeholder="Enter unit (kg, L, pcs)"
                             maxlength="20"
                             autocomplete="off"
                         >

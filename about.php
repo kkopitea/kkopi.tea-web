@@ -74,7 +74,7 @@
         </div>
 
         <div class="story-image">
-            <img src="Images/Storefront.png" alt="KKOPI.TEA Display">
+            <img src="Images/kkopi.jpg" alt="KKOPI.TEA Display">
         </div>
     </section>
 

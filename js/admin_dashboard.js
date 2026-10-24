@@ -477,12 +477,17 @@ function renderLowStock(items) {
 
 function renderDashboard() {
     if (allOrders !== null) {
+        const todaysOrders = getDayOrders(new Date(), allOrders);
+
         renderStatistics(allOrders);
         renderSalesChart(allOrders);
         renderTopProducts(allOrders);
-        renderOrderOverview(allOrders);
-        renderRecentOrders(allOrders);
+
+        // Show today's orders only
+        renderOrderOverview(todaysOrders);
+        renderRecentOrders(todaysOrders);
     }
+
     if (inventoryItems !== null) {
         renderLowStock(inventoryItems);
     }

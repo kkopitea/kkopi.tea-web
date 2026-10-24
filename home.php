@@ -54,7 +54,7 @@
                     <span class="info-icon">🕒</span>
                     <p>8:00 AM - 9:00 PM</p>
                 </div>
-                <img src="Images/Storefront.png" alt="Manaoag Branch">
+                <img src="Images/kkopi.jpg" alt="Manaoag Branch">
             </div>
     </section>
 

@@ -2381,3 +2381,78 @@ html.dark-mode .save-product-button {
             #ec6e0b
         );
 }
+
+/* Carousel image and description side by side */
+
+.carousel-description-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 30px;
+}
+
+/* Keep both sections equal in width */
+
+.carousel-description-layout > .image-form-group,
+.carousel-description-layout > .description-form-group {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+/* Match the carousel image picker to the main image picker */
+
+.carousel-description-layout .image-upload-box {
+    width: 100%;
+    height: 320px;
+    box-sizing: border-box;
+}
+
+/* Make the image fill the preview area */
+
+.carousel-description-layout .image-preview {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-description-layout .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Make the description use the same overall height */
+
+.carousel-description-layout .description-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-description-layout .description-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.carousel-description-layout #product-description {
+    width: 100%;
+    height: 320px;
+    min-height: 320px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* Keep both columns usable on narrower screens */
+
+@media (max-width: 900px) {
+    .carousel-description-layout {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+}

@@ -1992,3 +1992,281 @@ html.dark-mode .empty-orders h3 {
 html.dark-mode .empty-orders p {
     color: #888888;
 }
+
+
+
+/* ORDER TYPE FILTER */
+
+.order-type-filter {
+    height: 48px;
+    min-width: 145px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #ddd8d2;
+    border-radius: 13px;
+    background: #ffffff;
+    box-shadow: var(--shadow-small);
+}
+
+.order-type-filter > i {
+    color: var(--orange-dark);
+    font-size: 12px;
+}
+
+.order-type-filter select {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    color: #555555;
+    background: transparent;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* MANUAL ORDER BUTTON */
+
+.manual-order-button {
+    min-height: 48px;
+    padding: 0 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 13px;
+    color: #ffffff;
+    background: var(--orange-dark);
+    box-shadow: var(--shadow-small);
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.manual-order-button:hover {
+    background: #d95f08;
+    transform: translateY(-2px);
+}
+
+/* ORDER TYPE BADGES */
+
+.order-type-badge {
+    width: max-content;
+    padding: 7px 10px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.order-type-badge.online {
+    color: #248ba8;
+    background: var(--blue-light);
+}
+
+.order-type-badge.walk-in {
+    color: var(--orange-dark);
+    background: var(--orange-light);
+}
+
+/* ORDER CHECKBOXES */
+
+.order-checkbox,
+#select-all-orders {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--orange-dark);
+    cursor: pointer;
+}
+
+/* ACTION BUTTONS */
+
+.order-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.order-action {
+    min-height: 33px;
+    padding: 0 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid #e5dfd8;
+    border-radius: 9px;
+    color: #666666;
+    background: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.order-action:hover {
+    color: var(--orange-dark);
+    background: var(--orange-light);
+    border-color: #f1bd91;
+}
+
+.order-action.delete-order:hover {
+    color: #c03939;
+    background: #fbeaea;
+    border-color: #eababa;
+}
+
+.order-action:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* INLINE STATUS EDITOR */
+
+.status-editor {
+    min-width: 125px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+}
+
+.status-edit-select {
+    max-width: 140px;
+    padding: 7px 8px;
+    border: 1px solid #ddd8d2;
+    border-radius: 8px;
+    color: #444444;
+    background: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.status-edit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.status-edit-actions button {
+    width: 29px;
+    height: 27px;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    background: var(--green);
+    cursor: pointer;
+}
+
+.status-edit-actions .cancel-status {
+    background: #888888;
+}
+
+.status-edit-actions button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* DARK MODE: NEW ELEMENTS */
+
+html.dark-mode .order-type-filter {
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .order-type-filter > i {
+    color: #ff9e48;
+}
+
+html.dark-mode .order-type-filter select {
+    color: #eeeeee;
+    color-scheme: dark;
+}
+
+html.dark-mode .manual-order-button {
+    color: #ffffff;
+    background: #e87920;
+}
+
+html.dark-mode .order-type-badge.online {
+    color: #69c8e5;
+    background: #243c43;
+}
+
+html.dark-mode .order-type-badge.walk-in {
+    color: #ffb16c;
+    background: #3a2d24;
+}
+
+html.dark-mode .order-action {
+    color: #cccccc;
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .order-action:hover {
+    color: #ff9e48;
+    background: #3a2d24;
+    border-color: #755337;
+}
+
+html.dark-mode .order-action.delete-order:hover {
+    color: #ff9999;
+    background: #432a2a;
+    border-color: #704040;
+}
+
+html.dark-mode .status-edit-select {
+    color: #eeeeee;
+    background: #333333;
+    border-color: #4a4a4a;
+    color-scheme: dark;
+}
+
+/* FILTER LAYOUT */
+
+.orders-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .orders-filters {
+        align-items: stretch;
+    }
+
+    .order-type-filter,
+    .manual-order-button {
+        flex: 1 1 140px;
+        min-width: 0;
+    }
+
+    .orders-filters .month-filter,
+    .orders-filters .status-dropdown,
+    .orders-filters .status-filter {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .orders-filters {
+        flex-direction: column;
+    }
+
+    .order-type-filter,
+    .manual-order-button,
+    .orders-filters .month-filter,
+    .orders-filters .status-dropdown,
+    .orders-filters .status-filter {
+        width: 100%;
+    }
+}
+
