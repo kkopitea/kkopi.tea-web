@@ -8,7 +8,7 @@
 
     <title>Kkopi.tea | Branches</title>
 
-    <link rel="stylesheet" href="css/branches.css?V=2">
+    <link rel="stylesheet" href="css/branches.css?v=3">
 
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&family=Baloo+Da+2&display=swap" rel="stylesheet">
 </head>

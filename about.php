@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kkopi.tea | About</title>
-    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/about.css?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&display=swap" rel="stylesheet">
 </head>
 <body>

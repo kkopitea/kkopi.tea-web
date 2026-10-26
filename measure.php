@@ -96,7 +96,12 @@ $menuCategories = [
 
     <link
         rel="stylesheet"
-        href="css/measure.css?v=2"
+        href="css/measure.css?v=3"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=4"
     >
 
 </head>

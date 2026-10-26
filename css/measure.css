@@ -751,6 +751,16 @@ html.dark-mode .measurement-actions {
 }
 
 @media (max-width: 650px) {
+    .add-product-top {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .back-menu-button {
+        width: 100%;
+        white-space: normal;
+    }
+
     .measurement-category-header {
         padding: 13px;
     }

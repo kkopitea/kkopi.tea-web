@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="css/contact.css?v=2"
+        href="css/contact.css?v=3"
     >
 
     <link

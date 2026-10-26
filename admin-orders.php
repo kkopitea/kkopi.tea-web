@@ -76,7 +76,7 @@ $menuItems = [
 
     <link
         rel="stylesheet"
-        href="css/admin-responsive.css?v=1"
+        href="css/admin-responsive.css?v=4"
     >
 
 </head>

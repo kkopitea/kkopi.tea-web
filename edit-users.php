@@ -82,6 +82,11 @@ $menuItems = [
         href="css/edit-users.css?v=2"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/admin-responsive.css?v=4"
+    >
+
 </head>
 
 <body>

@@ -29,6 +29,7 @@ $menuItems = [
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/manual-orders.css?v=2">
+    <link rel="stylesheet" href="css/admin-responsive.css?v=4">
 </head>
 <body>
 <div class="users-container">
