@@ -20,8 +20,10 @@ const CLOUDINARY_UPLOAD_URL =
     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
 
+
 const form = document.getElementById("add-product-form");
 
+// IMAGE ELEMENTS
 const imageUploadBox = document.getElementById("image-upload-box");
 const imageUploadContent = document.getElementById("image-upload-content");
 const productImage = document.getElementById("product-image");
@@ -30,17 +32,38 @@ const imagePreview = document.getElementById("image-preview");
 const previewImage = document.getElementById("preview-image");
 const removeImageButton = document.getElementById("remove-image-button");
 
+// PRODUCT INFORMATION
 const productName = document.getElementById("product-name");
 const productCategory = document.getElementById("product-category");
+// PRODUCT OPTIONS
+const sizesSection = document.getElementById("sizes-section");
+const sugarLevelsSection = document.getElementById("sugar-levels-section");
+
+function toggleProductOptions() {
+    const isSnack = productCategory.value === "snacks";
+
+    if (sizesSection) {
+        sizesSection.hidden = isSnack;
+    }
+
+    if (sugarLevelsSection) {
+        sugarLevelsSection.hidden = isSnack;
+    }
+}
+
+productCategory.addEventListener("change", toggleProductOptions);
+toggleProductOptions();
 const productPrice = document.getElementById("product-price");
 const productStatus = document.getElementById("product-status");
 const productDescription = document.getElementById("product-description");
 const characterCounter = document.getElementById("character-counter");
 
+// FORM MESSAGES AND BUTTONS
 const formMessage = document.getElementById("form-message");
 const formMessageText = document.getElementById("form-message-text");
 const saveProductButton = document.getElementById("save-product-button");
 
+// VALIDATION ERRORS
 const nameError = document.getElementById("name-error");
 const categoryError = document.getElementById("category-error");
 const priceError = document.getElementById("price-error");
@@ -374,6 +397,9 @@ function validateSugarLevels() {
     return getSelectedSugarLevels().length > 0;
 }
 
+function isSnackCategory() {
+    return productCategory.value === "snacks";
+}
 
 /* Validate form */
 
@@ -410,12 +436,16 @@ function validateForm() {
         isValid = false;
     }
 
-    if (!validateSizes()) {
-        isValid = false;
-    }
+    // Drinks require sizes and sugar levels.
+    // Snacks can be added without these options.
+    if (!isSnackCategory()) {
+        if (!validateSizes()) {
+            isValid = false;
+        }
 
-    if (!validateSugarLevels()) {
-        isValid = false;
+        if (!validateSugarLevels()) {
+            isValid = false;
+        }
     }
 
     return isValid;
@@ -504,8 +534,11 @@ form.addEventListener("submit", async (event) => {
     const isAvailable = productStatus.value === "active";
     const description = productDescription.value.trim();
 
-    const sizes = getSizes();
-    const sugarLevels = getSelectedSugarLevels();
+    const sizes = isSnackCategory() ? [] : getSizes();
+
+    const sugarLevels = isSnackCategory()
+    ? []
+    : getSelectedSugarLevels();
 
     console.log("PRODUCT DATA:", {
         name,

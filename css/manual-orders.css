@@ -1058,3 +1058,398 @@ input {
         flex: 1;
     }
 }
+
+
+/* ========================================
+   MANUAL ORDER DARK MODE
+======================================== */
+
+/* DARK MODE */
+
+html.dark-mode body {
+    background: #1f1f1f;
+    color: #eeeeee;
+}
+
+html.dark-mode .main-content {
+    background: #1f1f1f;
+}
+
+
+/* HEADER */
+
+html.dark-mode .top-header {
+    background: rgba(31, 31, 31, 0.94);
+    border-bottom-color: #3d3d3d;
+}
+
+html.dark-mode .welcome-badge {
+    color: #ff9e48;
+    background: #3a2d24;
+}
+
+html.dark-mode .header-title h1 {
+    color: #ffffff;
+}
+
+html.dark-mode .header-title p {
+    color: #aaaaaa;
+}
+
+html.dark-mode .admin-profile {
+    background: rgba(45, 45, 45, 0.85);
+    border-color: #444444;
+}
+
+html.dark-mode .admin-information strong {
+    color: #ffffff;
+}
+
+html.dark-mode .admin-information span {
+    color: #ff9e48;
+}
+
+html.dark-mode .admin-information small {
+    color: #999999;
+}
+
+
+/* Breadcrumbs */
+html.dark-mode .breadcrumb,
+html.dark-mode .breadcrumb a,
+html.dark-mode .breadcrumb span {
+    color: #cccccc;
+}
+
+html.dark-mode .breadcrumb .active,
+html.dark-mode .breadcrumb .current {
+    color: #ffffff;
+}
+
+/* Main Cards and Sections */
+html.dark-mode .card,
+html.dark-mode .content-card,
+html.dark-mode .manual-order-card,
+html.dark-mode .product-section,
+html.dark-mode .cart-section,
+html.dark-mode .order-form,
+html.dark-mode .order-details {
+    background-color: #292929;
+    color: #eeeeee;
+    border-color: #3d3d3d;
+}
+
+/* Headings and Labels */
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode label {
+    color: #eeeeee;
+}
+
+/* General Text */
+html.dark-mode p,
+html.dark-mode small,
+html.dark-mode .description,
+html.dark-mode .helper-text {
+    color: #cccccc;
+}
+
+/* Form Fields */
+html.dark-mode input:not([type="checkbox"]):not([type="radio"]),
+html.dark-mode select,
+html.dark-mode textarea {
+    background-color: #333333;
+    color: #eeeeee;
+    border: 1px solid #4a4a4a;
+    color-scheme: dark;
+}
+
+/* Placeholder Text */
+html.dark-mode input::placeholder,
+html.dark-mode textarea::placeholder {
+    color: #aaaaaa;
+    opacity: 1;
+}
+
+/* Disabled and Read-only Fields */
+html.dark-mode input:disabled,
+html.dark-mode input[readonly],
+html.dark-mode textarea:disabled,
+html.dark-mode select:disabled {
+    background-color: #303030;
+    color: #bbbbbb;
+    opacity: 1;
+}
+
+/* Search Field */
+html.dark-mode input[type="search"] {
+    background-color: #333333;
+    color: #eeeeee;
+}
+
+/* Product List and Product Cards */
+html.dark-mode .product-item,
+html.dark-mode .product-card,
+html.dark-mode .product-result,
+html.dark-mode .product-option {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #444444;
+}
+
+/* Selected Product */
+html.dark-mode .product-item:hover,
+html.dark-mode .product-card:hover,
+html.dark-mode .product-result:hover,
+html.dark-mode .product-item.active,
+html.dark-mode .product-card.active,
+html.dark-mode .product-item.selected,
+html.dark-mode .product-card.selected {
+    background-color: #3a3028;
+    border-color: #ff9e48;
+}
+
+/* Price Summary */
+html.dark-mode .price-summary,
+html.dark-mode .price-breakdown,
+html.dark-mode .order-summary,
+html.dark-mode .subtotal-box,
+html.dark-mode .price-box,
+html.dark-mode .total-summary {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #444444;
+}
+
+html.dark-mode .price-summary *,
+html.dark-mode .price-breakdown *,
+html.dark-mode .order-summary *,
+html.dark-mode .subtotal-box *,
+html.dark-mode .price-box *,
+html.dark-mode .total-summary * {
+    color: #eeeeee;
+}
+
+/* Prices */
+html.dark-mode .price,
+html.dark-mode .subtotal,
+html.dark-mode .total,
+html.dark-mode .order-total,
+html.dark-mode .item-subtotal {
+    color: #ff9e48;
+}
+
+/* Cart Table */
+html.dark-mode table {
+    background-color: #292929;
+    color: #eeeeee;
+    border-color: #444444;
+}
+
+html.dark-mode thead,
+html.dark-mode th {
+    background-color: #333333;
+    color: #eeeeee;
+    border-color: #444444;
+}
+
+html.dark-mode tbody,
+html.dark-mode tr,
+html.dark-mode td {
+    background-color: transparent;
+    color: #eeeeee;
+    border-color: #444444;
+}
+
+/* Prevent Dark Text Inside Cart */
+html.dark-mode td *,
+html.dark-mode th * {
+    color: inherit;
+}
+
+/* Cart Row Hover */
+html.dark-mode tbody tr:hover {
+    background-color: #333333;
+}
+
+/* Item Count Badge */
+html.dark-mode .item-count,
+html.dark-mode .count-badge,
+html.dark-mode .badge {
+    background-color: #fff0e4;
+    color: #ff7700;
+}
+
+/* Buttons - General */
+html.dark-mode button {
+    color: #eeeeee;
+}
+
+/* Primary Orange Buttons */
+html.dark-mode .btn-primary,
+html.dark-mode .add-to-cart-btn,
+html.dark-mode .submit-order-btn,
+html.dark-mode .create-order-btn {
+    background-color: #ff8624;
+    color: #ffffff;
+    border-color: #ff8624;
+}
+
+/* Orange Button Hover */
+html.dark-mode .btn-primary:hover,
+html.dark-mode .add-to-cart-btn:hover,
+html.dark-mode .submit-order-btn:hover,
+html.dark-mode .create-order-btn:hover {
+    background-color: #ff9e48;
+    border-color: #ff9e48;
+    color: #ffffff;
+}
+
+/* Secondary Buttons */
+html.dark-mode .btn-secondary,
+html.dark-mode .clear-btn,
+html.dark-mode .back-btn,
+html.dark-mode .remove-btn {
+    background-color: #383838;
+    color: #eeeeee;
+    border-color: #505050;
+}
+
+/* Secondary Button Hover */
+html.dark-mode .btn-secondary:hover,
+html.dark-mode .clear-btn:hover,
+html.dark-mode .back-btn:hover,
+html.dark-mode .remove-btn:hover {
+    background-color: #454545;
+    color: #ffffff;
+}
+
+/* Disabled Buttons */
+html.dark-mode button:disabled,
+html.dark-mode .btn:disabled {
+    background-color: #383838;
+    color: #888888;
+    border-color: #444444;
+    opacity: 0.7;
+}
+
+/* Remove Item Button */
+html.dark-mode .remove-item,
+html.dark-mode .remove-item-btn {
+    background-color: #493030;
+    color: #ffaaaa;
+    border-color: #654040;
+}
+
+/* Icons */
+html.dark-mode .fa,
+html.dark-mode .fas,
+html.dark-mode .far,
+html.dark-mode .fa-solid,
+html.dark-mode .fa-regular {
+    color: inherit;
+}
+
+/* Dividers */
+html.dark-mode hr,
+html.dark-mode .divider,
+html.dark-mode .section-divider {
+    border-color: #444444;
+}
+
+/* Borders */
+html.dark-mode * {
+    scrollbar-color: #555555 #292929;
+}
+
+/* Scrollbar */
+html.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html.dark-mode ::-webkit-scrollbar-track {
+    background-color: #292929;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+    background-color: #555555;
+    border-radius: 8px;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background-color: #777777;
+}
+
+/* ========================================
+   FIX CLEAR AND REMOVE BUTTONS
+======================================== */
+
+
+html.dark-mode button.clear-btn,
+html.dark-mode .clear-btn,
+html.dark-mode #clear-btn,
+html.dark-mode #clear-button,
+html.dark-mode button[onclick*="clear"],
+html.dark-mode button:has(i.fa-rotate-left) {
+    background-color: #383838 !important;
+    color: #ffffff !important;
+    border: 1px solid #444444 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+}
+
+html.dark-mode button.clear-btn *,
+html.dark-mode .clear-btn *,
+html.dark-mode #clear-btn *,
+html.dark-mode #clear-button * {
+    color: #ffffff !important;
+}
+
+html.dark-mode button.clear-btn:disabled,
+html.dark-mode .clear-btn:disabled,
+html.dark-mode #clear-btn:disabled,
+html.dark-mode #clear-button:disabled {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* Remove Button */
+html.dark-mode .remove-btn,
+html.dark-mode .remove-item,
+html.dark-mode .remove-item-btn,
+html.dark-mode button[class*="remove"] {
+    background-color: #493030 !important;
+    color: #ffaaaa !important;
+    border: 1px solid #654040 !important;
+    box-shadow: none !important;
+}
+
+/* Remove Button Icon */
+html.dark-mode button[class*="remove"] i {
+    color: #ffaaaa !important;
+}
+
+/* Disabled Clear Button */
+html.dark-mode #clear-btn:disabled,
+html.dark-mode #clear-button:disabled,
+html.dark-mode .clear-btn:disabled {
+    background-color: #303030 !important;
+    color: #888888 !important;
+    border-color: #404040 !important;
+    opacity: 1 !important;
+}
+
+/* Order Details - Product Text */
+html.dark-mode .cart-section td,
+html.dark-mode .cart-section td *,
+html.dark-mode .order-details td,
+html.dark-mode .order-details td *,
+html.dark-mode table tbody td,
+html.dark-mode table tbody td * {
+    color: #ffffff !important;
+}
+

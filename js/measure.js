@@ -1,13 +1,19 @@
 
+
+import { auth, db } from "./firebase-config.js";
+
 import {
     collection,
     getDocs,
     doc,
+    getDoc,
     setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-import { db } from "./firebase-config.js";
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const categorySelect = document.getElementById("menu-category");
 const productSelect = document.getElementById("menu-product");
@@ -22,7 +28,7 @@ let isSaving = false;
 const categoryNames = {
     milktea: "Milk Tea",
     coffee: "Coffee",
-    snack: "Snack",
+    snacks: "Snacks",
     frappe: "Frappe",
     "fruit-tea": "Fruit Tea"
 };
@@ -454,6 +460,7 @@ function renderIngredientCategories() {
     saveButton.disabled = false;
 }
 
+
 /* SAVE RECIPE */
 
 saveButton.addEventListener("click", async () => {
@@ -471,29 +478,27 @@ saveButton.addEventListener("click", async () => {
         const ingredientSelect = row.querySelector(
             ".measurement-ingredient-select"
         );
-
         const quantityInput = row.querySelector(".measurement-quantity");
 
         const itemId = ingredientSelect.value;
         const quantityText = quantityInput.value.trim();
 
-        // An unused row can remain blank.
+        // Ignore unused ingredient rows.
         if (!itemId && quantityText === "") continue;
 
-        // A quantity cannot be entered without choosing an ingredient.
         if (!itemId && quantityText !== "") {
-            alert("Please select an ingredient for every entered quantity.");
+            alert("Please select an ingredient for the entered quantity.");
             ingredientSelect.focus();
             return;
         }
 
-        // A selected ingredient with no quantity is ignored.
+        // Ignore selected ingredients without a quantity.
         if (itemId && quantityText === "") continue;
 
         const recipeQuantity = Number(quantityText);
 
-        if (!Number.isFinite(recipeQuantity) || recipeQuantity < 0) {
-            alert("Enter a valid quantity greater than or equal to zero.");
+        if (!Number.isFinite(recipeQuantity) || recipeQuantity <= 0) {
+            alert("Quantity must be greater than zero.");
             quantityInput.focus();
             return;
         }
@@ -503,7 +508,7 @@ saveButton.addEventListener("click", async () => {
         );
 
         if (!item) {
-            alert("An ingredient could not be found in inventory. Reload the page.");
+            alert("Ingredient not found. Please reload the page.");
             return;
         }
 
@@ -512,11 +517,7 @@ saveButton.addEventListener("click", async () => {
         measurements[item.id] = {
             itemName: item.name || "Unnamed Item",
             category: item.category || "Other",
-
-            // Quantity expressed in the inventory's original unit.
             quantity: recipeQuantity / conversion.multiplier,
-
-            // Quantity entered for the recipe.
             recipeQuantity,
             recipeUnit: conversion.unit,
             unit: item.unit || "unit"
@@ -524,11 +525,8 @@ saveButton.addEventListener("click", async () => {
     }
 
     if (Object.keys(measurements).length === 0) {
-        const confirmed = confirm(
-            "No ingredients with quantities were entered. Save this product with an empty recipe?"
-        );
-
-        if (!confirmed) return;
+        alert("Please add at least one ingredient with a quantity.");
+        return;
     }
 
     isSaving = true;
@@ -542,27 +540,72 @@ saveButton.addEventListener("click", async () => {
             {
                 productId: selectedProduct.id,
                 productName: selectedProduct.name || "Unnamed Product",
-                category: categoryNames[categorySelect.value] ||
-                    categorySelect.options[categorySelect.selectedIndex].text,
+                category:
+                    categoryNames[categorySelect.value] ||
+                    categorySelect.options[
+                        categorySelect.selectedIndex
+                    ].text,
                 measurements,
                 updatedAt: serverTimestamp()
             }
         );
 
-        alert("Measurements saved successfully.");
+        // Redirect only after Firestore confirms the save.
+        window.location.assign("./admin-inventory.php");
+
     } catch (error) {
         console.error("Could not save measurements:", error);
 
         alert(
-            `Could not save measurements: ${error.message}\n\n` +
-            "Check your Firestore rules and browser console."
+            "Could not save measurements.\n\n" +
+            error.message
         );
-    } finally {
+
         isSaving = false;
-        saveButton.disabled = !selectedProduct;
+        saveButton.disabled = false;
         saveButton.innerHTML =
             '<i class="fa-solid fa-floppy-disk"></i> Save Measurements';
     }
 });
+
+/* Load admin profile */
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        return;
+    }
+
+    try {
+        const adminSnapshot = await getDoc(
+            doc(db, "admins", user.uid)
+        );
+
+        if (!adminSnapshot.exists()) {
+            console.error("Admin document not found.");
+            return;
+        }
+
+        const adminData = adminSnapshot.data();
+
+        const adminGreeting =
+            document.getElementById("adminGreeting");
+
+        const adminRole =
+            document.getElementById("adminRole");
+
+        if (adminGreeting) {
+            adminGreeting.textContent =
+                adminData.name || user.email || "Admin";
+        }
+
+        if (adminRole) {
+            adminRole.textContent =
+                adminData.role || "Administrator";
+        }
+    } catch (error) {
+        console.error("Error loading admin profile:", error);
+    }
+});
+
 
 loadMeasurementData();

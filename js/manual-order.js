@@ -5,7 +5,9 @@ import {
     collection,
     getDocs,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    getDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 import {
@@ -99,10 +101,16 @@ function getProductSizes(product) {
     }));
 }
 
+
 function getSelectedSizePrice() {
     if (!selectedProduct) return 0;
 
     const sizes = getProductSizes(selectedProduct);
+
+    // Products without sizes, such as snacks, use the base price.
+    if (sizes.length === 0) {
+        return getProductPrice(selectedProduct);
+    }
 
     const selectedSize = sizes.find(
         (size) => size.name === productSize.value
@@ -110,6 +118,7 @@ function getSelectedSizePrice() {
 
     return selectedSize ? selectedSize.price : 0;
 }
+
 
 function updateProductSubtotal() {
     const price = getSelectedSizePrice();
@@ -265,8 +274,9 @@ function renderCart() {
             const row = document.createElement("tr");
 
             const nameCell = document.createElement("td");
-            nameCell.textContent =
-                `${item.productName} (${item.size})`;
+            nameCell.textContent = item.size
+                ? `${item.productName} (${item.size})`
+                : item.productName;
 
             const priceCell = document.createElement("td");
             priceCell.textContent = peso(item.price);
@@ -335,8 +345,9 @@ function addItemToCart() {
         return;
     }
 
-    const size = productSize.value;
-    const price = getSelectedSizePrice();
+const sizes = getProductSizes(selectedProduct);
+const size = sizes.length > 0 ? productSize.value : "";
+const price = getSelectedSizePrice();
 
     const existingItem = cart.find(
         (item) =>

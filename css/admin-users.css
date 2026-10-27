@@ -1374,7 +1374,7 @@ input {
 }
 
 .user-edit-action {
-    color: var(--blue);
+    color: var(--gray);
 }
 
 .user-edit-action:hover {

@@ -260,5 +260,6 @@ $menuItems = [
 </div>
 
 <script type="module" src="js/manual-order.js?v=2"></script>
+<script src="js/theme.js?v=1"></script>
 </body>
 </html>

@@ -1237,7 +1237,7 @@ input {
 }
 
 .item-edit-button {
-    color: var(--blue);
+    color: #eeebeb;
 }
 
 .item-edit-button:hover {

@@ -1538,6 +1538,13 @@ body.advertisement-modal-open {
     padding-right: 24px;
 }
 
+.product-table th.category-column,
+.product-table td:nth-child(2) {
+    text-align: left;
+    padding-left: 22px;
+    padding-right: 22px;
+}
+
 
 /* COLUMN WIDTHS */
 
@@ -1545,24 +1552,20 @@ body.advertisement-modal-open {
     width: 38%;
 }
 
-
 .category-column {
     width: 18%;
 }
 
-
 .price-column {
-    width: 13%;
+    width: 12%;
 }
-
 
 .status-column {
     width: 17%;
 }
 
-
 .actions-column {
-    width: 14%;
+    width: 15%;
 }
 
 
@@ -1702,25 +1705,6 @@ body.advertisement-modal-open {
     display: none;
 }
 
-
-.category-milktea {
-    color: #a35d28;
-
-    background: #fff0df;
-
-    border: 1px solid #f8dfc7;
-}
-
-
-.category-coffee {
-    color: #66452d;
-
-    background: #eee5dc;
-
-    border: 1px solid #e2d5c8;
-}
-
-
 /* PRICE */
 
 .product-price {
@@ -1847,7 +1831,7 @@ body.advertisement-modal-open {
 
 
 .edit-product-button {
-    color: var(--blue);
+    color: var(--gray);
 }
 
 
@@ -2592,19 +2576,6 @@ html.dark-mode .product-details span {
 
 /* CATEGORY BADGES */
 
-html.dark-mode .category-milktea {
-    color: #ffb06b;
-    background: #4a3020;
-    border-color: #60432c;
-}
-
-html.dark-mode .category-coffee {
-    color: #d7b894;
-    background: #3d342d;
-    border-color: #50443a;
-}
-
-
 /* PRICE */
 
 html.dark-mode .product-price {
@@ -2754,4 +2725,9 @@ html.dark-mode .pagination-button.active {
 
     box-shadow:
         0 4px 10px rgba(236, 110, 11, 0.18);
+}
+
+/* FIX CATEGORY ALIGNMENT */
+.product-table td:nth-child(2) .category-badge {
+    transform: translateX(-22px);
 }

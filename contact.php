@@ -387,6 +387,8 @@
 
 
         </form>
+        <p id="form-status" class="form-status"
+        role="status" aria-live="polite"></p>
 
     </section>
 

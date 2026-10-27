@@ -200,8 +200,11 @@ function createItemRow(item) {
         "";
 
 
-    const stockStatus =
-        getStockStatus(stock);
+const stockStatus = getStockStatus(
+    stock,
+    category,
+    unit
+);
 
 
     const statusClass =
@@ -372,6 +375,7 @@ function getCategoryName(category) {
         toppings: "Toppings",
         powder: "Powder",
         packaging: "Packaging Supplies",
+        snacks: "Snacks",
         other: "Other"
 
     };
@@ -384,36 +388,114 @@ function getCategoryName(category) {
 }
 
 
-/* Stock status */
 
-function getStockStatus(stock) {
+/* Stock status by inventory category */
 
-    if (stock <= 0) {
+function getStockStatus(stock, category, unit) {
+    const currentStock = Number(stock) || 0;
+    const normalizedCategory = String(category || "")
+        .toLowerCase()
+        .trim();
 
+    const normalizedUnit = String(unit || "")
+        .toLowerCase()
+        .trim();
+
+    // Out of stock always takes priority.
+    if (currentStock <= 0) {
         return {
             label: "Out of Stock",
             className: "status-out"
         };
-
     }
 
+    let threshold;
+    let comparableStock;
 
-    if (stock <= 10) {
+    switch (normalizedCategory) {
+        case "tea":
+        case "toppings":
+        case "powder":
+            threshold = 3000;
 
+            if (["kg", "kilogram", "kilograms"].includes(normalizedUnit)) {
+                comparableStock = currentStock * 1000;
+            } else if (["g", "gram", "grams"].includes(normalizedUnit)) {
+                comparableStock = currentStock;
+            } else {
+                comparableStock = null;
+            }
+            break;
+
+        case "syrup":
+        case "milk":
+            threshold = 3000;
+
+            if (["l", "liter", "liters", "litre", "litres"].includes(normalizedUnit)) {
+                comparableStock = currentStock * 1000;
+            } else if (["ml", "milliliter", "milliliters", "millilitre", "millilitres"].includes(normalizedUnit)) {
+                comparableStock = currentStock;
+            } else {
+                comparableStock = null;
+            }
+            break;
+
+        case "packaging":
+            threshold = 20;
+
+            if (["pcs", "pc", "piece", "pieces"].includes(normalizedUnit)) {
+                comparableStock = currentStock;
+            } else {
+                comparableStock = null;
+            }
+            break;
+
+        case "snacks":
+            threshold = 10;
+
+            if (["kg", "kilogram", "kilograms"].includes(normalizedUnit)) {
+                comparableStock = currentStock * 1000;
+                threshold = 1000; // 1 kg remaining
+            } else if (["g", "gram", "grams"].includes(normalizedUnit)) {
+                comparableStock = currentStock;
+                threshold = 1000; // 1000 grams remaining
+            } else if (["pcs", "pc", "piece", "pieces"].includes(normalizedUnit)) {
+                comparableStock = currentStock;
+                threshold = 10; // 10 pieces remaining
+            } else {
+                comparableStock = null;
+            }
+
+            break;
+
+        default:
+            // Keep the original threshold for other categories.
+            threshold = 10;
+            comparableStock = currentStock;
+    }
+
+    // If the item's unit doesn't match the expected measurement,
+    // don't apply an incorrect category threshold.
+    if (comparableStock === null) {
+        return {
+            label: "In Stock",
+            className: "status-in"
+        };
+    }
+
+    if (comparableStock <= threshold) {
         return {
             label: "Low Stock",
             className: "status-low"
         };
-
     }
-
 
     return {
         label: "In Stock",
         className: "status-in"
     };
-
 }
+
 
 
 /* Format stock */

@@ -7,7 +7,8 @@ import {
     doc,
     getDoc,
     updateDoc,
-    deleteDoc
+    deleteDoc,
+    runTransaction
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 import {
@@ -423,12 +424,12 @@ function createOrderRow(order) {
             <div class="order-actions">
                 <button type="button" class="order-action edit-order" title="Edit status">
                     <i class="fa-solid fa-pen"></i>
-                    <span>Edit</span>
+                    
                 </button>
 
                 <button type="button" class="order-action delete-order" title="Delete order">
                     <i class="fa-solid fa-trash"></i>
-                    <span>Delete</span>
+                    
                 </button>
             </div>
         </td>
@@ -464,6 +465,177 @@ function createOrderRow(order) {
 
     return row;
 }
+
+
+/* DEDUCT INVENTORY WHEN ORDER IS COMPLETED */
+
+async function completeOrderAndDeductInventory(orderId) {
+    const orderRef = doc(db, "orders", orderId);
+
+    await runTransaction(db, async transaction => {
+        // Always read the latest order to prevent duplicate deductions.
+        const orderSnapshot = await transaction.get(orderRef);
+
+        if (!orderSnapshot.exists()) {
+            throw new Error("Order not found.");
+        }
+
+        const orderData = orderSnapshot.data();
+
+        // This order has already deducted inventory.
+        if (orderData.inventoryDeducted === true) {
+            transaction.update(orderRef, {
+                status: "completed",
+                updatedAt: new Date()
+            });
+            return;
+        }
+
+        if (!Array.isArray(orderData.items) || orderData.items.length === 0) {
+            throw new Error("This order has no items.");
+        }
+
+        // Aggregate ingredient quantities across all ordered products.
+        const requiredIngredients = new Map();
+
+        for (const orderedItem of orderData.items) {
+            const productId = orderedItem.productId;
+            const orderQuantity = Number(
+                orderedItem.quantity ?? orderedItem.qty ?? 1
+            );
+
+            if (!productId) {
+                throw new Error(
+                    `Product ID is missing for "${orderedItem.productName || orderedItem.name || "an order item"}".`
+                );
+            }
+
+            if (!Number.isFinite(orderQuantity) || orderQuantity <= 0) {
+                throw new Error(
+                    `Invalid quantity for "${orderedItem.productName || orderedItem.name || productId}".`
+                );
+            }
+
+            const recipeRef = doc(
+                db,
+                "productMeasurements",
+                productId
+            );
+
+            const recipeSnapshot = await transaction.get(recipeRef);
+
+            if (!recipeSnapshot.exists()) {
+                throw new Error(
+                    `No recipe found for "${orderedItem.productName || orderedItem.name || productId}".`
+                );
+            }
+
+            const recipe = recipeSnapshot.data();
+            const measurements = recipe.measurements;
+
+            if (
+                !measurements ||
+                Object.keys(measurements).length === 0
+            ) {
+                throw new Error(
+                    `The recipe for "${recipe.productName || productId}" has no ingredients.`
+                );
+            }
+
+            for (const [ingredientId, measurement] of Object.entries(measurements)) {
+                const quantityPerServing = Number(measurement.quantity);
+
+                if (
+                    !Number.isFinite(quantityPerServing) ||
+                    quantityPerServing < 0
+                ) {
+                    throw new Error(
+                        `Invalid recipe quantity for "${measurement.itemName || ingredientId}".`
+                    );
+                }
+
+                const totalRequired = quantityPerServing * orderQuantity;
+
+                if (requiredIngredients.has(ingredientId)) {
+                    requiredIngredients.get(ingredientId).quantity += totalRequired;
+                } else {
+                    requiredIngredients.set(ingredientId, {
+                        quantity: totalRequired,
+                        name: measurement.itemName || ingredientId,
+                        unit: measurement.unit || ""
+                    });
+                }
+            }
+        }
+
+        if (requiredIngredients.size === 0) {
+            throw new Error("No ingredients were found to deduct.");
+        }
+
+        // Read every inventory document before writing anything.
+        const inventoryUpdates = [];
+
+        for (const [ingredientId, required] of requiredIngredients) {
+            const inventoryRef = doc(db, "inventory", ingredientId);
+            const inventorySnapshot = await transaction.get(inventoryRef);
+
+            if (!inventorySnapshot.exists()) {
+                throw new Error(
+                    `Inventory item "${required.name}" no longer exists.`
+                );
+            }
+
+            const inventoryData = inventorySnapshot.data();
+            const currentStock = Number(inventoryData.stock);
+            const inventoryUnit = String(inventoryData.unit || "")
+                .trim()
+                .toLowerCase();
+            const recipeUnit = String(required.unit || "")
+                .trim()
+                .toLowerCase();
+
+            if (!Number.isFinite(currentStock) || currentStock < 0) {
+                throw new Error(
+                    `Invalid stock value for "${required.name}".`
+                );
+            }
+
+            if (inventoryUnit !== recipeUnit) {
+                throw new Error(
+                    `Unit mismatch for "${required.name}": inventory uses "${inventoryData.unit || "unspecified"}", but the recipe uses "${required.unit || "unspecified"}".`
+                );
+            }
+
+            if (currentStock < required.quantity) {
+                throw new Error(
+                    `Not enough stock for "${required.name}". ` +
+                    `Available: ${currentStock} ${inventoryData.unit || ""}; ` +
+                    `needed: ${required.quantity} ${inventoryData.unit || ""}.`
+                );
+            }
+
+            inventoryUpdates.push({
+                ref: inventoryRef,
+                newStock: currentStock - required.quantity
+            });
+        }
+
+        // Apply stock changes and mark the order in the same transaction.
+        for (const item of inventoryUpdates) {
+            transaction.update(item.ref, {
+                stock: item.newStock
+            });
+        }
+
+        transaction.update(orderRef, {
+            status: "completed",
+            inventoryDeducted: true,
+            inventoryDeductedAt: new Date(),
+            updatedAt: new Date()
+        });
+    });
+}
+
 
 /* INLINE STATUS EDITOR */
 
@@ -513,25 +685,36 @@ function editOrderStatus(row, order) {
         `;
     });
 
-    statusCell.querySelector(".save-status").addEventListener("click", async event => {
-        const saveButton = event.currentTarget;
-        const newStatus = select.value;
+statusCell.querySelector(".save-status").addEventListener("click", async event => {
+    const saveButton = event.currentTarget;
+    const newStatus = select.value;
 
-        saveButton.disabled = true;
+    saveButton.disabled = true;
 
-        try {
+    try {
+        if (newStatus === "completed") {
+            // Deduct inventory exactly once when completing the order.
+            await completeOrderAndDeductInventory(order.id);
+        } else {
+            // Other statuses do not deduct inventory.
             await updateDoc(doc(db, "orders", order.id), {
                 status: newStatus,
                 updatedAt: new Date()
             });
-
-            // The Firestore listener refreshes the row.
-        } catch (error) {
-            console.error("Error updating order status:", error);
-            alert("Unable to update the order status. Please try again.");
-            saveButton.disabled = false;
         }
-    });
+
+        // The Firestore listener refreshes the table.
+    } catch (error) {
+        console.error("Error updating order or inventory:", error);
+
+        alert(
+            "Could not update the order.\n\n" +
+            error.message
+        );
+
+        saveButton.disabled = false;
+    }
+});
 }
 
 /* SUMMARY CARDS */

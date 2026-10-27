@@ -274,7 +274,7 @@ $menuItems = [
                             </span>
 
                             <span>
-                                Set Measure
+                                Set Recipe
                             </span>
 
                         </a>
@@ -357,6 +357,10 @@ $menuItems = [
 
                                 <option value="packaging">
                                     Packaging Supplies
+                                </option>
+
+                                <option value="snacks">
+                                    Snacks
                                 </option>
 
                                 </select>

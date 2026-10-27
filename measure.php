@@ -50,7 +50,7 @@ $menuItems = [
 $menuCategories = [
     "milktea" => "Milk Tea",
     "coffee" => "Coffee",
-    "snack" => "Snack",
+    "snacks" => "Snacks",
     "frappe" => "Frappe",
     "fruit-tea" => "Fruit Tea"
 ];

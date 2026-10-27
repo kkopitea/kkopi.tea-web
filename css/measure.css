@@ -796,3 +796,292 @@ html.dark-mode .measurement-actions {
         width: 100%;
     }
 }
+
+
+/* ========================================
+   MEASUREMENTS DARK MODE
+======================================== */
+
+/* Main Background */
+html.dark-mode body,
+html.dark-mode .main-content {
+    background: #1f1f1f;
+    color: #eeeeee;
+}
+
+/* Header */
+html.dark-mode .top-header {
+    background: rgba(31, 31, 31, 0.94);
+    border-bottom-color: #3d3d3d;
+}
+
+html.dark-mode .welcome-badge {
+    background: #3a2d24;
+    color: #ff9e48;
+}
+
+html.dark-mode .header-title h1 {
+    color: #ffffff;
+}
+
+html.dark-mode .header-title p {
+    color: #aaaaaa;
+}
+
+/* Admin Profile */
+html.dark-mode .admin-profile {
+    background: rgba(45, 45, 45, 0.85);
+    border-color: #444444;
+}
+
+html.dark-mode .admin-information strong {
+    color: #ffffff;
+}
+
+html.dark-mode .admin-information span {
+    color: #ff9e48;
+}
+
+html.dark-mode .admin-information small {
+    color: #999999;
+}
+
+html.dark-mode .admin-avatar {
+    background: #333333;
+    color: #ffffff;
+}
+
+/* Breadcrumbs */
+html.dark-mode .breadcrumb,
+html.dark-mode .breadcrumb a {
+    color: #cccccc;
+}
+
+html.dark-mode .breadcrumb span {
+    color: #ff9e48;
+}
+
+html.dark-mode .breadcrumb i {
+    color: #888888;
+}
+
+/* Back Button */
+html.dark-mode .back-menu-button {
+    background: #383838;
+    color: #eeeeee;
+    border-color: #505050;
+}
+
+html.dark-mode .back-menu-button:hover {
+    background: #454545;
+    border-color: #666666;
+}
+
+/* Measurement Cards */
+html.dark-mode .measurement-card {
+    background: #292929;
+    color: #eeeeee;
+    border-color: #3d3d3d;
+}
+
+html.dark-mode .card-heading h3 {
+    color: #ffffff;
+}
+
+html.dark-mode .card-heading p {
+    color: #aaaaaa;
+}
+
+html.dark-mode .step-number {
+    background: #3a2d24;
+    color: #ff9e48;
+}
+
+/* Form Labels */
+html.dark-mode .form-group label {
+    color: #eeeeee;
+}
+
+/* Dropdowns and Inputs */
+html.dark-mode .form-group select,
+html.dark-mode .measurement-input,
+html.dark-mode .measurement-unit,
+html.dark-mode .measurement-ingredient-select,
+html.dark-mode .measurement-quantity {
+    background: #333333;
+    color: #eeeeee;
+    border-color: #4a4a4a;
+    color-scheme: dark;
+}
+
+html.dark-mode .form-group select:focus,
+html.dark-mode .measurement-input:focus,
+html.dark-mode .measurement-unit:focus,
+html.dark-mode .measurement-ingredient-select:focus,
+html.dark-mode .measurement-quantity:focus {
+    border-color: #ff9e48;
+    box-shadow: 0 0 0 3px rgba(255, 158, 72, 0.1);
+}
+
+html.dark-mode .form-group select:disabled {
+    background: #303030;
+    color: #888888;
+    border-color: #404040;
+}
+
+/* Measurement Note */
+html.dark-mode .measurement-note {
+    background: #302820;
+    border-left-color: #ff9e48;
+    color: #e0c4aa;
+}
+
+/* Categories */
+html.dark-mode .measurement-category {
+    background: #292929;
+    border-color: #3d3d3d;
+}
+
+html.dark-mode .measurement-category-header {
+    background: #302d2a;
+}
+
+html.dark-mode .measurement-category-toggle {
+    color: #eeeeee;
+}
+
+html.dark-mode .measurement-category-toggle > i:first-child {
+    color: #ff9e48;
+}
+
+html.dark-mode .measurement-category-count,
+html.dark-mode .measurement-category-chevron {
+    color: #aaaaaa;
+}
+
+/* Ingredient Rows */
+html.dark-mode .measurement-category-body {
+    background: #292929;
+}
+
+html.dark-mode .measurement-item {
+    background: #252525;
+    border-color: #414141;
+}
+
+html.dark-mode .measurement-field label {
+    color: #dddddd;
+}
+
+/* Unit Badge */
+html.dark-mode .measurement-unit {
+    background: #3a2d24;
+    color: #ff9e48;
+}
+
+/* Remove Ingredient Button */
+html.dark-mode .remove-measurement-button {
+    background: #383838;
+    color: #eeeeee;
+    border-color: #505050;
+}
+
+html.dark-mode .remove-measurement-button i {
+    color: #eeeeee;
+}
+
+html.dark-mode .remove-measurement-button:hover {
+    background: #454545;
+    border-color: #666666;
+}
+
+/* Add Ingredient Button */
+html.dark-mode .add-ingredient-button {
+    background: #383838;
+    color: #eeeeee;
+    border: 1px dashed #505050;
+}
+
+html.dark-mode .add-ingredient-button i {
+    color: #ff9e48;
+}
+
+html.dark-mode .add-ingredient-button:hover {
+    background: #454545;
+    border-color: #ff9e48;
+    color: #ffffff;
+}
+
+html.dark-mode .add-ingredient-button:disabled {
+    background: #303030;
+    color: #888888;
+    border-color: #444444;
+    opacity: 1;
+}
+
+/* Empty States */
+html.dark-mode .empty-measurement-state {
+    background: #252525;
+    border-color: #454545;
+    color: #aaaaaa;
+}
+
+html.dark-mode .empty-measurement-state > i {
+    color: #ff9e48;
+}
+
+html.dark-mode .empty-category-state {
+    color: #aaaaaa;
+}
+
+/* Save Button */
+html.dark-mode .measurement-actions {
+    border-top-color: #3d3d3d;
+}
+
+html.dark-mode .save-measurements-button {
+    background: #ff8624;
+    color: #ffffff;
+    border-color: #ff8624;
+}
+
+html.dark-mode .save-measurements-button:hover:not(:disabled) {
+    background: #ff9e48;
+    color: #ffffff;
+}
+
+html.dark-mode .save-measurements-button:disabled {
+    background: #383838;
+    color: #888888;
+    border-color: #444444;
+    opacity: 1;
+}
+
+/* Icons */
+html.dark-mode .measurement-category i,
+html.dark-mode .measurement-actions i {
+    color: inherit;
+}
+
+/* Scrollbars */
+html.dark-mode * {
+    scrollbar-color: #555555 #292929;
+}
+
+html.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html.dark-mode ::-webkit-scrollbar-track {
+    background: #292929;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555555;
+    border-radius: 8px;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+}

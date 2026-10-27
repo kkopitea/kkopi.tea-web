@@ -2111,6 +2111,29 @@ html.dark-mode .empty-orders p {
     transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
+/* EDIT BUTTON - BLACK */
+.order-action.edit-order {
+    color: #222222;
+}
+
+/* DELETE BUTTON - RED */
+.order-action.delete-order {
+    color: #e74c5c;
+}
+
+/* OPTIONAL HOVER EFFECTS */
+.order-action.edit-order:hover {
+    color: #000000;
+    background: #f5f5f5;
+    border-color: #cccccc;
+}
+
+.order-action.delete-order:hover {
+    color: #ffffff;
+    background: #e74c5c;
+    border-color: #e74c5c;
+}
+
 .order-action:hover {
     color: var(--orange-dark);
     background: var(--orange-light);

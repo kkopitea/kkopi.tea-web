@@ -613,75 +613,64 @@ $menuItems = [
 
             </div>
 
-            <!-- PRODCUCT OPTION --> 
 
-            <div class="product-options-section">
+<div id="sizes-section">
 
-    <div class="product-options-header">
-        <div class="product-options-icon">
-            <i class="fa-solid fa-sliders"></i>
+    <div class="product-option-group">
+
+        <div class="product-option-title">
+            <div>
+                <span>Sizes</span>
+                <small>Select available sizes and set additional prices.</small>
+            </div>
         </div>
 
-        <div>
-            <h3>Product Options</h3>
-            <p>Set the available sizes and sugar levels for this product.</p>
-        </div>
-    </div>
+        <div class="size-options-list">
 
-    
-<div class="product-option-group">
+            <div class="size-option-row">
 
-    <div class="product-option-title">
-        <div>
-            <span>Sizes</span>
-            <small>Select available sizes and set additional prices.</small>
-        </div>
-    </div>
+                <label class="circle-option">
+                    <input type="checkbox" name="sizes[]" value="16oz">
+                    <span class="circle-check"></span>
+                    <span class="circle-option-text">16oz</span>
+                </label>
 
-    <div class="size-options-list">
+                <div class="additional-price-input">
+                    <span>₱</span>
+                    <input
+                        type="number"
+                        name="16oz_additional"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        placeholder="0"
+                        aria-label="Additional price for 16oz"
+                    >
+                </div>
 
-        <div class="size-option-row">
-
-            <label class="circle-option">
-                <input type="checkbox" name="sizes[]" value="16oz">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">16oz</span>
-            </label>
-
-            <div class="additional-price-input">
-                <span>₱</span>
-                <input
-                    type="number"
-                    name="16oz_additional"
-                    min="0"
-                    step="0.01"
-                    value="0"
-                    placeholder="0"
-                    aria-label="Additional price for 16oz"
-                >
             </div>
 
-        </div>
+            <div class="size-option-row">
 
-        <div class="size-option-row">
+                <label class="circle-option">
+                    <input type="checkbox" name="sizes[]" value="22oz">
+                    <span class="circle-check"></span>
+                    <span class="circle-option-text">22oz</span>
+                </label>
 
-            <label class="circle-option">
-                <input type="checkbox" name="sizes[]" value="22oz">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">22oz</span>
-            </label>
+                <div class="additional-price-input">
+                    <span>₱</span>
+                    <input
+                        type="number"
+                        name="22oz_additional"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        placeholder="0"
+                        aria-label="Additional price for 22oz"
+                    >
+                </div>
 
-            <div class="additional-price-input">
-                <span>₱</span>
-                <input
-                    type="number"
-                    name="22oz_additional"
-                    min="0"
-                    step="0.01"
-                    value="0"
-                    placeholder="0"
-                    aria-label="Additional price for 22oz"
-                >
             </div>
 
         </div>
@@ -691,9 +680,12 @@ $menuItems = [
 </div>
 
 
-        
-    <div class="product-option-divider"></div>
 
+        
+
+<div class="product-option-divider"></div>
+
+<div id="sugar-levels-section">
 
     <div class="product-option-group">
 
@@ -741,6 +733,7 @@ $menuItems = [
     </div>
 
 </div>
+
 
 
             <!-- DESCRIPTION -->

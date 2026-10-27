@@ -2456,3 +2456,9 @@ html.dark-mode .save-product-button {
         gap: 25px;
     }
 }
+
+
+#sizes-section[hidden],
+#sugar-levels-section[hidden] {
+    display: none !important;
+}
