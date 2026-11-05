@@ -1,5 +1,4 @@
 
-
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -24,6 +23,7 @@ let menuProducts = [];
 let inventoryItems = [];
 let selectedProduct = null;
 let isSaving = false;
+let recipeLoadToken = 0;
 
 const categoryNames = {
     milktea: "Milk Tea",
@@ -92,6 +92,8 @@ function showEmptyState(message) {
     measurementItems.appendChild(state);
 }
 
+/* LOAD PRODUCTS AND INVENTORY */
+
 async function loadMeasurementData() {
     categorySelect.disabled = true;
     productSelect.disabled = true;
@@ -124,7 +126,7 @@ async function loadMeasurementData() {
 
         categorySelect.disabled = false;
 
-        productSelect.innerHTML = "";
+        productSelect.replaceChildren();
 
         const defaultOption = document.createElement("option");
         defaultOption.value = "";
@@ -132,6 +134,7 @@ async function loadMeasurementData() {
         productSelect.appendChild(defaultOption);
 
         showEmptyState("Select a menu product to start adding ingredients.");
+
     } catch (error) {
         console.error("Could not load products or inventory:", error);
 
@@ -144,7 +147,9 @@ async function loadMeasurementData() {
 /* PRODUCT CATEGORY SELECTION */
 
 categorySelect.addEventListener("change", () => {
+    recipeLoadToken++;
     selectedProduct = null;
+
     productSelect.disabled = true;
     saveButton.disabled = true;
 
@@ -184,12 +189,54 @@ categorySelect.addEventListener("change", () => {
     productSelect.disabled = false;
 });
 
-productSelect.addEventListener("change", () => {
+/* PRODUCT SELECTION AND EXISTING RECIPE LOADING */
+
+productSelect.addEventListener("change", async () => {
+    const productId = productSelect.value;
+
     selectedProduct = menuProducts.find(
-        product => product.id === productSelect.value
+        product => product.id === productId
     ) || null;
 
-    renderIngredientCategories();
+    const currentToken = ++recipeLoadToken;
+
+    saveButton.disabled = true;
+
+    if (!selectedProduct) {
+        showEmptyState("Select a product to start adding ingredients.");
+        return;
+    }
+
+    showEmptyState("Loading existing recipe...");
+
+    try {
+        const recipeSnapshot = await getDoc(
+            doc(db, "productMeasurements", selectedProduct.id)
+        );
+
+        if (
+            currentToken !== recipeLoadToken ||
+            !selectedProduct ||
+            selectedProduct.id !== productId
+        ) {
+            return;
+        }
+
+        const existingMeasurements = recipeSnapshot.exists()
+            ? recipeSnapshot.data().measurements || {}
+            : {};
+
+        renderIngredientCategories(existingMeasurements);
+
+    } catch (error) {
+        console.error("Could not load existing recipe:", error);
+
+        if (currentToken === recipeLoadToken) {
+            showEmptyState(
+                "Could not load this product's recipe. Please try selecting it again."
+            );
+        }
+    }
 });
 
 /* INVENTORY CATEGORIES */
@@ -210,7 +257,63 @@ function getInventoryGroups() {
     return groups;
 }
 
-function renderIngredientCategories() {
+/* GET SAVED QUANTITY */
+
+function getSavedRecipeQuantity(savedMeasurement, size, multiplier) {
+    if (!savedMeasurement) return "";
+
+    if (size === "both") {
+        if (savedMeasurement.recipeQuantity !== undefined) {
+            return savedMeasurement.recipeQuantity === null
+                ? ""
+                : String(savedMeasurement.recipeQuantity);
+        }
+
+        if (savedMeasurement.quantity !== undefined) {
+            return String(
+                Number(savedMeasurement.quantity) * multiplier
+            );
+        }
+
+        return "";
+    }
+
+    const recipeKey = `recipeQuantity${size}`;
+    const quantityKey = `quantity${size}`;
+
+    if (savedMeasurement[recipeKey] !== undefined) {
+        return savedMeasurement[recipeKey] === null
+            ? ""
+            : String(savedMeasurement[recipeKey]);
+    }
+
+    if (savedMeasurement[quantityKey] !== undefined) {
+        return savedMeasurement[quantityKey] === null
+            ? ""
+            : String(
+                Number(savedMeasurement[quantityKey]) * multiplier
+            );
+    }
+
+    // Support older recipes with size: "16oz" or "22oz".
+    if (savedMeasurement.size === size) {
+        if (savedMeasurement.recipeQuantity !== undefined) {
+            return String(savedMeasurement.recipeQuantity);
+        }
+
+        if (savedMeasurement.quantity !== undefined) {
+            return String(
+                Number(savedMeasurement.quantity) * multiplier
+            );
+        }
+    }
+
+    return "";
+}
+
+/* RENDER INGREDIENT CATEGORIES */
+
+function renderIngredientCategories(existingMeasurements = {}) {
     measurementItems.replaceChildren();
     saveButton.disabled = true;
 
@@ -303,8 +406,6 @@ function renderIngredientCategories() {
                 ? "All Ingredients Added"
                 : "Add Ingredient";
 
-            // Prevent selecting the same inventory item twice
-            // within the same category.
             rows.querySelectorAll(".measurement-ingredient-select")
                 .forEach(currentSelect => {
                     const currentValue = currentSelect.value;
@@ -319,7 +420,7 @@ function renderIngredientCategories() {
                 });
         }
 
-        function addIngredientRow() {
+        function addIngredientRow(savedMeasurement = null, savedItemId = "") {
             const usedIds = new Set(
                 [...rows.querySelectorAll(".measurement-ingredient-select")]
                     .map(select => select.value)
@@ -327,7 +428,7 @@ function renderIngredientCategories() {
             );
 
             const availableItems = items.filter(
-                item => !usedIds.has(item.id)
+                item => !usedIds.has(item.id) || item.id === savedItemId
             );
 
             if (availableItems.length === 0) {
@@ -359,14 +460,36 @@ function renderIngredientCategories() {
                 const option = document.createElement("option");
                 option.value = item.id;
                 option.textContent = item.name || "Unnamed Item";
-                option.disabled = usedIds.has(item.id);
                 ingredientSelect.appendChild(option);
             });
 
-            ingredientLabel.htmlFor = "";
             ingredientField.append(ingredientLabel, ingredientSelect);
 
-            /* QUANTITY INPUT */
+            /* APPLIES TO SIZE */
+
+            const sizeField = document.createElement("div");
+            sizeField.className = "measurement-field";
+
+            const sizeLabel = document.createElement("label");
+            sizeLabel.textContent = "Applies to size";
+
+            const sizeSelect = document.createElement("select");
+            sizeSelect.className = "measurement-size-select";
+
+            [
+                { value: "both", text: "Both sizes" },
+                { value: "16oz", text: "16oz" },
+                { value: "22oz", text: "22oz" }
+            ].forEach(optionData => {
+                const option = document.createElement("option");
+                option.value = optionData.value;
+                option.textContent = optionData.text;
+                sizeSelect.appendChild(option);
+            });
+
+            sizeField.append(sizeLabel, sizeSelect);
+
+            /* SINGLE QUANTITY INPUT */
 
             const quantityField = document.createElement("div");
             quantityField.className = "measurement-field";
@@ -404,7 +527,54 @@ function renderIngredientCategories() {
             removeIcon.className = "fa-solid fa-trash";
             removeButton.appendChild(removeIcon);
 
-            ingredientSelect.addEventListener("change", () => {
+            /*
+             * Keep all quantities in memory for this one row.
+             * Only one quantity input is displayed at a time.
+             */
+
+            const quantityValues = {
+                both: "",
+                "16oz": "",
+                "22oz": ""
+            };
+
+            const savedSize = savedMeasurement?.size || "both";
+
+            let currentSize = ["both", "16oz", "22oz"].includes(savedSize)
+                ? savedSize
+                : "both";
+
+            function restoreSavedValues() {
+                if (!savedMeasurement) return;
+
+                const item = inventoryItems.find(
+                    inventoryItem => inventoryItem.id === savedItemId
+                );
+
+                const conversion = getRecipeUnit(item?.unit);
+
+                quantityValues.both = getSavedRecipeQuantity(
+                    savedMeasurement,
+                    "both",
+                    conversion.multiplier
+                );
+
+                quantityValues["16oz"] = getSavedRecipeQuantity(
+                    savedMeasurement,
+                    "16oz",
+                    conversion.multiplier
+                );
+
+                quantityValues["22oz"] = getSavedRecipeQuantity(
+                    savedMeasurement,
+                    "22oz",
+                    conversion.multiplier
+                );
+            }
+
+            restoreSavedValues();
+
+            function updateIngredientUnit() {
                 const item = items.find(
                     inventoryItem => inventoryItem.id === ingredientSelect.value
                 );
@@ -412,22 +582,47 @@ function renderIngredientCategories() {
                 if (!item) {
                     quantityInput.value = "";
                     quantityInput.disabled = true;
+                    quantityInput.dataset.itemId = "";
                     unitLabel.textContent = "—";
-                } else {
-                    const conversion = getRecipeUnit(item.unit);
-
-                    quantityInput.disabled = false;
-                    quantityInput.dataset.itemId = item.id;
-                    quantityInput.dataset.multiplier =
-                        String(conversion.multiplier);
-                    quantityInput.dataset.recipeUnit = conversion.unit;
-
-                    quantityLabel.textContent =
-                        `Quantity (${conversion.unit})`;
-
-                    unitLabel.textContent = conversion.unit;
+                    quantityLabel.textContent = "Quantity";
+                    return;
                 }
 
+                const conversion = getRecipeUnit(item.unit);
+
+                quantityInput.disabled = false;
+                quantityInput.dataset.itemId = item.id;
+                quantityInput.dataset.multiplier =
+                    String(conversion.multiplier);
+                quantityInput.dataset.recipeUnit = conversion.unit;
+
+                quantityLabel.textContent =
+                    `Quantity (${conversion.unit})`;
+
+                unitLabel.textContent = conversion.unit;
+            }
+
+            function showCurrentQuantity() {
+                sizeSelect.value = currentSize;
+                quantityInput.value = quantityValues[currentSize] ?? "";
+            }
+
+            sizeSelect.addEventListener("change", () => {
+                // Save the currently displayed value before switching.
+                quantityValues[currentSize] = quantityInput.value.trim();
+
+                currentSize = sizeSelect.value;
+
+                // Restore the value previously entered for the new size.
+                showCurrentQuantity();
+            });
+
+            quantityInput.addEventListener("input", () => {
+                quantityValues[currentSize] = quantityInput.value.trim();
+            });
+
+            ingredientSelect.addEventListener("change", () => {
+                updateIngredientUnit();
                 updateCategory();
             });
 
@@ -439,14 +634,34 @@ function renderIngredientCategories() {
             row.append(
                 ingredientField,
                 quantityField,
+                sizeField,
                 removeButton
             );
 
             rows.appendChild(row);
+
+            if (savedItemId) {
+                ingredientSelect.value = savedItemId;
+                updateIngredientUnit();
+            }
+
+            showCurrentQuantity();
             updateCategory();
+
+            // Keep values available for saving.
+            row._quantityValues = quantityValues;
+
+            row._getCurrentSize = () => currentSize;
+            row._getCurrentQuantity = () => quantityInput.value.trim();
+
+            row._setCurrentQuantity = () => {
+                quantityValues[currentSize] = quantityInput.value.trim();
+            };
         }
 
-        addButton.addEventListener("click", addIngredientRow);
+        addButton.addEventListener("click", () => {
+            addIngredientRow();
+        });
 
         body.append(rows, addButton);
         header.appendChild(toggle);
@@ -454,12 +669,32 @@ function renderIngredientCategories() {
         section.append(header, body);
         measurementItems.appendChild(section);
 
+        // Restore saved ingredients.
+        Object.entries(existingMeasurements).forEach(
+            ([itemId, savedMeasurement]) => {
+                const matchingItem = items.find(item => item.id === itemId);
+
+                if (matchingItem) {
+                    addIngredientRow(savedMeasurement, itemId);
+                }
+            }
+        );
+
         updateCategory();
+    });
+
+    Object.keys(existingMeasurements).forEach(itemId => {
+        const stillExists = inventoryItems.some(item => item.id === itemId);
+
+        if (!stillExists) {
+            console.warn(
+                `Saved recipe ingredient ${itemId} was not found in inventory.`
+            );
+        }
     });
 
     saveButton.disabled = false;
 }
-
 
 /* SAVE RECIPE */
 
@@ -478,29 +713,28 @@ saveButton.addEventListener("click", async () => {
         const ingredientSelect = row.querySelector(
             ".measurement-ingredient-select"
         );
-        const quantityInput = row.querySelector(".measurement-quantity");
+
+        const sizeSelect = row.querySelector(
+            ".measurement-size-select"
+        );
+
+        const quantityInput = row.querySelector(
+            ".measurement-quantity"
+        );
 
         const itemId = ingredientSelect.value;
-        const quantityText = quantityInput.value.trim();
 
-        // Ignore unused ingredient rows.
-        if (!itemId && quantityText === "") continue;
+        // Capture the currently displayed quantity before saving.
+        row._setCurrentQuantity?.();
 
-        if (!itemId && quantityText !== "") {
-            alert("Please select an ingredient for the entered quantity.");
-            ingredientSelect.focus();
-            return;
-        }
+        if (!itemId) {
+            if (quantityInput.value.trim() !== "") {
+                alert("Please select an ingredient for the entered quantity.");
+                ingredientSelect.focus();
+                return;
+            }
 
-        // Ignore selected ingredients without a quantity.
-        if (itemId && quantityText === "") continue;
-
-        const recipeQuantity = Number(quantityText);
-
-        if (!Number.isFinite(recipeQuantity) || recipeQuantity <= 0) {
-            alert("Quantity must be greater than zero.");
-            quantityInput.focus();
-            return;
+            continue;
         }
 
         const item = inventoryItems.find(
@@ -513,15 +747,78 @@ saveButton.addEventListener("click", async () => {
         }
 
         const conversion = getRecipeUnit(item.unit);
+        const size = sizeSelect.value;
+        const quantityValues = row._quantityValues || {};
 
-        measurements[item.id] = {
+        const selectedQuantity = quantityValues[size] ?? "";
+
+        if (selectedQuantity === "") {
+            alert(`Please enter a quantity for ${item.name || "this ingredient"} (${size}).`);
+            quantityInput.focus();
+            return;
+        }
+
+        const recipeQuantity = Number(selectedQuantity);
+
+        if (!Number.isFinite(recipeQuantity) || recipeQuantity <= 0) {
+            alert("Quantity must be greater than zero.");
+            quantityInput.focus();
+            return;
+        }
+
+        const measurement = {
+            itemId: item.id,
             itemName: item.name || "Unnamed Item",
             category: item.category || "Other",
-            quantity: recipeQuantity / conversion.multiplier,
-            recipeQuantity,
+            unit: item.unit || "unit",
             recipeUnit: conversion.unit,
-            unit: item.unit || "unit"
+            size
         };
+
+        if (size === "both") {
+            measurement.recipeQuantity = recipeQuantity;
+            measurement.quantity =
+                recipeQuantity / conversion.multiplier;
+        } else {
+            const otherSize = size === "16oz" ? "22oz" : "16oz";
+            const otherQuantityText = quantityValues[otherSize] ?? "";
+
+            const otherQuantity = otherQuantityText === ""
+                ? null
+                : Number(otherQuantityText);
+
+            if (
+                otherQuantity !== null &&
+                (!Number.isFinite(otherQuantity) || otherQuantity <= 0)
+            ) {
+                alert(`${otherSize} quantity must be greater than zero.`);
+                return;
+            }
+
+            const quantity16 = size === "16oz"
+                ? recipeQuantity
+                : otherQuantity;
+
+            const quantity22 = size === "22oz"
+                ? recipeQuantity
+                : otherQuantity;
+
+            measurement.size = "separate";
+
+            measurement.selectedSize = size;
+
+            measurement.recipeQuantity16oz = quantity16;
+            measurement.quantity16oz = quantity16 === null
+                ? null
+                : quantity16 / conversion.multiplier;
+
+            measurement.recipeQuantity22oz = quantity22;
+            measurement.quantity22oz = quantity22 === null
+                ? null
+                : quantity22 / conversion.multiplier;
+        }
+
+        measurements[item.id] = measurement;
     }
 
     if (Object.keys(measurements).length === 0) {
@@ -550,7 +847,6 @@ saveButton.addEventListener("click", async () => {
             }
         );
 
-        // Redirect only after Firestore confirms the save.
         window.location.assign("./admin-inventory.php");
 
     } catch (error) {
@@ -568,7 +864,7 @@ saveButton.addEventListener("click", async () => {
     }
 });
 
-/* Load admin profile */
+/* LOAD ADMIN PROFILE */
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -602,10 +898,10 @@ onAuthStateChanged(auth, async (user) => {
             adminRole.textContent =
                 adminData.role || "Administrator";
         }
+
     } catch (error) {
         console.error("Error loading admin profile:", error);
     }
 });
-
 
 loadMeasurementData();

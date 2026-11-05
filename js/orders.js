@@ -294,10 +294,12 @@ function renderOrders() {
 
     if (!monthFilter.value) {
         updateSummary([]);
+
         showEmptyState(
             "Select a month",
             "Choose a month to view order records."
         );
+
         return;
     }
 
@@ -317,6 +319,7 @@ function renderOrders() {
             "No Orders Found",
             "There are no orders for the selected month, order type, and status."
         );
+
         return;
     }
 
@@ -424,18 +427,16 @@ function createOrderRow(order) {
             <div class="order-actions">
                 <button type="button" class="order-action edit-order" title="Edit status">
                     <i class="fa-solid fa-pen"></i>
-                    
                 </button>
 
                 <button type="button" class="order-action delete-order" title="Delete order">
                     <i class="fa-solid fa-trash"></i>
-                    
                 </button>
             </div>
         </td>
     `;
 
-    /* EDIT STATUS IN THE SAME ROW */
+    /* EDIT STATUS */
 
     row.querySelector(".edit-order").addEventListener("click", () => {
         editOrderStatus(row, order);
@@ -455,10 +456,11 @@ function createOrderRow(order) {
 
         try {
             await deleteDoc(doc(db, "orders", order.id));
-            // The Firestore listener refreshes the table.
         } catch (error) {
             console.error("Error deleting order:", error);
+
             alert("Unable to delete this order. Please try again.");
+
             deleteButton.disabled = false;
         }
     });
@@ -466,6 +468,57 @@ function createOrderRow(order) {
     return row;
 }
 
+/* GET RECIPE QUANTITY BASED ON ORDER SIZE */
+
+function getRecipeQuantity(measurement, selectedSize, ingredientId) {
+    const measurementSize = String(measurement.size || "both")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
+
+    let quantity;
+
+    if (measurementSize === "both") {
+        quantity = Number(measurement.quantity);
+    }
+
+    else if (measurementSize === "separate") {
+        if (!["16oz", "22oz"].includes(selectedSize)) {
+            throw new Error(
+                `The order size is missing for "${measurement.itemName || ingredientId}".`
+            );
+        }
+
+        quantity = Number(
+            selectedSize === "16oz"
+                ? measurement.quantity16oz
+                : measurement.quantity22oz
+        );
+    }
+
+    // Support older recipes saved for only one size.
+    else if (measurementSize === "16oz" || measurementSize === "22oz") {
+        if (measurementSize !== selectedSize) {
+            return null;
+        }
+
+        quantity = Number(measurement.quantity);
+    }
+
+    else {
+        throw new Error(
+            `Invalid recipe size setting for "${measurement.itemName || ingredientId}".`
+        );
+    }
+
+    if (!Number.isFinite(quantity) || quantity <= 0) {
+        throw new Error(
+            `Missing or invalid recipe quantity for "${measurement.itemName || ingredientId}" (${selectedSize || "unspecified size"}).`
+        );
+    }
+
+    return quantity;
+}
 
 /* DEDUCT INVENTORY WHEN ORDER IS COMPLETED */
 
@@ -473,7 +526,7 @@ async function completeOrderAndDeductInventory(orderId) {
     const orderRef = doc(db, "orders", orderId);
 
     await runTransaction(db, async transaction => {
-        // Always read the latest order to prevent duplicate deductions.
+        // Read the latest order.
         const orderSnapshot = await transaction.get(orderRef);
 
         if (!orderSnapshot.exists()) {
@@ -482,12 +535,13 @@ async function completeOrderAndDeductInventory(orderId) {
 
         const orderData = orderSnapshot.data();
 
-        // This order has already deducted inventory.
+        // Prevent duplicate inventory deductions.
         if (orderData.inventoryDeducted === true) {
             transaction.update(orderRef, {
                 status: "completed",
                 updatedAt: new Date()
             });
+
             return;
         }
 
@@ -495,11 +549,12 @@ async function completeOrderAndDeductInventory(orderId) {
             throw new Error("This order has no items.");
         }
 
-        // Aggregate ingredient quantities across all ordered products.
         const requiredIngredients = new Map();
 
+        // Read recipes and calculate required ingredient quantities.
         for (const orderedItem of orderData.items) {
             const productId = orderedItem.productId;
+
             const orderQuantity = Number(
                 orderedItem.quantity ?? orderedItem.qty ?? 1
             );
@@ -515,6 +570,11 @@ async function completeOrderAndDeductInventory(orderId) {
                     `Invalid quantity for "${orderedItem.productName || orderedItem.name || productId}".`
                 );
             }
+
+            const selectedSize = String(orderedItem.size || "")
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, "");
 
             const recipeRef = doc(
                 db,
@@ -533,25 +593,25 @@ async function completeOrderAndDeductInventory(orderId) {
             const recipe = recipeSnapshot.data();
             const measurements = recipe.measurements;
 
-            if (
-                !measurements ||
-                Object.keys(measurements).length === 0
-            ) {
+            if (!measurements || Object.keys(measurements).length === 0) {
                 throw new Error(
                     `The recipe for "${recipe.productName || productId}" has no ingredients.`
                 );
             }
 
-            for (const [ingredientId, measurement] of Object.entries(measurements)) {
-                const quantityPerServing = Number(measurement.quantity);
+            // Match each ingredient to the ordered product size.
+            for (const [measurementKey, measurement] of Object.entries(measurements)) {
+                const ingredientId = measurement.itemId || measurementKey;
 
-                if (
-                    !Number.isFinite(quantityPerServing) ||
-                    quantityPerServing < 0
-                ) {
-                    throw new Error(
-                        `Invalid recipe quantity for "${measurement.itemName || ingredientId}".`
-                    );
+                const quantityPerServing = getRecipeQuantity(
+                    measurement,
+                    selectedSize,
+                    ingredientId
+                );
+
+                // This ingredient is not used for the selected size.
+                if (quantityPerServing === null) {
+                    continue;
                 }
 
                 const totalRequired = quantityPerServing * orderQuantity;
@@ -577,6 +637,7 @@ async function completeOrderAndDeductInventory(orderId) {
 
         for (const [ingredientId, required] of requiredIngredients) {
             const inventoryRef = doc(db, "inventory", ingredientId);
+
             const inventorySnapshot = await transaction.get(inventoryRef);
 
             if (!inventorySnapshot.exists()) {
@@ -587,9 +648,11 @@ async function completeOrderAndDeductInventory(orderId) {
 
             const inventoryData = inventorySnapshot.data();
             const currentStock = Number(inventoryData.stock);
+
             const inventoryUnit = String(inventoryData.unit || "")
                 .trim()
                 .toLowerCase();
+
             const recipeUnit = String(required.unit || "")
                 .trim()
                 .toLowerCase();
@@ -620,13 +683,14 @@ async function completeOrderAndDeductInventory(orderId) {
             });
         }
 
-        // Apply stock changes and mark the order in the same transaction.
+        // Update inventory only after all required reads and checks.
         for (const item of inventoryUpdates) {
             transaction.update(item.ref, {
                 stock: item.newStock
             });
         }
 
+        // Mark the order as completed and inventory as deducted.
         transaction.update(orderRef, {
             status: "completed",
             inventoryDeducted: true,
@@ -635,7 +699,6 @@ async function completeOrderAndDeductInventory(orderId) {
         });
     });
 }
-
 
 /* INLINE STATUS EDITOR */
 
@@ -659,6 +722,7 @@ function editOrderStatus(row, order) {
                 <button type="button" class="save-status" title="Save status">
                     <i class="fa-solid fa-check"></i>
                 </button>
+
                 <button type="button" class="cancel-status" title="Cancel editing">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -685,36 +749,43 @@ function editOrderStatus(row, order) {
         `;
     });
 
-statusCell.querySelector(".save-status").addEventListener("click", async event => {
-    const saveButton = event.currentTarget;
-    const newStatus = select.value;
+    statusCell.querySelector(".save-status").addEventListener("click", async event => {
+        const saveButton = event.currentTarget;
+        const newStatus = select.value;
 
-    saveButton.disabled = true;
+        saveButton.disabled = true;
 
-    try {
-        if (newStatus === "completed") {
-            // Deduct inventory exactly once when completing the order.
-            await completeOrderAndDeductInventory(order.id);
-        } else {
-            // Other statuses do not deduct inventory.
-            await updateDoc(doc(db, "orders", order.id), {
-                status: newStatus,
-                updatedAt: new Date()
-            });
+        try {
+            if (newStatus === "completed") {
+                // Deduct inventory exactly once.
+                await completeOrderAndDeductInventory(order.id);
+            } else {
+                // Other statuses do not deduct inventory.
+                await updateDoc(doc(db, "orders", order.id), {
+                    status: newStatus,
+                    updatedAt: new Date()
+                });
+
+                const updatedOrder = await getDoc(doc(db, "orders", order.id));
+
+                console.log(
+                    "Saved order status:",
+                    updatedOrder.data()?.status
+                );
+            }
+
+            // Firestore listener refreshes the table.
+        } catch (error) {
+            console.error("Error updating order or inventory:", error);
+
+            alert(
+                "Could not update the order.\n\n" +
+                error.message
+            );
+
+            saveButton.disabled = false;
         }
-
-        // The Firestore listener refreshes the table.
-    } catch (error) {
-        console.error("Error updating order or inventory:", error);
-
-        alert(
-            "Could not update the order.\n\n" +
-            error.message
-        );
-
-        saveButton.disabled = false;
-    }
-});
+    });
 }
 
 /* SUMMARY CARDS */

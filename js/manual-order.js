@@ -14,6 +14,8 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
+/* ELEMENTS */
+
 const categoryFilter = document.getElementById("category-filter");
 const productSearch = document.getElementById("product-search");
 const productSearchResults = document.getElementById("product-search-results");
@@ -38,16 +40,30 @@ const cartItemsContainer = document.getElementById("cart-items");
 const orderTotal = document.getElementById("order-total");
 const createOrderButton = document.getElementById("create-order-button");
 
+/* STATE */
+
 let allProducts = [];
 let selectedProduct = null;
 let cart = [];
 let currentUser = null;
+
+/* PRODUCT MANAGEMENT CATEGORIES */
+
+const productCategories = [
+    { id: "milktea", name: "Milk Tea" },
+    { id: "coffee", name: "Coffee" },
+    { id: "snacks", name: "Snacks" },
+    { id: "frappe", name: "Frappe" },
+    { id: "fruittea", name: "Fruit Tea" }
+];
 
 const peso = (amount) =>
     new Intl.NumberFormat("en-PH", {
         style: "currency",
         currency: "PHP"
     }).format(Number(amount) || 0);
+
+/* MESSAGES */
 
 function showMessage(element, message, type = "error") {
     if (!element) return;
@@ -57,24 +73,35 @@ function showMessage(element, message, type = "error") {
     element.hidden = !message;
 }
 
+/* PRODUCT INFORMATION */
+
 function getProductName(product) {
     return (
-        product.productName ||
         product.name ||
+        product.productName ||
         product.title ||
         product.menuName ||
         "Unnamed Product"
     );
 }
 
-function getProductCategory(product) {
-    return (
+function getProductCategoryId(product) {
+    return String(
+        product.categoryId ||
         product.category ||
         product.productCategory ||
-        product.categoryName ||
-        product.type ||
-        "Uncategorized"
+        ""
+    ).trim().toLowerCase();
+}
+
+function getProductCategory(product) {
+    const categoryId = getProductCategoryId(product);
+
+    const category = productCategories.find(
+        item => item.id === categoryId
     );
+
+    return category ? category.name : "Uncategorized";
 }
 
 function getProductPrice(product) {
@@ -93,7 +120,7 @@ function getProductSizes(product) {
         return [];
     }
 
-    return product.sizes.map((size) => ({
+    return product.sizes.map(size => ({
         name: size.name,
         price:
             getProductPrice(product) +
@@ -101,27 +128,29 @@ function getProductSizes(product) {
     }));
 }
 
+/* SELECTED SIZE PRICE */
 
 function getSelectedSizePrice() {
     if (!selectedProduct) return 0;
 
     const sizes = getProductSizes(selectedProduct);
 
-    // Products without sizes, such as snacks, use the base price.
     if (sizes.length === 0) {
         return getProductPrice(selectedProduct);
     }
 
     const selectedSize = sizes.find(
-        (size) => size.name === productSize.value
+        size => size.name === productSize.value
     );
 
     return selectedSize ? selectedSize.price : 0;
 }
 
+/* UPDATE SUBTOTAL */
 
 function updateProductSubtotal() {
     const price = getSelectedSizePrice();
+
     const quantity = Math.max(
         1,
         Number(productQuantity.value) || 1
@@ -130,6 +159,8 @@ function updateProductSubtotal() {
     unitPrice.textContent = peso(price);
     productSubtotal.textContent = peso(price * quantity);
 }
+
+/* CLEAR SELECTED PRODUCT */
 
 function clearSelectedProduct() {
     selectedProduct = null;
@@ -153,23 +184,25 @@ function clearSelectedProduct() {
     showMessage(formMessage, "");
 }
 
+/* POPULATE CATEGORY FILTER */
+
 function populateCategories() {
     if (!categoryFilter) return;
 
-    const categories = [
-        ...new Set(allProducts.map(getProductCategory))
-    ].sort();
-
     categoryFilter.innerHTML =
-        '<option value="">All Categories</option>';
+        '<option value="all">All Categories</option>';
 
-    categories.forEach((category) => {
+    productCategories.forEach(category => {
         const option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
+
+        option.value = category.id;
+        option.textContent = category.name;
+
         categoryFilter.appendChild(option);
     });
 }
+
+/* RENDER PRODUCT SEARCH RESULTS */
 
 function renderProductSearchResults() {
     if (!productSearchResults) return;
@@ -178,17 +211,16 @@ function renderProductSearchResults() {
         .trim()
         .toLowerCase();
 
-    const selectedCategory =
-    categoryFilter.value === "all" ? "" : categoryFilter.value;
+    const selectedCategory = categoryFilter.value;
 
-    const results = allProducts.filter((product) => {
+    const results = allProducts.filter(product => {
         const matchesName = getProductName(product)
             .toLowerCase()
             .includes(searchText);
 
         const matchesCategory =
-            !selectedCategory ||
-            getProductCategory(product) === selectedCategory;
+            selectedCategory === "all" ||
+            getProductCategoryId(product) === selectedCategory;
 
         return matchesName && matchesCategory;
     });
@@ -202,7 +234,7 @@ function renderProductSearchResults() {
         return;
     }
 
-    results.forEach((product) => {
+    results.forEach(product => {
         const result = document.createElement("button");
 
         result.type = "button";
@@ -224,10 +256,13 @@ function renderProductSearchResults() {
     });
 }
 
+/* SELECT PRODUCT */
+
 function selectProduct(product) {
     selectedProduct = product;
 
     productName.value = getProductName(product);
+
     productBasePrice.value =
         getProductPrice(product).toFixed(2);
 
@@ -235,16 +270,16 @@ function selectProduct(product) {
 
     productSize.innerHTML = "";
 
-    sizes.forEach((size) => {
-    const option = document.createElement("option");
+    sizes.forEach(size => {
+        const option = document.createElement("option");
 
-    option.value = size.name;
-    option.textContent = `${size.name} - ${peso(size.price)}`;
+        option.value = size.name;
+        option.textContent = `${size.name} - ${peso(size.price)}`;
 
-    productSize.appendChild(option);
-});
+        productSize.appendChild(option);
+    });
 
-productSize.disabled = sizes.length === 0;
+    productSize.disabled = sizes.length === 0;
 
     productQuantity.value = 1;
 
@@ -257,6 +292,8 @@ productSize.disabled = sizes.length === 0;
     showMessage(formMessage, "");
     addItemButton.disabled = false;
 }
+
+/* RENDER CART */
 
 function renderCart() {
     if (!cartItemsContainer) return;
@@ -274,6 +311,7 @@ function renderCart() {
             const row = document.createElement("tr");
 
             const nameCell = document.createElement("td");
+
             nameCell.textContent = item.size
                 ? `${item.productName} (${item.size})`
                 : item.productName;
@@ -318,10 +356,11 @@ function renderCart() {
         0
     );
 
-const totalAmount = cart.reduce(
-    (total, item) => total + item.subtotal,
-    0
-);
+    const totalAmount = cart.reduce(
+        (total, item) => total + item.subtotal,
+        0
+    );
+
     if (cartCount) {
         cartCount.textContent = totalQuantity;
     }
@@ -331,6 +370,8 @@ const totalAmount = cart.reduce(
         createOrderButton.disabled = cart.length === 0;
     }
 }
+
+/* ADD ITEM TO CART */
 
 function addItemToCart() {
     if (!selectedProduct) {
@@ -345,18 +386,20 @@ function addItemToCart() {
         return;
     }
 
-const sizes = getProductSizes(selectedProduct);
-const size = sizes.length > 0 ? productSize.value : "";
-const price = getSelectedSizePrice();
+    const sizes = getProductSizes(selectedProduct);
+
+    const size = sizes.length > 0 ? productSize.value : "";
+    const price = getSelectedSizePrice();
 
     const existingItem = cart.find(
-        (item) =>
+        item =>
             item.productId === selectedProduct.id &&
             item.size === size
     );
 
     if (existingItem) {
         existingItem.quantity += quantity;
+
         existingItem.subtotal =
             existingItem.price * existingItem.quantity;
     } else {
@@ -375,8 +418,14 @@ const price = getSelectedSizePrice();
     renderCart();
     clearSelectedProduct();
 
-    showMessage(formMessage, "Item added to the order.", "success");
+    showMessage(
+        formMessage,
+        "Item added to the order.",
+        "success"
+    );
 }
+
+/* LOAD PRODUCTS */
 
 async function loadProducts() {
     if (productLoadMessage) {
@@ -387,11 +436,11 @@ async function loadProducts() {
         const snapshot = await getDocs(collection(db, "products"));
 
         allProducts = snapshot.docs
-            .map((document) => ({
+            .map(document => ({
                 id: document.id,
                 ...document.data()
             }))
-            .filter((product) =>
+            .filter(product =>
                 String(product.status || "active").toLowerCase() !==
                 "inactive"
             );
@@ -412,6 +461,8 @@ async function loadProducts() {
         }
     }
 }
+
+/* CREATE MANUAL ORDER */
 
 async function createOrder() {
     showMessage(formMessage, "");
@@ -454,13 +505,12 @@ async function createOrder() {
             isManual: true,
             customerName: name,
             fulfillment: fulfillment.value,
-            items: cart.map((item) => ({ ...item })),
+            items: cart.map(item => ({ ...item })),
             total,
             totalAmount: total,
             status: "pending",
             createdAt: serverTimestamp(),
             createdBy: currentUser.uid
-    
         });
 
         cart = [];
@@ -475,7 +525,9 @@ async function createOrder() {
             "Walk-in order created successfully!",
             "success"
         );
+
         window.location.href = "admin-orders.php";
+
     } catch (error) {
         console.error("Error creating order:", error);
 
@@ -489,17 +541,46 @@ async function createOrder() {
     }
 }
 
-productSearch?.addEventListener("input", renderProductSearchResults);
-categoryFilter?.addEventListener("change", renderProductSearchResults);
-productSize.addEventListener("change", updateProductSubtotal);
-productQuantity.addEventListener("input", updateProductSubtotal);
+/* EVENT LISTENERS */
 
+productSearch?.addEventListener(
+    "input",
+    renderProductSearchResults
+);
 
-clearProductButton?.addEventListener("click", clearSelectedProduct);
-addItemButton?.addEventListener("click", addItemToCart);
-createOrderButton?.addEventListener("click", createOrder);
+categoryFilter?.addEventListener(
+    "change",
+    renderProductSearchResults
+);
 
-onAuthStateChanged(auth, async (user) => {
+productSize.addEventListener(
+    "change",
+    updateProductSubtotal
+);
+
+productQuantity.addEventListener(
+    "input",
+    updateProductSubtotal
+);
+
+clearProductButton?.addEventListener(
+    "click",
+    clearSelectedProduct
+);
+
+addItemButton?.addEventListener(
+    "click",
+    addItemToCart
+);
+
+createOrderButton?.addEventListener(
+    "click",
+    createOrder
+);
+
+/* ADMIN AUTHENTICATION AND PRODUCTS */
+
+onAuthStateChanged(auth, async user => {
     currentUser = user;
 
     if (user) {
@@ -514,12 +595,10 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-/* Load admin profile */
+/* LOAD ADMIN PROFILE */
 
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        return;
-    }
+onAuthStateChanged(auth, async user => {
+    if (!user) return;
 
     try {
         const adminSnapshot = await getDoc(
@@ -548,10 +627,12 @@ onAuthStateChanged(auth, async (user) => {
             adminRole.textContent =
                 adminData.role || "Administrator";
         }
+
     } catch (error) {
         console.error("Error loading admin profile:", error);
     }
 });
 
+/* INITIAL CART */
 
 renderCart();

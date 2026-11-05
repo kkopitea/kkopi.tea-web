@@ -11,7 +11,7 @@
      <header>
        <h1>
             <span class="KKOPI">KKOPI</span>
-            <span class="TEA">.TE</span>
+            <span class="TEA">.TEA</span>
         </h1>
         <nav>
             <a href="home.php">Home</a>

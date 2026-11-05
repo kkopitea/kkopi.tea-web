@@ -123,7 +123,18 @@ function renderStatistics(orders) {
     const yesterdaysOrders = getDayOrders(yesterday, orders);
     const todaysSales = todaysOrders.reduce((sum, order) => sum + getOrderTotal(order), 0);
     const yesterdaysSales = yesterdaysOrders.reduce((sum, order) => sum + getOrderTotal(order), 0);
-    const customerCount = new Set(orders.map(getCustomerKey).filter(Boolean)).size;
+    const customerCount = new Set(
+    orders
+        .filter(order => {
+            const date = getOrderDate(order);
+
+            return date &&
+                date.getMonth() === new Date().getMonth() &&
+                date.getFullYear() === new Date().getFullYear();
+        })
+        .map(getCustomerKey)
+        .filter(Boolean)
+).size;
     const todaysCustomers = new Set(todaysOrders.map(getCustomerKey).filter(Boolean)).size;
     const yesterdaysCustomers = new Set(yesterdaysOrders.map(getCustomerKey).filter(Boolean)).size;
 

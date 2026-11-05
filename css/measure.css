@@ -416,8 +416,6 @@ button {
     line-height: 1.7;
 }
 
-
-
 /* MEASUREMENT CATEGORIES */
 
 .measurement-items {
@@ -502,7 +500,11 @@ button {
 .measurement-item {
     padding: 15px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(120px, 150px) 38px;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(120px, 150px)
+        minmax(90px, 110px)
+        38px;
     align-items: end;
     gap: 12px;
     border: 1px solid var(--border);
@@ -524,7 +526,8 @@ button {
 }
 
 .measurement-ingredient-select,
-.measurement-quantity {
+.measurement-quantity,
+.measurement-size-select {
     width: 100%;
     min-width: 0;
     height: 42px;
@@ -539,7 +542,8 @@ button {
 }
 
 .measurement-ingredient-select:focus,
-.measurement-quantity:focus {
+.measurement-quantity:focus,
+.measurement-size-select:focus {
     border-color: var(--orange);
     box-shadow: 0 0 0 3px rgba(255, 134, 38, 0.1);
 }
@@ -552,7 +556,7 @@ button {
 
 .measurement-unit {
     min-width: 40px;
-    height: 36px;
+    height: 42px;
     padding: 0 8px;
     display: flex;
     align-items: center;
@@ -673,7 +677,7 @@ button {
     cursor: not-allowed;
 }
 
-/* DARK MODE */
+/* DARK MODE - CATEGORIES AND INGREDIENTS */
 
 html.dark-mode .measurement-category {
     background: #292929;
@@ -703,11 +707,19 @@ html.dark-mode .measurement-field label {
 }
 
 html.dark-mode .measurement-ingredient-select,
-html.dark-mode .measurement-quantity {
+html.dark-mode .measurement-quantity,
+html.dark-mode .measurement-size-select {
     background: #333333;
     border-color: #4a4a4a;
     color: #eeeeee;
     color-scheme: dark;
+}
+
+html.dark-mode .measurement-ingredient-select:focus,
+html.dark-mode .measurement-quantity:focus,
+html.dark-mode .measurement-size-select:focus {
+    border-color: #ff9e48;
+    box-shadow: 0 0 0 3px rgba(255, 158, 72, 0.1);
 }
 
 html.dark-mode .measurement-unit {
@@ -745,7 +757,11 @@ html.dark-mode .measurement-actions {
 
 @media (max-width: 1000px) {
     .measurement-item {
-        grid-template-columns: minmax(0, 1fr) minmax(110px, 140px) 38px;
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(110px, 140px)
+            minmax(85px, 105px)
+            38px;
         gap: 9px;
     }
 }
@@ -778,13 +794,14 @@ html.dark-mode .measurement-actions {
         grid-column: 1 / -1;
     }
 
-    .measurement-field:nth-child(2) {
+    .measurement-field:nth-child(2),
+    .measurement-field:nth-child(3) {
         grid-column: 1;
     }
 
     .remove-measurement-button {
         grid-column: 2;
-        grid-row: 2;
+        grid-row: 2 / span 2;
         align-self: end;
     }
 
@@ -797,12 +814,12 @@ html.dark-mode .measurement-actions {
     }
 }
 
-
 /* ========================================
    MEASUREMENTS DARK MODE
 ======================================== */
 
 /* Main Background */
+
 html.dark-mode body,
 html.dark-mode .main-content {
     background: #1f1f1f;
@@ -810,6 +827,7 @@ html.dark-mode .main-content {
 }
 
 /* Header */
+
 html.dark-mode .top-header {
     background: rgba(31, 31, 31, 0.94);
     border-bottom-color: #3d3d3d;
@@ -829,6 +847,7 @@ html.dark-mode .header-title p {
 }
 
 /* Admin Profile */
+
 html.dark-mode .admin-profile {
     background: rgba(45, 45, 45, 0.85);
     border-color: #444444;
@@ -852,6 +871,7 @@ html.dark-mode .admin-avatar {
 }
 
 /* Breadcrumbs */
+
 html.dark-mode .breadcrumb,
 html.dark-mode .breadcrumb a {
     color: #cccccc;
@@ -866,6 +886,7 @@ html.dark-mode .breadcrumb i {
 }
 
 /* Back Button */
+
 html.dark-mode .back-menu-button {
     background: #383838;
     color: #eeeeee;
@@ -878,6 +899,7 @@ html.dark-mode .back-menu-button:hover {
 }
 
 /* Measurement Cards */
+
 html.dark-mode .measurement-card {
     background: #292929;
     color: #eeeeee;
@@ -898,16 +920,19 @@ html.dark-mode .step-number {
 }
 
 /* Form Labels */
+
 html.dark-mode .form-group label {
     color: #eeeeee;
 }
 
 /* Dropdowns and Inputs */
+
 html.dark-mode .form-group select,
 html.dark-mode .measurement-input,
 html.dark-mode .measurement-unit,
 html.dark-mode .measurement-ingredient-select,
-html.dark-mode .measurement-quantity {
+html.dark-mode .measurement-quantity,
+html.dark-mode .measurement-size-select {
     background: #333333;
     color: #eeeeee;
     border-color: #4a4a4a;
@@ -918,7 +943,8 @@ html.dark-mode .form-group select:focus,
 html.dark-mode .measurement-input:focus,
 html.dark-mode .measurement-unit:focus,
 html.dark-mode .measurement-ingredient-select:focus,
-html.dark-mode .measurement-quantity:focus {
+html.dark-mode .measurement-quantity:focus,
+html.dark-mode .measurement-size-select:focus {
     border-color: #ff9e48;
     box-shadow: 0 0 0 3px rgba(255, 158, 72, 0.1);
 }
@@ -930,6 +956,7 @@ html.dark-mode .form-group select:disabled {
 }
 
 /* Measurement Note */
+
 html.dark-mode .measurement-note {
     background: #302820;
     border-left-color: #ff9e48;
@@ -937,6 +964,7 @@ html.dark-mode .measurement-note {
 }
 
 /* Categories */
+
 html.dark-mode .measurement-category {
     background: #292929;
     border-color: #3d3d3d;
@@ -960,6 +988,7 @@ html.dark-mode .measurement-category-chevron {
 }
 
 /* Ingredient Rows */
+
 html.dark-mode .measurement-category-body {
     background: #292929;
 }
@@ -974,12 +1003,14 @@ html.dark-mode .measurement-field label {
 }
 
 /* Unit Badge */
+
 html.dark-mode .measurement-unit {
     background: #3a2d24;
     color: #ff9e48;
 }
 
 /* Remove Ingredient Button */
+
 html.dark-mode .remove-measurement-button {
     background: #383838;
     color: #eeeeee;
@@ -996,6 +1027,7 @@ html.dark-mode .remove-measurement-button:hover {
 }
 
 /* Add Ingredient Button */
+
 html.dark-mode .add-ingredient-button {
     background: #383838;
     color: #eeeeee;
@@ -1020,6 +1052,7 @@ html.dark-mode .add-ingredient-button:disabled {
 }
 
 /* Empty States */
+
 html.dark-mode .empty-measurement-state {
     background: #252525;
     border-color: #454545;
@@ -1035,6 +1068,7 @@ html.dark-mode .empty-category-state {
 }
 
 /* Save Button */
+
 html.dark-mode .measurement-actions {
     border-top-color: #3d3d3d;
 }
@@ -1058,12 +1092,14 @@ html.dark-mode .save-measurements-button:disabled {
 }
 
 /* Icons */
+
 html.dark-mode .measurement-category i,
 html.dark-mode .measurement-actions i {
     color: inherit;
 }
 
 /* Scrollbars */
+
 html.dark-mode * {
     scrollbar-color: #555555 #292929;
 }
