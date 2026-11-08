@@ -1,3 +1,4 @@
+
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -121,37 +122,60 @@ function renderStatistics(orders) {
 
     const todaysOrders = getDayOrders(today, orders);
     const yesterdaysOrders = getDayOrders(yesterday, orders);
-    const todaysSales = todaysOrders.reduce((sum, order) => sum + getOrderTotal(order), 0);
-    const yesterdaysSales = yesterdaysOrders.reduce((sum, order) => sum + getOrderTotal(order), 0);
-    const customerCount = new Set(
-    orders
-        .filter(order => {
-            const date = getOrderDate(order);
 
-            return date &&
-                date.getMonth() === new Date().getMonth() &&
-                date.getFullYear() === new Date().getFullYear();
-        })
-        .map(getCustomerKey)
-        .filter(Boolean)
-).size;
-    const todaysCustomers = new Set(todaysOrders.map(getCustomerKey).filter(Boolean)).size;
-    const yesterdaysCustomers = new Set(yesterdaysOrders.map(getCustomerKey).filter(Boolean)).size;
-
-    document.getElementById("total-sales").textContent = formatMoney(todaysSales);
-    document.getElementById("total-orders").textContent = String(todaysOrders.length);
-    document.getElementById("average-order").textContent = formatMoney(
-        todaysOrders.length ? todaysSales / todaysOrders.length : 0
+    const todaysSales = todaysOrders.reduce(
+        (sum, order) => sum + getOrderTotal(order),
+        0
     );
-    document.getElementById("total-customers").textContent = String(customerCount);
 
-    updateChange(document.getElementById("sales-change"), todaysSales, yesterdaysSales);
-    updateChange(document.getElementById("orders-change"), todaysOrders.length, yesterdaysOrders.length);
+    const yesterdaysSales = yesterdaysOrders.reduce(
+        (sum, order) => sum + getOrderTotal(order),
+        0
+    );
+
+    // One order counts as one customer.
+    // Only today's orders are counted.
+    const todaysCustomers = todaysOrders.length;
+    const yesterdaysCustomers = yesterdaysOrders.length;
+
+    document.getElementById("total-sales").textContent =
+        formatMoney(todaysSales);
+
+    document.getElementById("total-orders").textContent =
+        String(todaysOrders.length);
+
+    document.getElementById("average-order").textContent =
+        formatMoney(
+            todaysOrders.length
+                ? todaysSales / todaysOrders.length
+                : 0
+        );
+
+    document.getElementById("total-customers").textContent =
+        String(todaysCustomers);
+
+    updateChange(
+        document.getElementById("sales-change"),
+        todaysSales,
+        yesterdaysSales
+    );
+
+    updateChange(
+        document.getElementById("orders-change"),
+        todaysOrders.length,
+        yesterdaysOrders.length
+    );
+
     updateChange(
         document.getElementById("average-change"),
-        todaysOrders.length ? todaysSales / todaysOrders.length : 0,
-        yesterdaysOrders.length ? yesterdaysSales / yesterdaysOrders.length : 0
+        todaysOrders.length
+            ? todaysSales / todaysOrders.length
+            : 0,
+        yesterdaysOrders.length
+            ? yesterdaysSales / yesterdaysOrders.length
+            : 0
     );
+
     updateChange(
         document.getElementById("customers-change"),
         todaysCustomers,
@@ -612,7 +636,7 @@ onAuthStateChanged(auth, async (user) => {
             return;
         }
         document.getElementById("adminGreeting").textContent =
-        adminData.name || user.email || "Admin";
+            adminData.name || user.email || "Admin";
 
         document.getElementById("adminRole").textContent =
             adminData.role || "Administrator";

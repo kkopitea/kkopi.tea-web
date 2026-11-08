@@ -421,6 +421,10 @@ function renderIngredientCategories(existingMeasurements = {}) {
         }
 
         function addIngredientRow(savedMeasurement = null, savedItemId = "") {
+            // Check the selected menu category.
+            const isSnackProduct =
+                normalizeCategory(categorySelect.value) === "snacks";
+
             const usedIds = new Set(
                 [...rows.querySelectorAll(".measurement-ingredient-select")]
                     .map(select => select.value)
@@ -540,9 +544,13 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
             const savedSize = savedMeasurement?.size || "both";
 
-            let currentSize = ["both", "16oz", "22oz"].includes(savedSize)
-                ? savedSize
-                : "both";
+            let currentSize = isSnackProduct
+                ? "both"
+                : (
+                    ["both", "16oz", "22oz"].includes(savedSize)
+                        ? savedSize
+                        : "both"
+                );
 
             function restoreSavedValues() {
                 if (!savedMeasurement) return;
@@ -631,12 +639,15 @@ function renderIngredientCategories(existingMeasurements = {}) {
                 updateCategory();
             });
 
+            // Snacks do not receive the size field in the DOM.
             row.append(
                 ingredientField,
                 quantityField,
-                sizeField,
+                ...(isSnackProduct ? [] : [sizeField]),
                 removeButton
             );
+
+            row._isSnackProduct = isSnackProduct;
 
             rows.appendChild(row);
 
@@ -747,7 +758,10 @@ saveButton.addEventListener("click", async () => {
         }
 
         const conversion = getRecipeUnit(item.unit);
-        const size = sizeSelect.value;
+
+        // Snacks always use one universal quantity.
+        const size = row._isSnackProduct ? "both" : sizeSelect.value;
+
         const quantityValues = row._quantityValues || {};
 
         const selectedQuantity = quantityValues[size] ?? "";
