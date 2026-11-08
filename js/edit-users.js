@@ -1,3 +1,4 @@
+
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -7,7 +8,7 @@ import {
 import {
     doc,
     getDoc,
-    updateDoc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 
@@ -21,6 +22,7 @@ const saveButton = document.getElementById("save-admin");
 
 const adminId = new URLSearchParams(window.location.search).get("id");
 
+
 function showMessage(text, type) {
     message.textContent = text;
     message.className = `form-message ${type}`;
@@ -33,19 +35,19 @@ function hideMessage() {
 }
 
 function normalizeRole(role) {
-    const roles = ["Administrator", "Manager", "Cashier", "Inventory"];
+    const roles = ["Administrator", "Manager", "Staff"];
 
     return roles.find(
         item => item.toLowerCase() === String(role || "").toLowerCase()
     ) || "Administrator";
 }
-
 function normalizeStatus(status) {
     return status === false ||
         String(status).toLowerCase() === "inactive"
         ? "inactive"
         : "active";
 }
+
 
 /* Display the signed-in administrator's name and role */
 onAuthStateChanged(auth, async (user) => {
@@ -95,14 +97,18 @@ onAuthStateChanged(auth, async (user) => {
             adminRole.textContent =
                 adminData.role || "Administrator";
         }
+
     } catch (error) {
         console.error("Admin profile verification failed:", error);
     }
 });
+
+
 function restoreSaveButton() {
     saveButton.disabled = false;
     saveButton.innerHTML = '<i class="fa-solid fa-check"></i> Save Changes';
 }
+
 
 async function loadUser() {
     if (!adminId) {
@@ -138,6 +144,7 @@ async function loadUser() {
             user.userId ||
             user.accountId ||
             adminId;
+
     } catch (error) {
         console.error("Error loading user:", error);
         showMessage("Unable to load user information.", "error");
@@ -145,6 +152,8 @@ async function loadUser() {
     }
 }
 
+
+/* Save edited user information */
 form.addEventListener("submit", async function (event) {
     event.preventDefault();
     hideMessage();
@@ -181,11 +190,18 @@ form.addEventListener("submit", async function (event) {
         window.setTimeout(() => {
             window.location.href = "admin-users.php";
         }, 1000);
+
     } catch (error) {
         console.error("Error updating user:", error);
-        showMessage("Unable to save changes. Please try again.", "error");
+
+        showMessage(
+            `Unable to save changes: ${error.code || error.message}`,
+            "error"
+        );
+
         restoreSaveButton();
     }
 });
+
 
 loadUser();
