@@ -50,11 +50,11 @@ let currentUser = null;
 /* PRODUCT MANAGEMENT CATEGORIES */
 
 const productCategories = [
-    { id: "milktea", name: "Milk Tea" },
-    { id: "coffee", name: "Coffee" },
-    { id: "snacks", name: "Snacks" },
-    { id: "frappe", name: "Frappe" },
-    { id: "fruittea", name: "Fruit Tea" }
+    { id: "icedlattes", name: "Iced Lattes" },
+    { id: "bubbleteas", name: "Bubble Teas" },
+    { id: "fruitteas", name: "Fruit Teas" },
+    { id: "noncaffeine", name: "Non Caffeine" },
+    { id: "amerikano", name: "Amerikano" }
 ];
 
 const peso = (amount) =>

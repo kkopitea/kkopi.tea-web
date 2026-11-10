@@ -14,10 +14,12 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
+
 const categorySelect = document.getElementById("menu-category");
 const productSelect = document.getElementById("menu-product");
 const measurementItems = document.getElementById("measurement-items");
 const saveButton = document.getElementById("save-measurements");
+
 
 let menuProducts = [];
 let inventoryItems = [];
@@ -25,13 +27,19 @@ let selectedProduct = null;
 let isSaving = false;
 let recipeLoadToken = 0;
 
+
 const categoryNames = {
-    milktea: "Milk Tea",
-    coffee: "Coffee",
-    snacks: "Snacks",
-    frappe: "Frappe",
-    "fruit-tea": "Fruit Tea"
+    icedlattes: "Iced Lattes",
+    bubbleteas: "Bubble Teas",
+    fruitteas: "Fruit Teas",
+    noncaffeine: "Non Caffeine",
+    amerikano: "Amerikano"
 };
+
+
+/* =========================================
+   CATEGORY FUNCTIONS
+========================================= */
 
 function normalizeCategory(value) {
     return String(value ?? "")
@@ -39,12 +47,18 @@ function normalizeCategory(value) {
         .replace(/[\s_-]/g, "");
 }
 
+
 function getProductCategory(product) {
     return product.category ||
         product.categoryName ||
         product.categoryId ||
         "";
 }
+
+
+/* =========================================
+   RECIPE UNIT CONVERSION
+========================================= */
 
 function getRecipeUnit(unit) {
     const originalUnit = String(unit ?? "").trim();
@@ -76,6 +90,11 @@ function getRecipeUnit(unit) {
     };
 }
 
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
 function showEmptyState(message) {
     measurementItems.replaceChildren();
 
@@ -92,7 +111,10 @@ function showEmptyState(message) {
     measurementItems.appendChild(state);
 }
 
-/* LOAD PRODUCTS AND INVENTORY */
+
+/* =========================================
+   LOAD PRODUCTS AND INVENTORY
+========================================= */
 
 async function loadMeasurementData() {
     categorySelect.disabled = true;
@@ -144,7 +166,10 @@ async function loadMeasurementData() {
     }
 }
 
-/* PRODUCT CATEGORY SELECTION */
+
+/* =========================================
+   PRODUCT CATEGORY SELECTION
+========================================= */
 
 categorySelect.addEventListener("change", () => {
     recipeLoadToken++;
@@ -189,7 +214,10 @@ categorySelect.addEventListener("change", () => {
     productSelect.disabled = false;
 });
 
-/* PRODUCT SELECTION AND EXISTING RECIPE LOADING */
+
+/* =========================================
+   PRODUCT SELECTION AND EXISTING RECIPE
+========================================= */
 
 productSelect.addEventListener("change", async () => {
     const productId = productSelect.value;
@@ -239,7 +267,10 @@ productSelect.addEventListener("change", async () => {
     }
 });
 
-/* INVENTORY CATEGORIES */
+
+/* =========================================
+   INVENTORY CATEGORIES
+========================================= */
 
 function getInventoryGroups() {
     const groups = new Map();
@@ -257,7 +288,10 @@ function getInventoryGroups() {
     return groups;
 }
 
-/* GET SAVED QUANTITY */
+
+/* =========================================
+   GET SAVED QUANTITY
+========================================= */
 
 function getSavedRecipeQuantity(savedMeasurement, size, multiplier) {
     if (!savedMeasurement) return "";
@@ -270,9 +304,11 @@ function getSavedRecipeQuantity(savedMeasurement, size, multiplier) {
         }
 
         if (savedMeasurement.quantity !== undefined) {
-            return String(
-                Number(savedMeasurement.quantity) * multiplier
-            );
+            return savedMeasurement.quantity === null
+                ? ""
+                : String(
+                    Number(savedMeasurement.quantity) * multiplier
+                );
         }
 
         return "";
@@ -298,20 +334,27 @@ function getSavedRecipeQuantity(savedMeasurement, size, multiplier) {
     // Support older recipes with size: "16oz" or "22oz".
     if (savedMeasurement.size === size) {
         if (savedMeasurement.recipeQuantity !== undefined) {
-            return String(savedMeasurement.recipeQuantity);
+            return savedMeasurement.recipeQuantity === null
+                ? ""
+                : String(savedMeasurement.recipeQuantity);
         }
 
         if (savedMeasurement.quantity !== undefined) {
-            return String(
-                Number(savedMeasurement.quantity) * multiplier
-            );
+            return savedMeasurement.quantity === null
+                ? ""
+                : String(
+                    Number(savedMeasurement.quantity) * multiplier
+                );
         }
     }
 
     return "";
 }
 
-/* RENDER INGREDIENT CATEGORIES */
+
+/* =========================================
+   RENDER INGREDIENT CATEGORIES
+========================================= */
 
 function renderIngredientCategories(existingMeasurements = {}) {
     measurementItems.replaceChildren();
@@ -334,6 +377,7 @@ function renderIngredientCategories(existingMeasurements = {}) {
     groups.forEach((items, category) => {
         const section = document.createElement("section");
         section.className = "measurement-category";
+
 
         /* CATEGORY HEADER */
 
@@ -382,10 +426,16 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
         addButton.append(plusIcon, addText);
 
+
+        /* CATEGORY TOGGLE */
+
         toggle.addEventListener("click", () => {
             const collapsed = section.classList.toggle("is-collapsed");
             toggle.setAttribute("aria-expanded", String(!collapsed));
         });
+
+
+        /* UPDATE CATEGORY */
 
         function updateCategory() {
             const selectedCount = [
@@ -420,11 +470,10 @@ function renderIngredientCategories(existingMeasurements = {}) {
                 });
         }
 
-        function addIngredientRow(savedMeasurement = null, savedItemId = "") {
-            // Check the selected menu category.
-            const isSnackProduct =
-                normalizeCategory(categorySelect.value) === "snacks";
 
+        /* ADD INGREDIENT ROW */
+
+        function addIngredientRow(savedMeasurement = null, savedItemId = "") {
             const usedIds = new Set(
                 [...rows.querySelectorAll(".measurement-ingredient-select")]
                     .map(select => select.value)
@@ -442,6 +491,7 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
             const row = document.createElement("div");
             row.className = "measurement-item";
+
 
             /* INGREDIENT DROPDOWN */
 
@@ -469,6 +519,7 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
             ingredientField.append(ingredientLabel, ingredientSelect);
 
+
             /* APPLIES TO SIZE */
 
             const sizeField = document.createElement("div");
@@ -493,7 +544,8 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
             sizeField.append(sizeLabel, sizeSelect);
 
-            /* SINGLE QUANTITY INPUT */
+
+            /* QUANTITY INPUT */
 
             const quantityField = document.createElement("div");
             quantityField.className = "measurement-field";
@@ -519,6 +571,7 @@ function renderIngredientCategories(existingMeasurements = {}) {
             quantityGroup.append(quantityInput, unitLabel);
             quantityField.append(quantityLabel, quantityGroup);
 
+
             /* REMOVE BUTTON */
 
             const removeButton = document.createElement("button");
@@ -531,10 +584,8 @@ function renderIngredientCategories(existingMeasurements = {}) {
             removeIcon.className = "fa-solid fa-trash";
             removeButton.appendChild(removeIcon);
 
-            /*
-             * Keep all quantities in memory for this one row.
-             * Only one quantity input is displayed at a time.
-             */
+
+            /* INDEPENDENT QUANTITIES */
 
             const quantityValues = {
                 both: "",
@@ -542,15 +593,28 @@ function renderIngredientCategories(existingMeasurements = {}) {
                 "22oz": ""
             };
 
-            const savedSize = savedMeasurement?.size || "both";
 
-            let currentSize = isSnackProduct
-                ? "both"
-                : (
-                    ["both", "16oz", "22oz"].includes(savedSize)
-                        ? savedSize
-                        : "both"
-                );
+            /* RESTORE SAVED SIZE */
+
+            let savedSize = savedMeasurement?.size || "both";
+
+            if (savedSize === "separate") {
+                savedSize = savedMeasurement?.selectedSize || "both";
+            }
+
+            savedSize = String(savedSize)
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, "");
+
+            let currentSize = (
+                ["both", "16oz", "22oz"].includes(savedSize)
+                    ? savedSize
+                    : "both"
+            );
+
+
+            /* RESTORE SAVED VALUES */
 
             function restoreSavedValues() {
                 if (!savedMeasurement) return;
@@ -582,6 +646,9 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
             restoreSavedValues();
 
+
+            /* UPDATE INGREDIENT UNIT */
+
             function updateIngredientUnit() {
                 const item = items.find(
                     inventoryItem => inventoryItem.id === ingredientSelect.value
@@ -610,46 +677,62 @@ function renderIngredientCategories(existingMeasurements = {}) {
                 unitLabel.textContent = conversion.unit;
             }
 
+
+            /* SHOW CURRENT QUANTITY */
+
             function showCurrentQuantity() {
                 sizeSelect.value = currentSize;
                 quantityInput.value = quantityValues[currentSize] ?? "";
             }
 
+
+            /* CHANGE SIZE */
+
             sizeSelect.addEventListener("change", () => {
-                // Save the currently displayed value before switching.
                 quantityValues[currentSize] = quantityInput.value.trim();
 
                 currentSize = sizeSelect.value;
 
-                // Restore the value previously entered for the new size.
                 showCurrentQuantity();
             });
+
+
+            /* QUANTITY INPUT */
 
             quantityInput.addEventListener("input", () => {
                 quantityValues[currentSize] = quantityInput.value.trim();
             });
+
+
+            /* INGREDIENT SELECTION */
 
             ingredientSelect.addEventListener("change", () => {
                 updateIngredientUnit();
                 updateCategory();
             });
 
+
+            /* REMOVE INGREDIENT */
+
             removeButton.addEventListener("click", () => {
                 row.remove();
                 updateCategory();
             });
 
-            // Snacks do not receive the size field in the DOM.
+
+            /* APPEND ROW ELEMENTS */
+
             row.append(
                 ingredientField,
+                sizeField,
                 quantityField,
-                ...(isSnackProduct ? [] : [sizeField]),
                 removeButton
             );
 
-            row._isSnackProduct = isSnackProduct;
-
             rows.appendChild(row);
+
+
+            /* LOAD EXISTING INGREDIENT */
 
             if (savedItemId) {
                 ingredientSelect.value = savedItemId;
@@ -659,10 +742,13 @@ function renderIngredientCategories(existingMeasurements = {}) {
             showCurrentQuantity();
             updateCategory();
 
-            // Keep values available for saving.
+
+            /* STORE QUANTITY FUNCTIONS */
+
             row._quantityValues = quantityValues;
 
             row._getCurrentSize = () => currentSize;
+
             row._getCurrentQuantity = () => quantityInput.value.trim();
 
             row._setCurrentQuantity = () => {
@@ -670,9 +756,15 @@ function renderIngredientCategories(existingMeasurements = {}) {
             };
         }
 
+
+        /* ADD INGREDIENT BUTTON */
+
         addButton.addEventListener("click", () => {
             addIngredientRow();
         });
+
+
+        /* APPEND CATEGORY ELEMENTS */
 
         body.append(rows, addButton);
         header.appendChild(toggle);
@@ -680,7 +772,9 @@ function renderIngredientCategories(existingMeasurements = {}) {
         section.append(header, body);
         measurementItems.appendChild(section);
 
-        // Restore saved ingredients.
+
+        /* RESTORE SAVED INGREDIENTS */
+
         Object.entries(existingMeasurements).forEach(
             ([itemId, savedMeasurement]) => {
                 const matchingItem = items.find(item => item.id === itemId);
@@ -693,6 +787,9 @@ function renderIngredientCategories(existingMeasurements = {}) {
 
         updateCategory();
     });
+
+
+    /* CHECK MISSING INVENTORY ITEMS */
 
     Object.keys(existingMeasurements).forEach(itemId => {
         const stillExists = inventoryItems.some(item => item.id === itemId);
@@ -707,7 +804,10 @@ function renderIngredientCategories(existingMeasurements = {}) {
     saveButton.disabled = false;
 }
 
-/* SAVE RECIPE */
+
+/* =========================================
+   SAVE RECIPE
+========================================= */
 
 saveButton.addEventListener("click", async () => {
     if (isSaving) return;
@@ -718,6 +818,7 @@ saveButton.addEventListener("click", async () => {
     }
 
     const measurements = {};
+
     const rows = measurementItems.querySelectorAll(".measurement-item");
 
     for (const row of rows) {
@@ -735,7 +836,6 @@ saveButton.addEventListener("click", async () => {
 
         const itemId = ingredientSelect.value;
 
-        // Capture the currently displayed quantity before saving.
         row._setCurrentQuantity?.();
 
         if (!itemId) {
@@ -759,9 +859,7 @@ saveButton.addEventListener("click", async () => {
 
         const conversion = getRecipeUnit(item.unit);
 
-        // Snacks always use one universal quantity.
-        const size = row._isSnackProduct ? "both" : sizeSelect.value;
-
+        const size = sizeSelect.value;
         const quantityValues = row._quantityValues || {};
 
         const selectedQuantity = quantityValues[size] ?? "";
@@ -793,34 +891,48 @@ saveButton.addEventListener("click", async () => {
             measurement.recipeQuantity = recipeQuantity;
             measurement.quantity =
                 recipeQuantity / conversion.multiplier;
-        } else {
-            const otherSize = size === "16oz" ? "22oz" : "16oz";
-            const otherQuantityText = quantityValues[otherSize] ?? "";
 
-            const otherQuantity = otherQuantityText === ""
+        } else {
+            const quantity16Text = quantityValues["16oz"] ?? "";
+            const quantity22Text = quantityValues["22oz"] ?? "";
+
+            const quantity16 = quantity16Text === ""
                 ? null
-                : Number(otherQuantityText);
+                : Number(quantity16Text);
+
+            const quantity22 = quantity22Text === ""
+                ? null
+                : Number(quantity22Text);
 
             if (
-                otherQuantity !== null &&
-                (!Number.isFinite(otherQuantity) || otherQuantity <= 0)
+                quantity16 !== null &&
+                (!Number.isFinite(quantity16) || quantity16 <= 0)
             ) {
-                alert(`${otherSize} quantity must be greater than zero.`);
+                alert(`16oz quantity for ${item.name} must be greater than zero.`);
                 return;
             }
 
-            const quantity16 = size === "16oz"
-                ? recipeQuantity
-                : otherQuantity;
+            if (
+                quantity22 !== null &&
+                (!Number.isFinite(quantity22) || quantity22 <= 0)
+            ) {
+                alert(`22oz quantity for ${item.name} must be greater than zero.`);
+                return;
+            }
 
-            const quantity22 = size === "22oz"
-                ? recipeQuantity
-                : otherQuantity;
+            // The selected size must have a valid quantity.
+            if (
+                (size === "16oz" && quantity16 === null) ||
+                (size === "22oz" && quantity22 === null)
+            ) {
+                alert(`Please enter a quantity for ${item.name} (${size}).`);
+                return;
+            }
 
             measurement.size = "separate";
-
             measurement.selectedSize = size;
 
+            // Save each size independently.
             measurement.recipeQuantity16oz = quantity16;
             measurement.quantity16oz = quantity16 === null
                 ? null
@@ -835,15 +947,24 @@ saveButton.addEventListener("click", async () => {
         measurements[item.id] = measurement;
     }
 
+
+    /* CHECK MEASUREMENTS */
+
     if (Object.keys(measurements).length === 0) {
         alert("Please add at least one ingredient with a quantity.");
         return;
     }
 
+
+    /* BUTTON LOADING */
+
     isSaving = true;
+
     saveButton.disabled = true;
+
     saveButton.innerHTML =
         '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
 
     try {
         await setDoc(
@@ -851,11 +972,13 @@ saveButton.addEventListener("click", async () => {
             {
                 productId: selectedProduct.id,
                 productName: selectedProduct.name || "Unnamed Product",
+
                 category:
                     categoryNames[categorySelect.value] ||
                     categorySelect.options[
                         categorySelect.selectedIndex
                     ].text,
+
                 measurements,
                 updatedAt: serverTimestamp()
             }
@@ -872,13 +995,18 @@ saveButton.addEventListener("click", async () => {
         );
 
         isSaving = false;
+
         saveButton.disabled = false;
+
         saveButton.innerHTML =
             '<i class="fa-solid fa-floppy-disk"></i> Save Measurements';
     }
 });
 
-/* LOAD ADMIN PROFILE */
+
+/* =========================================
+   LOAD ADMIN PROFILE
+========================================= */
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -917,5 +1045,10 @@ onAuthStateChanged(auth, async (user) => {
         console.error("Error loading admin profile:", error);
     }
 });
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
 
 loadMeasurementData();

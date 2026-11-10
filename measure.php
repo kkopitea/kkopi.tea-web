@@ -48,11 +48,11 @@ $menuItems = [
 ];
 
 $menuCategories = [
-    "milktea" => "Milk Tea",
-    "coffee" => "Coffee",
-    "snacks" => "Snacks",
-    "frappe" => "Frappe",
-    "fruit-tea" => "Fruit Tea"
+    "icedlattes" => "Iced Lattes",
+    "bubbleteas" => "Bubble Teas",
+    "fruitteas" => "Fruit Teas",
+    "noncaffeine" => "Non Caffeine",
+    "amerikano" => "Amerikano"
 ];
 
 ?>

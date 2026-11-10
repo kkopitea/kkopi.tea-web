@@ -1089,52 +1089,19 @@ function createProductRow(product) {
 
 function getCategoryName(category) {
 
-    if (
-        category === "milktea"
-    ) {
+    const categories = {
+        icedlattes: "Iced Lattes",
+        bubbleteas: "Bubble Teas",
+        fruitteas: "Fruit Teas",
+        noncaffeine: "Non Caffeine",
+        amerikano: "Amerikano"
+    };
 
-        return "Milk Tea";
+    const categoryKey = String(category || "")
+        .trim()
+        .toLowerCase();
 
-    }
-
-
-    if (
-        category === "coffee"
-    ) {
-
-        return "Coffee";
-
-    }
-
-
-    if (
-        category === "snacks"
-    ) {
-
-        return "Snacks";
-
-    }
-
-
-    if (
-        category === "frappe"
-    ) {
-
-        return "Frappe";
-
-    }
-
-
-    if (
-        category === "fruittea"
-    ) {
-
-        return "Fruit Tea";
-
-    }
-
-
-    return "Unknown";
+    return categories[categoryKey] || "Unknown";
 
 }
 

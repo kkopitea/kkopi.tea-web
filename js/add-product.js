@@ -1,3 +1,4 @@
+
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -20,10 +21,24 @@ const CLOUDINARY_UPLOAD_URL =
     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
 
+/* PRODUCT CATEGORIES */
+
+const PRODUCT_CATEGORIES = {
+    icedlattes: "Iced Lattes",
+    bubbleteas: "Bubble Teas",
+    fruitteas: "Fruit Teas",
+    noncaffeine: "Non Caffeine",
+    amerikano: "Amerikano"
+};
+
+
+/* FORM ELEMENTS */
 
 const form = document.getElementById("add-product-form");
 
-// IMAGE ELEMENTS
+
+/* IMAGE ELEMENTS */
+
 const imageUploadBox = document.getElementById("image-upload-box");
 const imageUploadContent = document.getElementById("image-upload-content");
 const productImage = document.getElementById("product-image");
@@ -32,45 +47,39 @@ const imagePreview = document.getElementById("image-preview");
 const previewImage = document.getElementById("preview-image");
 const removeImageButton = document.getElementById("remove-image-button");
 
-// PRODUCT INFORMATION
+
+/* PRODUCT INFORMATION */
+
 const productName = document.getElementById("product-name");
 const productCategory = document.getElementById("product-category");
-// PRODUCT OPTIONS
-const sizesSection = document.getElementById("sizes-section");
-const sugarLevelsSection = document.getElementById("sugar-levels-section");
-
-function toggleProductOptions() {
-    const isSnack = productCategory.value === "snacks";
-
-    if (sizesSection) {
-        sizesSection.hidden = isSnack;
-    }
-
-    if (sugarLevelsSection) {
-        sugarLevelsSection.hidden = isSnack;
-    }
-}
-
-productCategory.addEventListener("change", toggleProductOptions);
-toggleProductOptions();
 const productPrice = document.getElementById("product-price");
 const productStatus = document.getElementById("product-status");
 const productDescription = document.getElementById("product-description");
 const characterCounter = document.getElementById("character-counter");
 
-// FORM MESSAGES AND BUTTONS
+
+/* PRODUCT OPTIONS */
+
+const sizesSection = document.getElementById("sizes-section");
+const sugarLevelsSection = document.getElementById("sugar-levels-section");
+
+
+/* FORM MESSAGES AND BUTTONS */
+
 const formMessage = document.getElementById("form-message");
 const formMessageText = document.getElementById("form-message-text");
 const saveProductButton = document.getElementById("save-product-button");
 
-// VALIDATION ERRORS
+
+/* VALIDATION ERRORS */
+
 const nameError = document.getElementById("name-error");
 const categoryError = document.getElementById("category-error");
 const priceError = document.getElementById("price-error");
 const imageError = document.getElementById("image-error");
 
 
-/* Size controls */
+/* SIZE CONTROLS */
 
 const size16ozAdditional =
     document.querySelector('input[name="16oz_additional"]');
@@ -82,13 +91,225 @@ const sizeCheckboxes =
     document.querySelectorAll('input[name="sizes[]"]');
 
 
-/* Sugar level controls */
+/* SUGAR LEVEL CONTROLS */
 
 const sugarCheckboxes =
     document.querySelectorAll('input[name="sugar_levels[]"]');
 
 
 let selectedImage = null;
+
+
+/* =========================================
+   ADD-ONS SECTION
+========================================= */
+
+/*
+   This creates the Add-ons section through JavaScript.
+   You do not need to add the Add-ons HTML manually.
+*/
+
+const addonsSection = document.createElement("div");
+addonsSection.id = "addons-section";
+addonsSection.className = "product-option-group";
+
+addonsSection.innerHTML = `
+    <div class="product-option-title">
+        <div>
+            <span>Add-ons</span>
+            <small>
+                Add optional extras and their additional prices.
+            </small>
+        </div>
+    </div>
+
+    <div id="addons-list"></div>
+
+    <button type="button" id="add-addon-button">
+        <i class="fa-solid fa-plus"></i>
+        Add Add-on
+    </button>
+
+    <p id="addons-error" class="error-message"></p>
+`;
+
+const addonsList = addonsSection.querySelector("#addons-list");
+const addAddonButton = addonsSection.querySelector("#add-addon-button");
+const addonsError = addonsSection.querySelector("#addons-error");
+
+
+/* Place Add-ons after the sugar level section */
+
+if (sugarLevelsSection) {
+    sugarLevelsSection.insertAdjacentElement(
+        "afterend",
+        addonsSection
+    );
+} else {
+    const submitButton = form.querySelector('[type="submit"]');
+
+    if (submitButton) {
+        submitButton.parentElement.insertAdjacentElement(
+            "beforebegin",
+            addonsSection
+        );
+    } else {
+        form.appendChild(addonsSection);
+    }
+}
+
+
+/* Create an add-on row */
+
+function createAddonRow() {
+    const addonRow = document.createElement("div");
+
+    addonRow.className = "addon-row";
+
+    addonRow.innerHTML = `
+        <div class="addon-input-group">
+            <input
+                type="text"
+                name="addon-name[]"
+                class="addon-name"
+                placeholder="Add-on name (e.g. Pearls)"
+                maxlength="50"
+                aria-label="Add-on name"
+            >
+
+            <input
+                type="number"
+                name="addon-price[]"
+                class="addon-price"
+                placeholder="Additional price"
+                min="0"
+                step="0.01"
+                aria-label="Add-on price"
+            >
+
+            <button
+                type="button"
+                class="remove-addon-button"
+                aria-label="Remove add-on"
+                title="Remove add-on"
+            >
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    addonsList.appendChild(addonRow);
+
+    const nameInput = addonRow.querySelector(".addon-name");
+
+    nameInput.focus();
+}
+
+
+/* Add add-on button */
+
+addAddonButton.addEventListener("click", () => {
+    addonsError.textContent = "";
+    createAddonRow();
+});
+
+
+/* Remove add-on */
+
+addonsList.addEventListener("click", (event) => {
+    const removeButton = event.target.closest(
+        ".remove-addon-button"
+    );
+
+    if (!removeButton) {
+        return;
+    }
+
+    const addonRow = removeButton.closest(".addon-row");
+
+    if (addonRow) {
+        addonRow.remove();
+    }
+
+    addonsError.textContent = "";
+});
+
+
+/* Get add-ons */
+
+function getAddons() {
+    const addons = [];
+
+    const addonRows = addonsList.querySelectorAll(".addon-row");
+
+    addonRows.forEach((row) => {
+        const nameInput = row.querySelector(".addon-name");
+        const priceInput = row.querySelector(".addon-price");
+
+        const name = nameInput.value.trim();
+        const priceValue = priceInput.value;
+
+        // Ignore completely empty rows.
+        if (!name && priceValue === "") {
+            return;
+        }
+
+        addons.push({
+            name: name,
+            price: Number(priceValue)
+        });
+    });
+
+    return addons;
+}
+
+
+/* Validate add-ons */
+
+function validateAddons() {
+    const addonRows = addonsList.querySelectorAll(".addon-row");
+
+    for (const row of addonRows) {
+        const nameInput = row.querySelector(".addon-name");
+        const priceInput = row.querySelector(".addon-price");
+
+        const name = nameInput.value.trim();
+        const priceValue = priceInput.value;
+        const price = Number(priceValue);
+
+        // Both fields are empty, so ignore this row.
+        if (!name && priceValue === "") {
+            continue;
+        }
+
+        // Require both name and price.
+        if (!name || priceValue === "") {
+            addonsError.textContent =
+                "Please complete both the add-on name and price.";
+
+            return false;
+        }
+
+        if (
+            !Number.isFinite(price) ||
+            price < 0
+        ) {
+            addonsError.textContent =
+                "Please enter a valid add-on price.";
+
+            return false;
+        }
+    }
+
+    addonsError.textContent = "";
+
+    return true;
+}
+
+
+/* =========================================
+   IMAGE UPLOAD
+========================================= */
 
 
 /* Open file selector */
@@ -102,74 +323,6 @@ uploadButton.addEventListener("click", () => {
 
 productImage.addEventListener("change", () => {
     const file = productImage.files[0];
-
-    if (!file) {
-        return;
-    }
-
-    handleImage(file);
-});
-
-
-/* Load admin profile */
-
-onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        return;
-    }
-
-    try {
-        const adminSnapshot = await getDoc(
-            doc(db, "admins", user.uid)
-        );
-
-        if (!adminSnapshot.exists()) {
-            console.error("Admin document not found.");
-            return;
-        }
-
-        const adminData = adminSnapshot.data();
-
-        const greeting = document.getElementById("adminGreeting");
-        const role = document.getElementById("adminRole");
-
-        if (greeting) {
-            greeting.textContent =
-                adminData.name || user.email || "Admin";
-        }
-
-        if (role) {
-            role.textContent =
-                adminData.role || "Administrator";
-        }
-    } catch (error) {
-        console.error("Error loading admin profile:", error);
-    }
-});
-
-
-/* Drag over */
-
-imageUploadBox.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    imageUploadBox.classList.add("dragging");
-});
-
-
-/* Drag leave */
-
-imageUploadBox.addEventListener("dragleave", () => {
-    imageUploadBox.classList.remove("dragging");
-});
-
-
-/* Drop image */
-
-imageUploadBox.addEventListener("drop", (event) => {
-    event.preventDefault();
-    imageUploadBox.classList.remove("dragging");
-
-    const file = event.dataTransfer.files[0];
 
     if (!file) {
         return;
@@ -209,6 +362,7 @@ function handleImage(file) {
 
     reader.onload = (event) => {
         previewImage.src = event.target.result;
+
         imageUploadContent.hidden = true;
         imagePreview.hidden = false;
     };
@@ -234,7 +388,9 @@ removeImageButton.addEventListener("click", () => {
 /* Change image */
 
 imagePreview.addEventListener("click", (event) => {
-    const changeButton = event.target.closest(".change-image-button");
+    const changeButton = event.target.closest(
+        ".change-image-button"
+    );
 
     if (!changeButton) {
         return;
@@ -244,7 +400,82 @@ imagePreview.addEventListener("click", (event) => {
 });
 
 
-/* Character counter */
+/* Drag over */
+
+imageUploadBox.addEventListener("dragover", (event) => {
+    event.preventDefault();
+
+    imageUploadBox.classList.add("dragging");
+});
+
+
+/* Drag leave */
+
+imageUploadBox.addEventListener("dragleave", () => {
+    imageUploadBox.classList.remove("dragging");
+});
+
+
+/* Drop image */
+
+imageUploadBox.addEventListener("drop", (event) => {
+    event.preventDefault();
+
+    imageUploadBox.classList.remove("dragging");
+
+    const file = event.dataTransfer.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    handleImage(file);
+});
+
+
+/* =========================================
+   ADMIN PROFILE
+========================================= */
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        return;
+    }
+
+    try {
+        const adminSnapshot = await getDoc(
+            doc(db, "admins", user.uid)
+        );
+
+        if (!adminSnapshot.exists()) {
+            console.error("Admin document not found.");
+            return;
+        }
+
+        const adminData = adminSnapshot.data();
+
+        const greeting = document.getElementById("adminGreeting");
+        const role = document.getElementById("adminRole");
+
+        if (greeting) {
+            greeting.textContent =
+                adminData.name || user.email || "Admin";
+        }
+
+        if (role) {
+            role.textContent =
+                adminData.role || "Administrator";
+        }
+
+    } catch (error) {
+        console.error("Error loading admin profile:", error);
+    }
+});
+
+
+/* =========================================
+   CHARACTER COUNTER
+========================================= */
 
 productDescription.addEventListener("input", () => {
     const currentLength = productDescription.value.length;
@@ -252,6 +483,11 @@ productDescription.addEventListener("input", () => {
     characterCounter.textContent =
         `${currentLength} / 300`;
 });
+
+
+/* =========================================
+   ERROR HANDLING
+========================================= */
 
 
 /* Clear errors */
@@ -262,6 +498,8 @@ function clearErrors() {
     priceError.textContent = "";
 
     clearImageError();
+
+    addonsError.textContent = "";
 }
 
 
@@ -295,6 +533,11 @@ function hideMessage() {
 }
 
 
+/* =========================================
+   SIZE FUNCTIONS
+========================================= */
+
+
 /* Get additional price */
 
 function getAdditionalPrice(input) {
@@ -325,9 +568,14 @@ function getSizes() {
         let additionalPrice = 0;
 
         if (checkbox.value === "16oz") {
-            additionalPrice = getAdditionalPrice(size16ozAdditional);
+            additionalPrice = getAdditionalPrice(
+                size16ozAdditional
+            );
+
         } else if (checkbox.value === "22oz") {
-            additionalPrice = getAdditionalPrice(size22ozAdditional);
+            additionalPrice = getAdditionalPrice(
+                size22ozAdditional
+            );
         }
 
         sizes.push({
@@ -340,21 +588,6 @@ function getSizes() {
 }
 
 
-/* Get selected sugar levels */
-
-function getSelectedSugarLevels() {
-    const sugarLevels = [];
-
-    sugarCheckboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            sugarLevels.push(checkbox.value);
-        }
-    });
-
-    return sugarLevels;
-}
-
-
 /* Validate sizes */
 
 function validateSizes() {
@@ -362,7 +595,10 @@ function validateSizes() {
         !size16ozAdditional ||
         !size22ozAdditional
     ) {
-        console.error("Size price inputs are missing from the PHP form.");
+        console.error(
+            "Size price inputs are missing from the PHP form."
+        );
+
         return false;
     }
 
@@ -382,12 +618,35 @@ function validateSizes() {
 
         const value = Number(input.value);
 
-        if (!Number.isFinite(value) || value < 0) {
+        if (
+            !Number.isFinite(value) ||
+            value < 0
+        ) {
             return false;
         }
     }
 
     return true;
+}
+
+
+/* =========================================
+   SUGAR LEVEL FUNCTIONS
+========================================= */
+
+
+/* Get selected sugar levels */
+
+function getSelectedSugarLevels() {
+    const sugarLevels = [];
+
+    sugarCheckboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            sugarLevels.push(checkbox.value);
+        }
+    });
+
+    return sugarLevels;
 }
 
 
@@ -397,11 +656,25 @@ function validateSugarLevels() {
     return getSelectedSugarLevels().length > 0;
 }
 
-function isSnackCategory() {
-    return productCategory.value === "snacks";
+
+/* =========================================
+   CATEGORY FUNCTIONS
+========================================= */
+
+
+/* Validate selected category */
+
+function validateCategory(category) {
+    return Object.prototype.hasOwnProperty.call(
+        PRODUCT_CATEGORIES,
+        category
+    );
 }
 
-/* Validate form */
+
+/* =========================================
+   FORM VALIDATION
+========================================= */
 
 function validateForm() {
     clearErrors();
@@ -412,47 +685,84 @@ function validateForm() {
     const category = productCategory.value;
     const price = Number(productPrice.value);
 
+    /* Product name */
+
     if (!name) {
-        nameError.textContent = "Please enter a product name.";
+        nameError.textContent =
+            "Please enter a product name.";
+
         isValid = false;
     }
 
+
+    /* Product category */
+
     if (!category) {
-        categoryError.textContent = "Please select a category.";
+        categoryError.textContent =
+            "Please select a category.";
+
+        isValid = false;
+
+    } else if (!validateCategory(category)) {
+        categoryError.textContent =
+            "Please select a valid product category.";
+
         isValid = false;
     }
+
+
+    /* Product price */
 
     if (
         productPrice.value === "" ||
         !Number.isFinite(price) ||
         price < 0
     ) {
-        priceError.textContent = "Please enter a valid price.";
+        priceError.textContent =
+            "Please enter a valid price.";
+
         isValid = false;
     }
+
+
+    /* Product image */
 
     if (!selectedImage) {
-        showImageError("Please upload a product image.");
+        showImageError(
+            "Please upload a product image."
+        );
+
         isValid = false;
     }
 
-    // Drinks require sizes and sugar levels.
-    // Snacks can be added without these options.
-    if (!isSnackCategory()) {
-        if (!validateSizes()) {
-            isValid = false;
-        }
 
-        if (!validateSugarLevels()) {
-            isValid = false;
-        }
+    /* Sizes */
+
+    if (!validateSizes()) {
+        isValid = false;
+    }
+
+
+    /* Sugar levels */
+
+    if (!validateSugarLevels()) {
+        isValid = false;
+    }
+
+
+    /* Add-ons */
+
+    if (!validateAddons()) {
+        isValid = false;
     }
 
     return isValid;
 }
 
 
-/* Upload image to Cloudinary */
+/* =========================================
+   CLOUDINARY IMAGE UPLOAD
+========================================= */
 
 async function uploadImageToCloudinary(file) {
     const formData = new FormData();
@@ -473,13 +783,17 @@ async function uploadImageToCloudinary(file) {
 
         console.error("Cloudinary error:", errorData);
 
-        throw new Error("Cloudinary image upload failed.");
+        throw new Error(
+            "Cloudinary image upload failed."
+        );
     }
 
     const data = await response.json();
 
     if (!data.secure_url) {
-        throw new Error("Cloudinary did not return an image URL.");
+        throw new Error(
+            "Cloudinary did not return an image URL."
+        );
     }
 
     return {
@@ -487,6 +801,11 @@ async function uploadImageToCloudinary(file) {
         publicId: data.public_id
     };
 }
+
+
+/* =========================================
+   BUTTON LOADING
+========================================= */
 
 
 /* Loading button */
@@ -498,6 +817,7 @@ function setButtonLoading(message) {
         <span class="button-icon">
             <i class="fa-solid fa-spinner fa-spin"></i>
         </span>
+
         <span>${message}</span>
     `;
 }
@@ -512,12 +832,15 @@ function restoreButton() {
         <span class="button-icon">
             <i class="fa-solid fa-plus"></i>
         </span>
+
         <span>Add Product</span>
     `;
 }
 
 
-/* Submit product */
+/* =========================================
+   SUBMIT PRODUCT
+========================================= */
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -534,21 +857,23 @@ form.addEventListener("submit", async (event) => {
     const isAvailable = productStatus.value === "active";
     const description = productDescription.value.trim();
 
-    const sizes = isSnackCategory() ? [] : getSizes();
+    const sizes = getSizes();
+    const sugarLevels = getSelectedSugarLevels();
+    const addons = getAddons();
 
-    const sugarLevels = isSnackCategory()
-    ? []
-    : getSelectedSugarLevels();
 
     console.log("PRODUCT DATA:", {
         name,
         description,
         categoryId,
+        categoryName: PRODUCT_CATEGORIES[categoryId],
         basePrice,
         isAvailable,
         sizes,
-        sugarLevels
+        sugarLevels,
+        addons
     });
+
 
     try {
         setButtonLoading("Uploading image...");
@@ -556,12 +881,16 @@ form.addEventListener("submit", async (event) => {
         const cloudinaryResult =
             await uploadImageToCloudinary(selectedImage);
 
+
         setButtonLoading("Saving product...");
+
 
         const productData = {
             name: name,
             description: description,
+
             categoryId: categoryId,
+
             basePrice: basePrice,
 
             imageUrl: cloudinaryResult.imageUrl,
@@ -571,31 +900,45 @@ form.addEventListener("submit", async (event) => {
 
             sizes: sizes,
             sugarLevels: sugarLevels,
+            addons: addons,
 
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         };
 
-        console.log("FIRESTORE PRODUCT DATA:", productData);
+
+        console.log(
+            "FIRESTORE PRODUCT DATA:",
+            productData
+        );
+
 
         await addDoc(
             collection(db, "products"),
             productData
         );
 
-        showMessage("Product added successfully!", "success");
+
+        showMessage(
+            "Product added successfully!",
+            "success"
+        );
+
 
         setButtonLoading("Product added!");
+
 
         setTimeout(() => {
             window.location.href = "menu-management.php";
         }, 1000);
 
+
     } catch (error) {
         console.error("Add product error:", error);
 
         showMessage(
-            error.message || "Something went wrong while adding the product. Please try again.",
+            error.message ||
+            "Something went wrong while adding the product. Please try again.",
             "error"
         );
 

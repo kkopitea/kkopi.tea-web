@@ -1777,6 +1777,8 @@ input {
 }
 
 
+
+
 .save-product-button {
     min-width: 155px;
 
@@ -2458,7 +2460,148 @@ html.dark-mode .save-product-button {
 }
 
 
-#sizes-section[hidden],
-#sugar-levels-section[hidden] {
-    display: none !important;
+
+/* =========================================
+   ADD-ONS SECTION
+========================================= */
+
+#addons-section {
+    width: 100%;
+    margin-top: 25px;
 }
+
+#addons-section .product-option-title {
+    margin-bottom: 15px;
+}
+
+#addons-section .product-option-title small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 13px;
+}
+
+
+/* Add-on rows */
+
+#addons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.addon-row {
+    width: 100%;
+}
+
+.addon-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+
+/* Add-on inputs */
+
+.addon-name,
+.addon-price {
+    height: 45px;
+    padding: 0 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.addon-name {
+    flex: 2;
+    min-width: 0;
+}
+
+.addon-price {
+    flex: 1;
+    min-width: 0;
+}
+
+.addon-name:focus,
+.addon-price:focus {
+    border-color: #FF9E48;
+}
+
+
+/* Remove add-on button */
+
+.remove-addon-button {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    background: #fff0f0;
+    color: #e05252;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.remove-addon-button:hover {
+    background: #ffe0e0;
+}
+
+
+/* Add add-on button */
+
+#add-addon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 11px 16px;
+    border: 1px dashed #FF9E48;
+    border-radius: 8px;
+    background: #FFF1E6;
+    color: #d97722;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#add-addon-button:hover {
+    background: #ffe5cf;
+}
+
+
+/* Add-on validation message */
+
+#addons-error {
+    margin-top: 8px;
+    color: #e05252;
+    font-size: 13px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 600px) {
+    .addon-input-group {
+        gap: 8px;
+    }
+
+    .addon-name,
+    .addon-price {
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .remove-addon-button {
+        width: 36px;
+        height: 36px;
+    }
+}
+

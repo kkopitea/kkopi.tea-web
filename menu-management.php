@@ -533,24 +533,24 @@ $menuItems = [
                             All Categories
                         </option>
 
-                        <option value="milktea">
-                            Milk Tea
+                        <option value="icedlattes">
+                            Iced Lattes
                         </option>
 
-                        <option value="coffee">
-                            Coffee
+                        <option value="bubbleteas">
+                            Bubble Teas
                         </option>
 
-                        <option value="snacks">
-                            Snacks
+                        <option value="fruitteas">
+                            Fruit Teas
                         </option>
 
-                        <option value="frappe">
-                            Frappe
+                        <option value="noncaffeine">
+                             Non Caffeine
                         </option>
 
-                        <option value="fruittea">
-                            Fruit Tea
+                        <option value="amerikano">
+                           Amerikano
                         </option>
 
                     </select>

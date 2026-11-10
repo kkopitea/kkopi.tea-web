@@ -375,7 +375,6 @@ function getCategoryName(category) {
         toppings: "Toppings",
         powder: "Powder",
         packaging: "Packaging Supplies",
-        snacks: "Snacks",
         other: "Other"
 
     };
@@ -448,24 +447,6 @@ function getStockStatus(stock, category, unit) {
             } else {
                 comparableStock = null;
             }
-            break;
-
-        case "snacks":
-            threshold = 10;
-
-            if (["kg", "kilogram", "kilograms"].includes(normalizedUnit)) {
-                comparableStock = currentStock * 1000;
-                threshold = 1000; // 1 kg remaining
-            } else if (["g", "gram", "grams"].includes(normalizedUnit)) {
-                comparableStock = currentStock;
-                threshold = 1000; // 1000 grams remaining
-            } else if (["pcs", "pc", "piece", "pieces"].includes(normalizedUnit)) {
-                comparableStock = currentStock;
-                threshold = 10; // 10 pieces remaining
-            } else {
-                comparableStock = null;
-            }
-
             break;
 
         default:

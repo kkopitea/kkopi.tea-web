@@ -468,6 +468,21 @@ function createOrderRow(order) {
     return row;
 }
 
+/* NORMALIZE ORDER SIZE */
+
+function normalizeOrderSize(size) {
+    const normalized = String(size || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/ounces?/g, "oz");
+
+    if (normalized.includes("16oz")) return "16oz";
+    if (normalized.includes("22oz")) return "22oz";
+
+    return normalized;
+}
+
 /* GET RECIPE QUANTITY BASED ON ORDER SIZE */
 
 function getRecipeQuantity(measurement, selectedSize, ingredientId) {
@@ -476,48 +491,106 @@ function getRecipeQuantity(measurement, selectedSize, ingredientId) {
         .toLowerCase()
         .replace(/\s+/g, "");
 
-    let quantity;
+    const normalizedSize = normalizeOrderSize(selectedSize);
 
-    if (measurementSize === "both") {
-        quantity = Number(measurement.quantity);
+    if (!["16oz", "22oz"].includes(normalizedSize)) {
+        throw new Error(
+            `Invalid or missing order size for "${measurement.itemName || ingredientId}".`
+        );
     }
 
-    else if (measurementSize === "separate") {
-        if (!["16oz", "22oz"].includes(selectedSize)) {
+    /* SAME QUANTITY FOR BOTH SIZES */
+
+    if (measurementSize === "both") {
+        const quantity = Number(measurement.quantity);
+
+        if (
+            measurement.quantity === null ||
+            measurement.quantity === undefined ||
+            measurement.quantity === "" ||
+            !Number.isFinite(quantity) ||
+            quantity <= 0
+        ) {
             throw new Error(
-                `The order size is missing for "${measurement.itemName || ingredientId}".`
+                `Missing or invalid shared recipe quantity for "${measurement.itemName || ingredientId}".`
             );
         }
 
-        quantity = Number(
-            selectedSize === "16oz"
-                ? measurement.quantity16oz
-                : measurement.quantity22oz
-        );
+        return quantity;
     }
 
-    // Support older recipes saved for only one size.
-    else if (measurementSize === "16oz" || measurementSize === "22oz") {
-        if (measurementSize !== selectedSize) {
+    /* SEPARATE QUANTITIES FOR 16OZ AND 22OZ */
+
+    if (measurementSize === "separate") {
+        const quantityKey = normalizedSize === "16oz"
+            ? "quantity16oz"
+            : "quantity22oz";
+
+        const recipeQuantityKey = normalizedSize === "16oz"
+            ? "recipeQuantity16oz"
+            : "recipeQuantity22oz";
+
+        const savedQuantity = measurement[quantityKey];
+        const savedRecipeQuantity = measurement[recipeQuantityKey];
+
+        // Skip this ingredient if it is not assigned to the ordered size.
+        if (
+            (savedQuantity === null ||
+                savedQuantity === undefined ||
+                savedQuantity === "") &&
+            (savedRecipeQuantity === null ||
+                savedRecipeQuantity === undefined ||
+                savedRecipeQuantity === "")
+        ) {
             return null;
         }
 
-        quantity = Number(measurement.quantity);
+        // Prefer the quantity saved in the inventory's original unit.
+        const quantityValue =
+            savedQuantity !== null &&
+            savedQuantity !== undefined &&
+            savedQuantity !== ""
+                ? savedQuantity
+                : savedRecipeQuantity;
+
+        const quantity = Number(quantityValue);
+
+        if (!Number.isFinite(quantity) || quantity <= 0) {
+            throw new Error(
+                `Invalid ${normalizedSize} recipe quantity for "${measurement.itemName || ingredientId}".`
+            );
+        }
+
+        return quantity;
     }
 
-    else {
-        throw new Error(
-            `Invalid recipe size setting for "${measurement.itemName || ingredientId}".`
-        );
+    /* SUPPORT OLDER RECIPES SAVED FOR ONLY ONE SIZE */
+
+    if (measurementSize === "16oz" || measurementSize === "22oz") {
+        if (measurementSize !== normalizedSize) {
+            return null;
+        }
+
+        const quantity = Number(measurement.quantity);
+
+        if (
+            measurement.quantity === null ||
+            measurement.quantity === undefined ||
+            measurement.quantity === "" ||
+            !Number.isFinite(quantity) ||
+            quantity <= 0
+        ) {
+            throw new Error(
+                `Invalid recipe quantity for "${measurement.itemName || ingredientId}".`
+            );
+        }
+
+        return quantity;
     }
 
-    if (!Number.isFinite(quantity) || quantity <= 0) {
-        throw new Error(
-            `Missing or invalid recipe quantity for "${measurement.itemName || ingredientId}" (${selectedSize || "unspecified size"}).`
-        );
-    }
-
-    return quantity;
+    throw new Error(
+        `Invalid recipe size setting "${measurementSize}" for "${measurement.itemName || ingredientId}".`
+    );
 }
 
 /* DEDUCT INVENTORY WHEN ORDER IS COMPLETED */
@@ -526,7 +599,9 @@ async function completeOrderAndDeductInventory(orderId) {
     const orderRef = doc(db, "orders", orderId);
 
     await runTransaction(db, async transaction => {
-        // Read the latest order.
+
+        /* READ LATEST ORDER */
+
         const orderSnapshot = await transaction.get(orderRef);
 
         if (!orderSnapshot.exists()) {
@@ -535,7 +610,8 @@ async function completeOrderAndDeductInventory(orderId) {
 
         const orderData = orderSnapshot.data();
 
-        // Prevent duplicate inventory deductions.
+        /* PREVENT DUPLICATE INVENTORY DEDUCTIONS */
+
         if (orderData.inventoryDeducted === true) {
             transaction.update(orderRef, {
                 status: "completed",
@@ -551,7 +627,8 @@ async function completeOrderAndDeductInventory(orderId) {
 
         const requiredIngredients = new Map();
 
-        // Read recipes and calculate required ingredient quantities.
+        /* READ RECIPES AND CALCULATE REQUIRED INGREDIENTS */
+
         for (const orderedItem of orderData.items) {
             const productId = orderedItem.productId;
 
@@ -571,10 +648,25 @@ async function completeOrderAndDeductInventory(orderId) {
                 );
             }
 
-            const selectedSize = String(orderedItem.size || "")
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g, "");
+            /* GET THE SIZE OF THIS ORDER ITEM */
+
+            const rawSize =
+                orderedItem.size ||
+                orderedItem.selectedSize ||
+                orderedItem.productSize ||
+                "";
+
+            const selectedSize = normalizeOrderSize(rawSize);
+
+            if (!["16oz", "22oz"].includes(selectedSize)) {
+                throw new Error(
+                    `Missing or invalid size for "${orderedItem.productName || orderedItem.name || productId}". Received: "${rawSize || "empty"}".`
+                );
+            }
+
+            console.log(
+                `Processing ${orderedItem.productName || orderedItem.name || productId}: ${selectedSize}`
+            );
 
             const recipeRef = doc(
                 db,
@@ -599,7 +691,8 @@ async function completeOrderAndDeductInventory(orderId) {
                 );
             }
 
-            // Match each ingredient to the ordered product size.
+            /* MATCH INGREDIENTS TO THE ORDERED SIZE */
+
             for (const [measurementKey, measurement] of Object.entries(measurements)) {
                 const ingredientId = measurement.itemId || measurementKey;
 
@@ -609,15 +702,27 @@ async function completeOrderAndDeductInventory(orderId) {
                     ingredientId
                 );
 
-                // This ingredient is not used for the selected size.
+                // Do not deduct ingredients not assigned to this size.
                 if (quantityPerServing === null) {
+                    console.log(
+                        `Skipping ${measurement.itemName || ingredientId} for ${selectedSize}.`
+                    );
                     continue;
                 }
 
                 const totalRequired = quantityPerServing * orderQuantity;
 
+                // Combine quantities only for the same inventory item.
                 if (requiredIngredients.has(ingredientId)) {
-                    requiredIngredients.get(ingredientId).quantity += totalRequired;
+                    const existing = requiredIngredients.get(ingredientId);
+
+                    if (existing.unit !== (measurement.unit || "")) {
+                        throw new Error(
+                            `Conflicting recipe units for "${measurement.itemName || ingredientId}".`
+                        );
+                    }
+
+                    existing.quantity += totalRequired;
                 } else {
                     requiredIngredients.set(ingredientId, {
                         quantity: totalRequired,
@@ -625,6 +730,10 @@ async function completeOrderAndDeductInventory(orderId) {
                         unit: measurement.unit || ""
                     });
                 }
+
+                console.log(
+                    `Required: ${measurement.itemName || ingredientId} - ${totalRequired} ${measurement.unit || ""}`
+                );
             }
         }
 
@@ -632,7 +741,8 @@ async function completeOrderAndDeductInventory(orderId) {
             throw new Error("No ingredients were found to deduct.");
         }
 
-        // Read every inventory document before writing anything.
+        /* READ AND VALIDATE INVENTORY */
+
         const inventoryUpdates = [];
 
         for (const [ingredientId, required] of requiredIngredients) {
@@ -683,14 +793,16 @@ async function completeOrderAndDeductInventory(orderId) {
             });
         }
 
-        // Update inventory only after all required reads and checks.
+        /* UPDATE INVENTORY AFTER ALL CHECKS */
+
         for (const item of inventoryUpdates) {
             transaction.update(item.ref, {
                 stock: item.newStock
             });
         }
 
-        // Mark the order as completed and inventory as deducted.
+        /* MARK ORDER AS COMPLETED */
+
         transaction.update(orderRef, {
             status: "completed",
             inventoryDeducted: true,
@@ -765,13 +877,6 @@ function editOrderStatus(row, order) {
                     status: newStatus,
                     updatedAt: new Date()
                 });
-
-                const updatedOrder = await getDoc(doc(db, "orders", order.id));
-
-                console.log(
-                    "Saved order status:",
-                    updatedOrder.data()?.status
-                );
             }
 
             // Firestore listener refreshes the table.
