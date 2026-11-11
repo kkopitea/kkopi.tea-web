@@ -515,8 +515,6 @@ $menuItems = [
                             <option value="packaging">
                                 Packaging Supplies
                             </option>
-                            <option value="snacks">
-                                Snacks</option>
                             </select>
 
 

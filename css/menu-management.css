@@ -3406,3 +3406,298 @@ body.promotion-modal-open {
     }
 
 }
+
+/* =========================================
+   PROMOTION DARK MODE
+========================================= */
+
+html.dark-mode .promotion-manager-card,
+html.dark-mode .promotion-modal {
+    color: #eeeeee;
+    background: #292929;
+    border-color: #3d3d3d;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+
+/* PROMOTION HEADINGS */
+
+html.dark-mode .promotion-manager-heading h2,
+html.dark-mode .promotion-modal-header h2 {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-manager-heading p,
+html.dark-mode .promotion-modal-header p {
+    color: #aaaaaa;
+}
+
+html.dark-mode .promotion-eyebrow {
+    color: #ff9e48;
+}
+
+
+/* PROMOTION CLOSE BUTTON */
+
+html.dark-mode .promotion-close-button {
+    color: #eeeeee;
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-close-button:hover {
+    color: #ff9e48;
+    background: #3a2d24;
+    border-color: #765033;
+}
+
+
+/* PROMOTION TOOLBAR */
+
+html.dark-mode .promotion-manager-toolbar {
+    color: #aaaaaa;
+    border-color: #3d3d3d;
+}
+
+
+/* PROMOTION CREATE BUTTON */
+
+html.dark-mode .promotion-create-button {
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff8626, #ec6e0b);
+}
+
+html.dark-mode .promotion-create-button:hover {
+    background: linear-gradient(135deg, #ff9e48, #ec6e0b);
+}
+
+
+/* PROMOTION LIST */
+
+html.dark-mode .promotion-list-message {
+    color: #aaaaaa;
+}
+
+html.dark-mode .promotion-list-message.error {
+    color: #ff7777;
+}
+
+html.dark-mode .promotion-item {
+    background: #333333;
+    border-color: #444444;
+}
+
+html.dark-mode .promotion-item-image {
+    color: #ff9e48;
+    background: #3a3029;
+}
+
+html.dark-mode .promotion-item-title-row h3 {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-item-details > p {
+    color: #aaaaaa;
+}
+
+html.dark-mode .promotion-status.active {
+    color: #79e991;
+    background: #24452d;
+}
+
+html.dark-mode .promotion-status.inactive {
+    color: #aaaaaa;
+    background: #363636;
+}
+
+html.dark-mode .promotion-item-meta {
+    color: #999999;
+}
+
+
+/* PROMOTION ACTION BUTTONS */
+
+html.dark-mode .promotion-action-button {
+    color: #cccccc;
+    background: #292929;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-action-button:hover {
+    color: #ff9e48;
+    background: #3a2d24;
+    border-color: #765033;
+}
+
+html.dark-mode .promotion-action-button.delete:hover {
+    color: #ff8585;
+    background: #432a2a;
+    border-color: #704040;
+}
+
+
+/* PROMOTION FORM */
+
+html.dark-mode .promotion-form-field > label {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-form-field label small {
+    color: #999999;
+}
+
+html.dark-mode .promotion-form-field input:not([type="checkbox"]):not([type="file"]),
+html.dark-mode .promotion-form-field textarea,
+html.dark-mode .promotion-form-field select,
+html.dark-mode .promotion-product-search {
+    color: #eeeeee;
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-form-field input::placeholder,
+html.dark-mode .promotion-form-field textarea::placeholder,
+html.dark-mode .promotion-product-search::placeholder {
+    color: #888888;
+}
+
+html.dark-mode .promotion-form-field input:focus,
+html.dark-mode .promotion-form-field textarea:focus,
+html.dark-mode .promotion-form-field select:focus,
+html.dark-mode .promotion-product-search:focus {
+    border-color: #ff8626;
+    box-shadow: 0 0 0 3px rgba(255, 134, 38, 0.08);
+}
+
+
+/* PROMOTION CHECKBOX */
+
+html.dark-mode .promotion-checkbox-option {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-checkbox-option input,
+html.dark-mode .promotion-product-option input {
+    accent-color: #ff9e48;
+}
+
+
+/* PROMOTION IMAGE UPLOAD */
+
+html.dark-mode .promotion-upload-zone {
+    color: #ff9e48;
+    background: #3a2d24;
+    border-color: #765033;
+}
+
+html.dark-mode .promotion-upload-zone > i {
+    color: #ff9e48;
+}
+
+html.dark-mode .promotion-upload-zone strong {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-upload-zone small {
+    color: #999999;
+}
+
+html.dark-mode .promotion-choose-image {
+    color: #eeeeee;
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-image-preview img {
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-remove-image {
+    color: #ff8585;
+    background: #333333;
+    border-color: #704040;
+}
+
+
+/* PROMOTION PRODUCT SELECTION */
+
+html.dark-mode .promotion-product-count {
+    color: #999999;
+}
+
+html.dark-mode .promotion-product-list {
+    background: #292929;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-product-option {
+    background: #333333;
+}
+
+html.dark-mode .promotion-product-option:hover {
+    background: #3a2d24;
+}
+
+html.dark-mode .promotion-product-option-name {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-product-option-price {
+    color: #ff9e48;
+}
+
+
+/* PROMOTION CUSTOMER PREVIEW */
+
+html.dark-mode .promotion-preview {
+    background: #333333;
+    border-color: #765033;
+}
+
+html.dark-mode .promotion-preview h3 {
+    color: #eeeeee;
+}
+
+html.dark-mode .promotion-preview p,
+html.dark-mode .promotion-preview small {
+    color: #aaaaaa;
+}
+
+html.dark-mode .promotion-preview img {
+    background: #292929;
+}
+
+
+/* PROMOTION FORM MESSAGES */
+
+html.dark-mode .promotion-form-message {
+    color: #aaaaaa;
+}
+
+html.dark-mode .promotion-form-message.error {
+    color: #ff7777;
+}
+
+html.dark-mode .promotion-form-message.success {
+    color: #79e991;
+}
+
+
+/* PROMOTION MODAL ACTIONS */
+
+html.dark-mode .promotion-modal-actions {
+    border-color: #3d3d3d;
+}
+
+html.dark-mode .promotion-cancel-button {
+    color: #eeeeee;
+    background: #333333;
+    border-color: #4a4a4a;
+}
+
+html.dark-mode .promotion-cancel-button:hover {
+    color: #ff9e48;
+    background: #3a2d24;
+    border-color: #765033;
+}
