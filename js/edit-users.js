@@ -41,11 +41,17 @@ function normalizeRole(role) {
         item => item.toLowerCase() === String(role || "").toLowerCase()
     ) || "Administrator";
 }
-function normalizeStatus(status) {
-    return status === false ||
-        String(status).toLowerCase() === "inactive"
-        ? "inactive"
-        : "active";
+
+function normalizeStatus(user) {
+    if (
+        user.active === false ||
+        user.isActive === false ||
+        String(user.status || "").toLowerCase() === "inactive"
+    ) {
+        return "inactive";
+    }
+
+    return "active";
 }
 
 
@@ -98,8 +104,16 @@ onAuthStateChanged(auth, async (user) => {
                 adminData.role || "Administrator";
         }
 
+        // Load the selected user only after authentication is verified.
+        await loadUser();
+
     } catch (error) {
         console.error("Admin profile verification failed:", error);
+
+        showMessage(
+            `Unable to verify administrator: ${error.code || error.message}`,
+            "error"
+        );
     }
 });
 
@@ -110,6 +124,7 @@ function restoreSaveButton() {
 }
 
 
+/* Load selected user information */
 async function loadUser() {
     if (!adminId) {
         showMessage("No user ID was provided.", "error");
@@ -137,7 +152,7 @@ async function loadUser() {
             "";
 
         roleInput.value = normalizeRole(user.role || user.adminRole);
-        statusInput.value = normalizeStatus(user.status);
+        statusInput.value = normalizeStatus(user);
 
         idInput.value =
             user.adminId ||
@@ -147,7 +162,12 @@ async function loadUser() {
 
     } catch (error) {
         console.error("Error loading user:", error);
-        showMessage("Unable to load user information.", "error");
+
+        showMessage(
+            `Unable to load user information: ${error.code || error.message}`,
+            "error"
+        );
+
         saveButton.disabled = true;
     }
 }
@@ -172,6 +192,16 @@ form.addEventListener("submit", async function (event) {
         return;
     }
 
+    if (!["Administrator", "Manager", "Staff"].includes(role)) {
+        showMessage("Please select a valid user role.", "error");
+        return;
+    }
+
+    if (!["active", "inactive"].includes(status)) {
+        showMessage("Please select a valid account status.", "error");
+        return;
+    }
+
     saveButton.disabled = true;
     saveButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
@@ -181,10 +211,13 @@ form.addEventListener("submit", async function (event) {
         await updateDoc(userRef, {
             name,
             role,
-            status
+            status,
+            active: status === "active",
+            isActive: status === "active"
         });
 
         showMessage("User information updated successfully.", "success");
+
         saveButton.innerHTML = '<i class="fa-solid fa-check"></i> Saved';
 
         window.setTimeout(() => {
@@ -202,6 +235,3 @@ form.addEventListener("submit", async function (event) {
         restoreSaveButton();
     }
 });
-
-
-loadUser();

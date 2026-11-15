@@ -435,7 +435,7 @@ $menuItems = [
 
     <script
         type="module"
-        src="js/edit-users.js?v=2"
+        src="js/edit-users.js?v=3"
     ></script>
 
 </body>
