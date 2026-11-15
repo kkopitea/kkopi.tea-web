@@ -431,6 +431,22 @@ $menuItems = [
                             </div>
 
 
+                            <div class="advertisement-form-options">
+
+                                <label class="advertisement-option">
+
+                                    <input type="checkbox" id="advertisement-bogo">
+
+                                    <span class="advertisement-option-check"></span>
+
+                                    <span>
+                                        <strong>Buy One, Take One</strong>
+                                        <small>Optional promotion for this campaign.</small>
+                                    </span>
+
+                                </label>
+
+
                                 <label class="advertisement-option">
 
                                     <input
@@ -1065,7 +1081,7 @@ $menuItems = [
         </section>
 
 
-        <script type="module" src="js/menu-management.js?v=5"></script>
+        <script type="module" src="js/menu-management.js?v=4"></script>
         <script src="js/theme.js?v=2"></script>
 
     </main>
