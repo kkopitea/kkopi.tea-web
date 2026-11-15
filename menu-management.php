@@ -431,22 +431,6 @@ $menuItems = [
                             </div>
 
 
-                            <div class="advertisement-form-options">
-
-                                <label class="advertisement-option">
-
-                                    <input type="checkbox" id="advertisement-bogo">
-
-                                    <span class="advertisement-option-check"></span>
-
-                                    <span>
-                                        <strong>Buy One, Take One</strong>
-                                        <small>Optional promotion for this campaign.</small>
-                                    </span>
-
-                                </label>
-
-
                                 <label class="advertisement-option">
 
                                     <input
