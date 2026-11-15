@@ -58,7 +58,6 @@ const advertisementImageCount = document.getElementById("advertisement-image-cou
 const advertisementProductList = document.getElementById("advertisement-product-list");
 const advertisementProductSearch = document.getElementById("advertisement-product-search");
 const advertisementProductCount = document.getElementById("advertisement-product-count");
-const advertisementBogo = document.getElementById("advertisement-bogo");
 const advertisementActive = document.getElementById("advertisement-active");
 const advertisementFormTitle = document.getElementById("advertisement-form-title");
 const advertisementFormMessage = document.getElementById("advertisement-form-message");
@@ -570,7 +569,6 @@ function resetAdvertisementForm() {
     advertisementTitle.value = "";
 
     advertisementActive.checked = true;
-    advertisementBogo.checked = false;
 
     advertisementProductSearch.value = "";
 
@@ -614,8 +612,6 @@ function openAdvertisementForm(advertisement = null) {
         advertisementActive.checked =
             advertisement.isActive !== false;
 
-        advertisementBogo.checked =
-            advertisement.isBuyOneTakeOne === true;
 
         const imageUrls = Array.isArray(advertisement.imageUrls)
             ? advertisement.imageUrls.filter(
@@ -811,19 +807,14 @@ async function saveAdvertisement(event) {
         const categoryId = selectedProducts[0]?.categoryId || "";
         const categoryName = getCategoryName(categoryId);
 
-        const isBuyOneTakeOne = advertisementBogo.checked;
 
         const advertisementData = {
 
             title,
 
-            eyebrow: isBuyOneTakeOne
-                ? "BUY ONE, TAKE ONE"
-                : categoryName.toUpperCase(),
+            eyebrow: categoryName.toUpperCase(),
 
-            description: isBuyOneTakeOne
-                ? `${title} - Buy One, Take One!`
-                : title,
+            description: title,
 
             buttonLabel: "Order now",
 
@@ -833,7 +824,7 @@ async function saveAdvertisement(event) {
             productId: productIds[0],
             productIds,
 
-            isBuyOneTakeOne,
+            isBuyOneTakeOne: false,
 
             isActive: advertisementActive.checked,
 
@@ -1032,11 +1023,6 @@ function renderAdvertisements() {
                         <span>
                             ${productIds.length} product${productIds.length === 1 ? "" : "s"}
                         </span>
-
-                        ${advertisement.isBuyOneTakeOne === true
-                            ? `<span class="bogo-tag">Buy One, Take One</span>`
-                            : ""
-                        }
 
                     </div>
 

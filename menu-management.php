@@ -1065,7 +1065,7 @@ $menuItems = [
         </section>
 
 
-        <script type="module" src="js/menu-management.js?v=4"></script>
+        <script type="module" src="js/menu-management.js?v=5"></script>
         <script src="js/theme.js?v=2"></script>
 
     </main>
