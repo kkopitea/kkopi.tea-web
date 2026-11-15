@@ -1989,3 +1989,37 @@ html.dark-mode .pagination-button.active {
 
     border-color: #ff8626;
 }
+
+/* TABLET RESPONSIVE - INVENTORY HEADER BUTTONS */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    .menu-page-heading {
+        gap: 12px;
+    }
+
+    .inventory-header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .inventory-header-actions .add-product-button {
+        min-height: 38px;
+        padding: 0 10px;
+        gap: 6px;
+        border-radius: 10px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .inventory-header-actions .add-product-icon {
+        width: 23px;
+        height: 23px;
+        font-size: 10px;
+        border-radius: 7px;
+    }
+
+}
