@@ -1,5 +1,6 @@
 
 import { auth, db } from "./firebase-config.js";
+import { notifyPublishedContent } from "./push-notifications.js";
 
 import {
     onAuthStateChanged
@@ -98,6 +99,7 @@ const productId = urlParams.get("id");
 let selectedImage = null;
 let currentImageUrl = "";
 let currentCloudinaryPublicId = "";
+let productWasAvailable = false;
 
 
 /* =========================================
@@ -746,6 +748,7 @@ async function loadProduct() {
         }
 
         const product = productSnapshot.data();
+        productWasAvailable = product.isAvailable !== false;
 
 
         /* Load product name */
@@ -1167,6 +1170,24 @@ form.addEventListener("submit", async (event) => {
             productData
         );
 
+        if (!productWasAvailable && isAvailable) {
+            try {
+                await notifyPublishedContent("products", productId);
+            } catch (error) {
+                console.error("Product saved, but its push failed:", error);
+                const notificationError =
+                    error instanceof Error ? error.message : "Push failed.";
+                showMessage(
+                    `Product saved, but the push notification failed: ${notificationError}`,
+                    "error"
+                );
+                setButtonLoading("Product saved");
+                setTimeout(() => {
+                    window.location.href = "menu-management.php";
+                }, 2500);
+                return;
+            }
+        }
 
         showMessage(
             "Product updated successfully!",

@@ -1,5 +1,6 @@
 
 import { auth, db } from "./firebase-config.js";
+import { notifyPublishedContent } from "./push-notifications.js";
 
 import {
     onAuthStateChanged
@@ -913,24 +914,38 @@ form.addEventListener("submit", async (event) => {
         );
 
 
-        await addDoc(
+        const savedProduct = await addDoc(
             collection(db, "products"),
             productData
         );
 
+        let notificationError = "";
+        if (isAvailable) {
+            try {
+                await notifyPublishedContent("products", savedProduct.id);
+            } catch (error) {
+                console.error("Product saved, but its push failed:", error);
+                notificationError =
+                    error instanceof Error ? error.message : "Push failed.";
+            }
+        }
 
         showMessage(
-            "Product added successfully!",
-            "success"
+            notificationError
+                ? `Product saved, but the push notification failed: ${notificationError}`
+                : "Product added successfully!",
+            notificationError ? "error" : "success"
         );
 
 
-        setButtonLoading("Product added!");
+        setButtonLoading(
+            notificationError ? "Product saved" : "Product added!"
+        );
 
 
         setTimeout(() => {
             window.location.href = "menu-management.php";
-        }, 1000);
+        }, notificationError ? 2500 : 1000);
 
 
     } catch (error) {

@@ -4,6 +4,7 @@
 // =========================================
 
 import { auth, db } from "./firebase-config.js";
+import { notifyPublishedContent } from "./push-notifications.js";
 
 import {
     onAuthStateChanged
@@ -850,6 +851,13 @@ async function saveAdvertisement(event) {
 
         showAdvertisementFormMessage("Saving advertisement...");
 
+        const existingAdvertisement = advertisementId.value
+            ? advertisements.find((item) => item.id === advertisementId.value)
+            : null;
+        const shouldNotify =
+            advertisementData.isActive &&
+            (!existingAdvertisement || existingAdvertisement.isActive !== true);
+        let savedAdvertisementId = advertisementId.value;
 
         if (advertisementId.value) {
 
@@ -860,16 +868,39 @@ async function saveAdvertisement(event) {
 
         } else {
 
-            await addDoc(
+            const savedAdvertisement = await addDoc(
                 collection(db, "advertisements"),
                 {
                     ...advertisementData,
                     createdAt: serverTimestamp()
                 }
             );
+            savedAdvertisementId = savedAdvertisement.id;
 
         }
 
+        if (shouldNotify) {
+            try {
+                await notifyPublishedContent(
+                    "advertisements",
+                    savedAdvertisementId
+                );
+            } catch (error) {
+                console.error(
+                    "Advertisement saved, but its push failed:",
+                    error
+                );
+                advertisementId.value = savedAdvertisementId;
+                const notificationError =
+                    error instanceof Error ? error.message : "Push failed.";
+                showAdvertisementFormMessage(
+                    `Advertisement saved, but the push notification failed: ${notificationError}`,
+                    "error"
+                );
+                await loadAdvertisements();
+                return;
+            }
+        }
 
         closeAdvertisementForm();
 
@@ -1977,6 +2008,13 @@ async function savePromotion(event) {
 
         showPromotionFormMessage("Saving promotion...");
 
+        const existingPromotion = promotionId.value
+            ? promotions.find((item) => item.id === promotionId.value)
+            : null;
+        const shouldNotify =
+            promotionData.isActive &&
+            (!existingPromotion || existingPromotion.isActive !== true);
+        let savedPromotionId = promotionId.value;
 
         if (promotionId.value) {
 
@@ -1987,16 +2025,36 @@ async function savePromotion(event) {
 
         } else {
 
-            await addDoc(
+            const savedPromotion = await addDoc(
                 collection(db, "promotions"),
                 {
                     ...promotionData,
                     createdAt: serverTimestamp()
                 }
             );
+            savedPromotionId = savedPromotion.id;
 
         }
 
+        if (shouldNotify) {
+            try {
+                await notifyPublishedContent(
+                    "promotions",
+                    savedPromotionId
+                );
+            } catch (error) {
+                console.error("Promotion saved, but its push failed:", error);
+                promotionId.value = savedPromotionId;
+                const notificationError =
+                    error instanceof Error ? error.message : "Push failed.";
+                showPromotionFormMessage(
+                    `Promotion saved, but the push notification failed: ${notificationError}`,
+                    "error"
+                );
+                await loadPromotions();
+                return;
+            }
+        }
 
         closePromotionForm();
 

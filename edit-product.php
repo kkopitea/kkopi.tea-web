@@ -828,7 +828,7 @@ $menuItems = [
 </section>
 
 
-<script type="module" src="js/edit-product.js?v=3"></script>
+<script type="module" src="js/edit-product.js?v=4"></script>
 <script src="js/theme.js?v=2"></script>
         </main>
     </body>
