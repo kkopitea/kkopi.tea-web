@@ -24,6 +24,8 @@ const productName = document.getElementById("product-name");
 const productBasePrice = document.getElementById("product-base-price");
 const productSize = document.getElementById("product-size");
 const productQuantity = document.getElementById("product-quantity");
+const productAddonsSection = document.getElementById("product-addons-section");
+const productAddonsList = document.getElementById("product-addons-list");
 const unitPrice = document.getElementById("unit-price");
 const productSubtotal = document.getElementById("product-subtotal");
 
@@ -128,6 +130,53 @@ function getProductSizes(product) {
     }));
 }
 
+function getProductAddons(product) {
+    if (!Array.isArray(product.addons)) {
+        return [];
+    }
+
+    return product.addons
+        .map(addon => {
+            if (!addon || typeof addon !== "object") {
+                return null;
+            }
+
+            const name = String(
+                addon.name ||
+                addon.addonName ||
+                addon.addOnName ||
+                addon.title ||
+                ""
+            ).trim();
+            const price = Number(
+                addon.price ??
+                addon.addonPrice ??
+                addon.addOnPrice ??
+                addon.additionalPrice ??
+                addon.additional_price ??
+                0
+            );
+
+            if (!name || !Number.isFinite(price) || price < 0) {
+                return null;
+            }
+
+            return { name, price };
+        })
+        .filter(Boolean);
+}
+
+function getSelectedAddons() {
+    if (!productAddonsList) return [];
+
+    return [...productAddonsList.querySelectorAll(
+        'input[name="product-addon"]:checked'
+    )].map(input => {
+        const addon = getProductAddons(selectedProduct)[Number(input.value)];
+        return addon ? { ...addon } : null;
+    }).filter(Boolean);
+}
+
 /* SELECTED SIZE PRICE */
 
 function getSelectedSizePrice() {
@@ -149,7 +198,11 @@ function getSelectedSizePrice() {
 /* UPDATE SUBTOTAL */
 
 function updateProductSubtotal() {
-    const price = getSelectedSizePrice();
+    const addonPrice = getSelectedAddons().reduce(
+        (total, addon) => total + addon.price,
+        0
+    );
+    const price = getSelectedSizePrice() + addonPrice;
 
     const quantity = Math.max(
         1,
@@ -170,8 +223,14 @@ function clearSelectedProduct() {
     productBasePrice.value = "";
     productSize.innerHTML = "";
     productQuantity.value = 1;
-    unitPrice.value = "";
-    productSubtotal.value = "";
+    if (productAddonsList) {
+        productAddonsList.innerHTML = "";
+    }
+    if (productAddonsSection) {
+        productAddonsSection.hidden = true;
+    }
+    unitPrice.textContent = peso(0);
+    productSubtotal.textContent = peso(0);
 
     if (productSearch) {
         productSearch.value = "";
@@ -283,6 +342,7 @@ function selectProduct(product) {
 
     productQuantity.value = 1;
 
+    renderProductAddons(product);
     updateProductSubtotal();
 
     if (productSearchResults) {
@@ -291,6 +351,34 @@ function selectProduct(product) {
 
     showMessage(formMessage, "");
     addItemButton.disabled = false;
+}
+
+function renderProductAddons(product) {
+    if (!productAddonsSection || !productAddonsList) return;
+
+    const addons = getProductAddons(product);
+    productAddonsList.innerHTML = "";
+    productAddonsSection.hidden = addons.length === 0;
+
+    addons.forEach((addon, index) => {
+        const label = document.createElement("label");
+        label.className = "product-addon-option";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "product-addon";
+        checkbox.value = index;
+        checkbox.addEventListener("change", updateProductSubtotal);
+
+        const name = document.createElement("span");
+        name.textContent = addon.name;
+
+        const price = document.createElement("strong");
+        price.textContent = `+ ${peso(addon.price)}`;
+
+        label.append(checkbox, name, price);
+        productAddonsList.appendChild(label);
+    });
 }
 
 /* RENDER CART */
@@ -315,6 +403,13 @@ function renderCart() {
             nameCell.textContent = item.size
                 ? `${item.productName} (${item.size})`
                 : item.productName;
+            if (item.addons && item.addons.length > 0) {
+                const addonNames = document.createElement("small");
+                addonNames.className = "cart-item-addons";
+                addonNames.textContent =
+                    `Add-ons: ${item.addons.map(addon => addon.name).join(", ")}`;
+                nameCell.appendChild(addonNames);
+            }
 
             const priceCell = document.createElement("td");
             priceCell.textContent = peso(item.price);
@@ -389,12 +484,18 @@ function addItemToCart() {
     const sizes = getProductSizes(selectedProduct);
 
     const size = sizes.length > 0 ? productSize.value : "";
-    const price = getSelectedSizePrice();
+    const addons = getSelectedAddons();
+    const addonPrice = addons.reduce(
+        (total, addon) => total + addon.price,
+        0
+    );
+    const price = getSelectedSizePrice() + addonPrice;
 
     const existingItem = cart.find(
         item =>
             item.productId === selectedProduct.id &&
-            item.size === size
+            item.size === size &&
+            JSON.stringify(item.addons || []) === JSON.stringify(addons)
     );
 
     if (existingItem) {
@@ -409,6 +510,7 @@ function addItemToCart() {
             name: getProductName(selectedProduct),
             category: getProductCategory(selectedProduct),
             size,
+            addons,
             price,
             quantity,
             subtotal: price * quantity

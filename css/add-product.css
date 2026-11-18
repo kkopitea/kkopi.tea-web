@@ -1470,73 +1470,6 @@ input {
 }
 
 
-/* SUGAR OPTIONS */
-
-.sugar-options-list {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-.sugar-option {
-    min-width: 54px;
-    height: 34px;
-
-    padding: 0 9px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    border: 1px solid #e1dcd7;
-
-    border-radius: 20px;
-
-    background: #fcfbfa;
-
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
-}
-
-.sugar-option:hover {
-    border-color: #f2bd8b;
-
-    background: #fff9f4;
-
-    transform: translateY(-1px);
-}
-
-.sugar-option:has(input:checked) {
-    border-color: #ff8626;
-
-    background: #fff1e4;
-
-    box-shadow:
-        0 3px 9px rgba(236, 110, 11, 0.08);
-}
-
-.sugar-option .circle-check {
-    width: 15px;
-    height: 15px;
-}
-
-.sugar-option .circle-check::after {
-    width: 5px;
-    height: 5px;
-}
-
-.sugar-option .circle-option-text {
-    font-size: 10px;
-}
 
 
 /* RESPONSIVE ADDITION */
@@ -1551,10 +1484,6 @@ input {
 
     .product-option-group {
         padding: 11px;
-    }
-
-    .sugar-options-list {
-        gap: 6px;
     }
 
 }
@@ -1583,12 +1512,6 @@ input {
 
     .additional-price-input {
         width: 72px;
-    }
-
-    .sugar-option {
-        min-width: 51px;
-
-        padding: 0 8px;
     }
 
 }
@@ -2298,27 +2221,6 @@ html.dark-mode .product-option-divider {
 }
 
 
-/* SUGAR OPTIONS */
-
-html.dark-mode .sugar-option {
-    background: #303030;
-    border-color: #444444;
-}
-
-html.dark-mode .sugar-option:hover {
-    border-color: #765033;
-    background: #36312d;
-}
-
-html.dark-mode .sugar-option:has(input:checked) {
-    border-color: #ff8626;
-    background: #3a2d24;
-}
-
-html.dark-mode .sugar-option .circle-option-text {
-    color: #dddddd;
-}
-
 
 /* DESCRIPTION */
 
@@ -2462,7 +2364,7 @@ html.dark-mode .save-product-button {
 
 
 /* =========================================
-   ADD-ONS SECTION
+   FIXED ADD-ONS SECTION
 ========================================= */
 
 #addons-section {
@@ -2477,114 +2379,127 @@ html.dark-mode .save-product-button {
 #addons-section .product-option-title small {
     display: block;
     margin-top: 5px;
-    color: #888;
-    font-size: 13px;
+    color: #888888;
+    font-size: 10px;
+    font-weight: 600;
 }
 
+/* ADD-ON LIST */
 
-/* Add-on rows */
-
-#addons-list {
+.addons-options-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
-.addon-row {
-    width: 100%;
-}
+/* ADD-ON OPTION */
 
-.addon-input-group {
+.addon-option {
+    min-height: 48px;
+    padding: 9px 12px;
+
     display: flex;
     align-items: center;
-    gap: 12px;
-    width: 100%;
+    gap: 10px;
+
+    border: 1px solid #eee9e4;
+    border-radius: 9px;
+
+    background: #fcfbfa;
+
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-
-/* Add-on inputs */
-
-.addon-name,
-.addon-price {
-    height: 45px;
-    padding: 0 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    background: #fff;
-    font-family: inherit;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
+.addon-option:hover {
+    border-color: #f2c39e;
+    background: #fffaf5;
 }
 
-.addon-name {
-    flex: 2;
-    min-width: 0;
+.addon-option:has(input:checked) {
+    border-color: #f5bd8c;
+    background: #fff8f1;
+
+    box-shadow:
+        0 3px 9px rgba(236, 110, 11, 0.05);
 }
 
-.addon-price {
-    flex: 1;
-    min-width: 0;
+/* HIDE DEFAULT CHECKBOX */
+
+.addon-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
-.addon-name:focus,
-.addon-price:focus {
-    border-color: #FF9E48;
-}
+/* CUSTOM CHECKBOX */
 
-
-/* Remove add-on button */
-
-.remove-addon-button {
-    width: 42px;
-    height: 42px;
+.addon-option .circle-check {
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    border: none;
-    border-radius: 8px;
-    background: #fff0f0;
-    color: #e05252;
-    cursor: pointer;
-    transition: background 0.2s ease;
+
+    border: 1.5px solid #c9c4bf;
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.remove-addon-button:hover {
-    background: #ffe0e0;
+.addon-option input:checked + .circle-check {
+    border-color: #ff8626;
+    background: #ff8626;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 134, 38, 0.10);
 }
 
+.addon-option input:checked + .circle-check::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
 
-/* Add add-on button */
+/* ADD-ON INFORMATION */
 
-#add-addon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
-    padding: 11px 16px;
-    border: 1px dashed #FF9E48;
-    border-radius: 8px;
-    background: #FFF1E6;
-    color: #d97722;
-    font-family: inherit;
-    font-size: 14px;
+.addon-option-info {
+    min-width: 0;
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.addon-option-info strong {
+    color: #292929;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.addon-option-info small {
+    color: #999999;
+    font-size: 9px;
     font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
 }
 
-#add-addon-button:hover {
-    background: #ffe5cf;
+/* ADD-ON PRICE */
+
+.addon-option-price {
+    flex-shrink: 0;
+
+    color: #ec6e0b;
+    font-size: 11px;
+    font-weight: 900;
 }
-
-
-/* Add-on validation message */
-
-#addons-error {
-    margin-top: 8px;
-    color: #e05252;
-    font-size: 13px;
-}
-
 
 /* Responsive */
 
@@ -2605,3 +2520,78 @@ html.dark-mode .save-product-button {
     }
 }
 
+/* DARK MODE */
+
+html.dark-mode #addons-section .product-option-title small {
+    color: #888888;
+}
+
+html.dark-mode .addon-option {
+    background: #303030;
+    border-color: #424242;
+}
+
+html.dark-mode .addon-option:hover {
+    border-color: #765033;
+    background: #36312d;
+}
+
+html.dark-mode .addon-option:has(input:checked) {
+    border-color: #9a6339;
+    background: #3a3029;
+
+    box-shadow:
+        0 3px 9px rgba(0, 0, 0, 0.16);
+}
+
+html.dark-mode .addon-option .circle-check {
+    background: #333333;
+    border-color: #666666;
+}
+
+html.dark-mode .addon-option input:checked + .circle-check {
+    border-color: #ff8626;
+    background: #ff8626;
+}
+
+html.dark-mode .addon-option-info strong {
+    color: #eeeeee;
+}
+
+html.dark-mode .addon-option-info small {
+    color: #888888;
+}
+
+html.dark-mode .addon-option-price {
+    color: #ff9e48;
+}/* RESPONSIVE */
+
+@media (max-width: 768px) {
+    #addons-section {
+        margin-top: 20px;
+    }
+
+    .addons-options-list {
+        gap: 7px;
+    }
+
+    .addon-option {
+        padding: 9px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .addon-option {
+        min-height: 45px;
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .addon-option-info strong {
+        font-size: 10px;
+    }
+
+    .addon-option-price {
+        font-size: 10px;
+    }
+}

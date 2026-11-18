@@ -625,6 +625,56 @@ input {
     opacity: 0.65;
 }
 
+.product-addons-section {
+    margin-top: 20px;
+}
+
+.product-addons-section[hidden] {
+    display: none;
+}
+
+.product-addons-label {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.product-addons-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.product-addon-option {
+    min-height: 42px;
+    padding: 8px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: #fffdfb;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.product-addon-option:has(input:checked) {
+    border-color: var(--orange);
+    background: var(--orange-light);
+}
+
+.product-addon-option input {
+    accent-color: var(--orange-dark);
+}
+
+.product-addon-option strong {
+    color: var(--orange-dark);
+    font-size: 11px;
+}
+
 .product-search-field {
     z-index: 10;
 }
@@ -756,6 +806,13 @@ input {
 
 .selected-subtotal strong {
     color: var(--orange-dark);
+}
+
+.cart-item-addons {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
 }
 
 /* FORM BUTTONS */
@@ -1193,7 +1250,8 @@ html.dark-mode input[type="search"] {
 html.dark-mode .product-item,
 html.dark-mode .product-card,
 html.dark-mode .product-result,
-html.dark-mode .product-option {
+html.dark-mode .product-option,
+html.dark-mode .product-addon-option {
     background-color: #333333;
     color: #eeeeee;
     border-color: #444444;
@@ -1203,12 +1261,17 @@ html.dark-mode .product-option {
 html.dark-mode .product-item:hover,
 html.dark-mode .product-card:hover,
 html.dark-mode .product-result:hover,
+html.dark-mode .product-addon-option:has(input:checked),
 html.dark-mode .product-item.active,
 html.dark-mode .product-card.active,
 html.dark-mode .product-item.selected,
 html.dark-mode .product-card.selected {
     background-color: #3a3028;
     border-color: #ff9e48;
+}
+
+html.dark-mode .cart-item-addons {
+    color: #aaaaaa;
 }
 
 /* Price Summary */

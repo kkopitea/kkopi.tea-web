@@ -2293,3 +2293,213 @@ html.dark-mode .status-edit-select {
     }
 }
 
+
+/* CLICKABLE PRODUCT NAME */
+
+.product-details-trigger {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.product-details-trigger:hover {
+    color: var(--orange-dark);
+    text-decoration-color: var(--orange-dark);
+}
+
+/* PRODUCT DETAILS MODAL */
+
+.product-details-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.product-details-modal[hidden] {
+    display: none !important;
+}
+
+.product-details-dialog {
+    width: 100%;
+    max-width: 430px;
+    padding: 25px;
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    animation: productModalShow 0.2s ease;
+}
+
+@keyframes productModalShow {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.product-details-header h2 {
+    color: var(--black);
+    font-size: 19px;
+}
+
+.product-details-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f1f1;
+    color: #555;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.product-details-close:hover {
+    background: var(--orange-light);
+    color: var(--orange-dark);
+}
+
+.product-detail-heading {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: var(--orange-light);
+}
+
+.product-detail-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--orange-dark);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.product-detail-heading h3 {
+    color: var(--text);
+    font-size: 19px;
+    overflow-wrap: anywhere;
+}
+
+.product-detail-info {
+    padding: 5px 0;
+    margin-bottom: 18px;
+}
+
+.product-detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 2px;
+    border-bottom: 1px solid var(--border);
+    color: #666;
+    font-size: 14px;
+}
+
+.product-detail-row strong {
+    color: var(--text);
+    text-align: right;
+}
+
+.product-detail-addons h4 {
+    margin-bottom: 10px;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.product-detail-addon {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 11px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #f7f7f7;
+    color: #555;
+    font-size: 13px;
+}
+
+.product-detail-addon strong {
+    color: var(--orange-dark);
+    white-space: nowrap;
+}
+
+.product-no-addons {
+    padding: 10px 0;
+    color: #888;
+    font-size: 13px;
+}
+
+body.product-modal-open {
+    overflow: hidden;
+}
+
+/* DARK MODE */
+
+html.dark-mode .product-details-dialog {
+    background: #292929;
+}
+
+html.dark-mode .product-details-header h2,
+html.dark-mode .product-detail-heading h3,
+html.dark-mode .product-detail-row strong,
+html.dark-mode .product-detail-addons h4 {
+    color: #ffffff;
+}
+
+html.dark-mode .product-details-close {
+    background: #3a3a3a;
+    color: #eeeeee;
+}
+
+html.dark-mode .product-detail-heading {
+    background: #3a2d24;
+}
+
+html.dark-mode .product-detail-row {
+    color: #aaaaaa;
+    border-bottom-color: #444444;
+}
+
+html.dark-mode .product-detail-addon {
+    color: #dddddd;
+    background: #353535;
+}
+
+html.dark-mode .product-detail-addon strong {
+    color: #ff9e48;
+}
+
+html.dark-mode .product-no-addons {
+    color: #999999;
+}
+
+@media (max-width: 480px) {
+    .product-details-dialog {
+        padding: 20px;
+    }
+}

@@ -62,7 +62,6 @@ const characterCounter = document.getElementById("character-counter");
 /* PRODUCT OPTIONS */
 
 const sizesSection = document.getElementById("sizes-section");
-const sugarLevelsSection = document.getElementById("sugar-levels-section");
 
 
 /* FORM MESSAGES AND BUTTONS */
@@ -92,220 +91,46 @@ const sizeCheckboxes =
     document.querySelectorAll('input[name="sizes[]"]');
 
 
-/* SUGAR LEVEL CONTROLS */
+/* ADD-ON CONTROLS */
 
-const sugarCheckboxes =
-    document.querySelectorAll('input[name="sugar_levels[]"]');
+const addonCheckboxes =
+    document.querySelectorAll('input[name="addons[]"]');
+
+
+/* FIXED ADD-ONS */
+
+const FIXED_ADDONS = {
+    "espresso-shot": {
+        name: "Espresso Shot",
+        price: 5,
+        quantity: 10,
+        unit: "mL"
+    },
+
+    "pearl": {
+        name: "Pearl",
+        price: 10,
+        quantity: 40,
+        unit: "g"
+    },
+
+    "crystal": {
+        name: "Crystal",
+        price: 10,
+        quantity: 40,
+        unit: "g"
+    },
+
+    "creampuff": {
+        name: "Creampuff",
+        price: 10,
+        quantity: 15,
+        unit: "g"
+    }
+};
 
 
 let selectedImage = null;
-
-
-/* =========================================
-   ADD-ONS SECTION
-========================================= */
-
-/*
-   This creates the Add-ons section through JavaScript.
-   You do not need to add the Add-ons HTML manually.
-*/
-
-const addonsSection = document.createElement("div");
-addonsSection.id = "addons-section";
-addonsSection.className = "product-option-group";
-
-addonsSection.innerHTML = `
-    <div class="product-option-title">
-        <div>
-            <span>Add-ons</span>
-            <small>
-                Add optional extras and their additional prices.
-            </small>
-        </div>
-    </div>
-
-    <div id="addons-list"></div>
-
-    <button type="button" id="add-addon-button">
-        <i class="fa-solid fa-plus"></i>
-        Add Add-on
-    </button>
-
-    <p id="addons-error" class="error-message"></p>
-`;
-
-const addonsList = addonsSection.querySelector("#addons-list");
-const addAddonButton = addonsSection.querySelector("#add-addon-button");
-const addonsError = addonsSection.querySelector("#addons-error");
-
-
-/* Place Add-ons after the sugar level section */
-
-if (sugarLevelsSection) {
-    sugarLevelsSection.insertAdjacentElement(
-        "afterend",
-        addonsSection
-    );
-} else {
-    const submitButton = form.querySelector('[type="submit"]');
-
-    if (submitButton) {
-        submitButton.parentElement.insertAdjacentElement(
-            "beforebegin",
-            addonsSection
-        );
-    } else {
-        form.appendChild(addonsSection);
-    }
-}
-
-
-/* Create an add-on row */
-
-function createAddonRow() {
-    const addonRow = document.createElement("div");
-
-    addonRow.className = "addon-row";
-
-    addonRow.innerHTML = `
-        <div class="addon-input-group">
-            <input
-                type="text"
-                name="addon-name[]"
-                class="addon-name"
-                placeholder="Add-on name (e.g. Pearls)"
-                maxlength="50"
-                aria-label="Add-on name"
-            >
-
-            <input
-                type="number"
-                name="addon-price[]"
-                class="addon-price"
-                placeholder="Additional price"
-                min="0"
-                step="0.01"
-                aria-label="Add-on price"
-            >
-
-            <button
-                type="button"
-                class="remove-addon-button"
-                aria-label="Remove add-on"
-                title="Remove add-on"
-            >
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    addonsList.appendChild(addonRow);
-
-    const nameInput = addonRow.querySelector(".addon-name");
-
-    nameInput.focus();
-}
-
-
-/* Add add-on button */
-
-addAddonButton.addEventListener("click", () => {
-    addonsError.textContent = "";
-    createAddonRow();
-});
-
-
-/* Remove add-on */
-
-addonsList.addEventListener("click", (event) => {
-    const removeButton = event.target.closest(
-        ".remove-addon-button"
-    );
-
-    if (!removeButton) {
-        return;
-    }
-
-    const addonRow = removeButton.closest(".addon-row");
-
-    if (addonRow) {
-        addonRow.remove();
-    }
-
-    addonsError.textContent = "";
-});
-
-
-/* Get add-ons */
-
-function getAddons() {
-    const addons = [];
-
-    const addonRows = addonsList.querySelectorAll(".addon-row");
-
-    addonRows.forEach((row) => {
-        const nameInput = row.querySelector(".addon-name");
-        const priceInput = row.querySelector(".addon-price");
-
-        const name = nameInput.value.trim();
-        const priceValue = priceInput.value;
-
-        // Ignore completely empty rows.
-        if (!name && priceValue === "") {
-            return;
-        }
-
-        addons.push({
-            name: name,
-            price: Number(priceValue)
-        });
-    });
-
-    return addons;
-}
-
-
-/* Validate add-ons */
-
-function validateAddons() {
-    const addonRows = addonsList.querySelectorAll(".addon-row");
-
-    for (const row of addonRows) {
-        const nameInput = row.querySelector(".addon-name");
-        const priceInput = row.querySelector(".addon-price");
-
-        const name = nameInput.value.trim();
-        const priceValue = priceInput.value;
-        const price = Number(priceValue);
-
-        // Both fields are empty, so ignore this row.
-        if (!name && priceValue === "") {
-            continue;
-        }
-
-        // Require both name and price.
-        if (!name || priceValue === "") {
-            addonsError.textContent =
-                "Please complete both the add-on name and price.";
-
-            return false;
-        }
-
-        if (
-            !Number.isFinite(price) ||
-            price < 0
-        ) {
-            addonsError.textContent =
-                "Please enter a valid add-on price.";
-
-            return false;
-        }
-    }
-
-    addonsError.textContent = "";
-
-    return true;
-}
 
 
 /* =========================================
@@ -499,8 +324,6 @@ function clearErrors() {
     priceError.textContent = "";
 
     clearImageError();
-
-    addonsError.textContent = "";
 }
 
 
@@ -632,29 +455,30 @@ function validateSizes() {
 
 
 /* =========================================
-   SUGAR LEVEL FUNCTIONS
+   ADD-ON FUNCTIONS
 ========================================= */
 
 
-/* Get selected sugar levels */
+/* Get selected add-ons */
 
-function getSelectedSugarLevels() {
-    const sugarLevels = [];
+function getAddons() {
+    const addons = [];
 
-    sugarCheckboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            sugarLevels.push(checkbox.value);
+    addonCheckboxes.forEach((checkbox) => {
+        if (!checkbox.checked) {
+            return;
+        }
+
+        const addon = FIXED_ADDONS[checkbox.value];
+
+        if (addon) {
+            addons.push({
+                ...addon
+            });
         }
     });
 
-    return sugarLevels;
-}
-
-
-/* Validate sugar levels */
-
-function validateSugarLevels() {
-    return getSelectedSugarLevels().length > 0;
+    return addons;
 }
 
 
@@ -740,20 +564,6 @@ function validateForm() {
     /* Sizes */
 
     if (!validateSizes()) {
-        isValid = false;
-    }
-
-
-    /* Sugar levels */
-
-    if (!validateSugarLevels()) {
-        isValid = false;
-    }
-
-
-    /* Add-ons */
-
-    if (!validateAddons()) {
         isValid = false;
     }
 
@@ -859,7 +669,6 @@ form.addEventListener("submit", async (event) => {
     const description = productDescription.value.trim();
 
     const sizes = getSizes();
-    const sugarLevels = getSelectedSugarLevels();
     const addons = getAddons();
 
 
@@ -871,7 +680,6 @@ form.addEventListener("submit", async (event) => {
         basePrice,
         isAvailable,
         sizes,
-        sugarLevels,
         addons
     });
 
@@ -900,7 +708,6 @@ form.addEventListener("submit", async (event) => {
             isAvailable: isAvailable,
 
             sizes: sizes,
-            sugarLevels: sugarLevels,
             addons: addons,
 
             createdAt: serverTimestamp(),
@@ -920,11 +727,13 @@ form.addEventListener("submit", async (event) => {
         );
 
         let notificationError = "";
+
         if (isAvailable) {
             try {
                 await notifyPublishedContent("products", savedProduct.id);
             } catch (error) {
                 console.error("Product saved, but its push failed:", error);
+
                 notificationError =
                     error instanceof Error ? error.message : "Push failed.";
             }

@@ -551,7 +551,7 @@ $menuItems = [
                             <th>Order Type</th>
                             <th>Customer</th>
                             <th>Date</th>
-                            <th>Items</th>
+                            <th>Quantity</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Products</th>
@@ -632,7 +632,30 @@ $menuItems = [
         </div>
 
     </main>
+    <!-- PRODUCT DETAILS POPUP -->
+<div class="product-details-modal" id="product-details-modal" hidden>
+    <div
+        class="product-details-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="product-details-title"
+    >
+        <div class="product-details-header">
+            <h2 id="product-details-title">Product Details</h2>
 
+            <button
+                type="button"
+                class="product-details-close"
+                id="product-details-close"
+                aria-label="Close popup"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="product-details-content"></div>
+    </div>
+</div>
 </div>
 
 

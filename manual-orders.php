@@ -28,7 +28,7 @@ $menuItems = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="css/manual-orders.css?v=2">
+    <link rel="stylesheet" href="css/manual-orders.css?v=3">
     <link rel="stylesheet" href="css/admin-responsive.css?v=4">
 </head>
 <body>
@@ -172,6 +172,11 @@ $menuItems = [
                             </div>
                         </div>
 
+                        <div id="product-addons-section" class="product-addons-section" hidden>
+                            <span class="product-addons-label">Add-ons</span>
+                            <div id="product-addons-list" class="product-addons-list"></div>
+                        </div>
+
                         <div class="selected-price-row">
                             <div>
                                 <span>Price per item</span>
@@ -259,7 +264,7 @@ $menuItems = [
     </main>
 </div>
 
-<script type="module" src="js/manual-order.js?v=2"></script>
+<script type="module" src="js/manual-order.js?v=3"></script>
 <script src="js/theme.js?v=1"></script>
 </body>
 </html>

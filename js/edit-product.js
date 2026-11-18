@@ -69,9 +69,6 @@ const size22ozAdditional =
 const sizeCheckboxes =
     document.querySelectorAll('input[name="sizes[]"]');
 
-const sugarCheckboxes =
-    document.querySelectorAll('input[name="sugar_levels[]"]');
-
 
 /* FORM MESSAGES AND BUTTONS */
 
@@ -100,6 +97,33 @@ let selectedImage = null;
 let currentImageUrl = "";
 let currentCloudinaryPublicId = "";
 let productWasAvailable = false;
+
+
+/* =========================================
+   FIXED ADD-ON MEASUREMENTS
+========================================= */
+
+const FIXED_ADDON_MEASUREMENTS = {
+    "espresso shot": {
+        quantity: 10,
+        unit: "mL"
+    },
+
+    "pearl": {
+        quantity: 40,
+        unit: "g"
+    },
+
+    "crystal": {
+        quantity: 40,
+        unit: "g"
+    },
+
+    "creampuff": {
+        quantity: 15,
+        unit: "g"
+    }
+};
 
 
 /* =========================================
@@ -146,7 +170,7 @@ const addonsError =
     addonsSection.querySelector("#addons-error");
 
 
-/* Place Add-ons after Sugar Levels and before Description */
+/* Place Add-ons after Sizes and before Description */
 
 const descriptionSection =
     document.querySelector(".description-form-group");
@@ -162,6 +186,7 @@ if (descriptionSection) {
 
 
 /* Create an add-on row */
+
 
 function createAddonRow(addonName = "", addonPrice = "") {
     const addonRow = document.createElement("div");
@@ -190,20 +215,12 @@ function createAddonRow(addonName = "", addonPrice = "") {
                 aria-label="Add-on price"
                 value="${escapeHTML(addonPrice)}"
             >
-
-            <button
-                type="button"
-                class="remove-addon-button"
-                aria-label="Remove add-on"
-                title="Remove add-on"
-            >
-                <i class="fa-solid fa-trash"></i>
-            </button>
         </div>
     `;
 
     addonsList.appendChild(addonRow);
 }
+
 
 
 /* Escape HTML */
@@ -234,25 +251,6 @@ addAddonButton.addEventListener("click", () => {
 });
 
 
-/* Remove add-on */
-
-addonsList.addEventListener("click", (event) => {
-    const removeButton = event.target.closest(
-        ".remove-addon-button"
-    );
-
-    if (!removeButton) {
-        return;
-    }
-
-    const addonRow = removeButton.closest(".addon-row");
-
-    if (addonRow) {
-        addonRow.remove();
-    }
-
-    addonsError.textContent = "";
-});
 
 
 /* Get add-ons */
@@ -278,9 +276,20 @@ function getAddons() {
             return;
         }
 
+        // Normalize the name to recognize fixed add-ons.
+        const normalizedName = name
+            .toLowerCase()
+            .trim()
+            .replace(/-/g, " ");
+
+        const measurement =
+            FIXED_ADDON_MEASUREMENTS[normalizedName];
+
         addons.push({
             name: name,
-            price: Number(priceValue)
+            price: Number(priceValue),
+
+            ...(measurement || {})
         });
     });
 
@@ -675,33 +684,6 @@ function validateSizes() {
 
 
 /* =========================================
-   SUGAR LEVEL FUNCTIONS
-========================================= */
-
-
-/* Get selected sugar levels */
-
-function getSelectedSugarLevels() {
-    const sugarLevels = [];
-
-    sugarCheckboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            sugarLevels.push(checkbox.value);
-        }
-    });
-
-    return sugarLevels;
-}
-
-
-/* Validate sugar levels */
-
-function validateSugarLevels() {
-    return getSelectedSugarLevels().length > 0;
-}
-
-
-/* =========================================
    CATEGORY FUNCTIONS
 ========================================= */
 
@@ -848,18 +830,6 @@ async function loadProduct() {
         });
 
 
-        /* Load sugar levels */
-
-        const sugarLevels = Array.isArray(product.sugarLevels)
-            ? product.sugarLevels
-            : [];
-
-        sugarCheckboxes.forEach((checkbox) => {
-            checkbox.checked =
-                sugarLevels.includes(checkbox.value);
-        });
-
-
         /* Load add-ons */
 
         const addons = Array.isArray(product.addons)
@@ -978,13 +948,6 @@ function validateForm() {
     }
 
 
-    /* Sugar levels */
-
-    if (!validateSugarLevels()) {
-        isValid = false;
-    }
-
-
     /* Add-ons */
 
     if (!validateAddons()) {
@@ -1093,7 +1056,6 @@ form.addEventListener("submit", async (event) => {
     const description = productDescription.value.trim();
 
     const sizes = getSizes();
-    const sugarLevels = getSelectedSugarLevels();
     const addons = getAddons();
 
 
@@ -1105,7 +1067,6 @@ form.addEventListener("submit", async (event) => {
         basePrice,
         isAvailable,
         sizes,
-        sugarLevels,
         addons
     });
 
@@ -1152,7 +1113,6 @@ form.addEventListener("submit", async (event) => {
             isAvailable: isAvailable,
 
             sizes: sizes,
-            sugarLevels: sugarLevels,
             addons: addons,
 
             updatedAt: serverTimestamp()
@@ -1175,16 +1135,21 @@ form.addEventListener("submit", async (event) => {
                 await notifyPublishedContent("products", productId);
             } catch (error) {
                 console.error("Product saved, but its push failed:", error);
+
                 const notificationError =
                     error instanceof Error ? error.message : "Push failed.";
+
                 showMessage(
                     `Product saved, but the push notification failed: ${notificationError}`,
                     "error"
                 );
+
                 setButtonLoading("Product saved");
+
                 setTimeout(() => {
                     window.location.href = "menu-management.php";
                 }, 2500);
+
                 return;
             }
         }

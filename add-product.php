@@ -196,7 +196,8 @@ $menuItems = [
 
         </aside>
 
-         <!-- MAIN CONTENT -->
+
+        <!-- MAIN CONTENT -->
 
         <main class="main-content">
 
@@ -214,31 +215,35 @@ $menuItems = [
 
                         <span class="welcome-dot"></span>
 
-                         ADMIN
+                        ADMIN
 
                     </div>
 
                     <h1>
                         Add Product
                     </h1>
-                     <p>
-                         manage your menu with ease.
+
+                    <p>
+                        manage your menu with ease.
                     </p>
+
                 </div>
-             <!-- ADMIN PROFILE -->
+
+
+                <!-- ADMIN PROFILE -->
 
                 <div class="admin-profile">
 
 
                     <div class="admin-information">
 
-                         <strong id="adminGreeting">
-                        <?php echo $adminName; ?>
-                    </strong>
+                        <strong id="adminGreeting">
+                            <?php echo $adminName; ?>
+                        </strong>
 
-                    <span id="adminRole">
-                        <?php echo $adminRole; ?>
-                    </span>
+                        <span id="adminRole">
+                            <?php echo $adminRole; ?>
+                        </span>
 
                         <small>
                             <?php echo $currentDate; ?>
@@ -254,579 +259,645 @@ $menuItems = [
                     </div>
 
 
-                </div>           
+                </div>
+
             </header>
-        <!-- ADD PRODUCT -->
 
-<section class="add-product-section">
 
-    <div class="add-product-top">
+            <!-- ADD PRODUCT -->
 
-        <div class="breadcrumb">
+            <section class="add-product-section">
 
-            <a href="menu-management.php">
-                Menu Management
-            </a>
+                <div class="add-product-top">
 
-            <i class="fa-solid fa-chevron-right"></i>
+                    <div class="breadcrumb">
 
-            <span>
-                Add New Product
-            </span>
+                        <a href="menu-management.php">
+                            Menu Management
+                        </a>
 
-        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
 
-
-        <a
-            href="menu-management.php"
-            class="back-menu-button"
-        >
-
-            <i class="fa-solid fa-arrow-left"></i>
-
-            <span>
-                Back to Menu Management
-            </span>
-
-        </a>
-
-    </div>
-
-
-    <div class="add-product-card">
-
-
-        <div class="form-heading">
-
-            <div class="form-heading-icon">
-                <i class="fa-solid fa-mug-hot"></i>
-            </div>
-
-            <div>
-
-                <h2>
-                    Product Information
-                </h2>
-
-                <p>
-                    Add a new product to your KKOPI.TEA menu.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <form
-            id="add-product-form"
-            class="add-product-form"
-        >
-
-
-            <div class="product-form-layout">
-
-
-                <!-- PRODUCT IMAGE -->
-
-                <div class="image-form-group">
-
-                    <label class="form-label">
-                        Product Image
-                        <span class="required-mark">*</span>
-                    </label>
-
-
-                    <div
-                        class="image-upload-box"
-                        id="image-upload-box"
-                    >
-
-                        <input
-                            type="file"
-                            id="product-image"
-                            accept="image/png,image/jpeg,image/jpg"
-                            hidden
-                        >
-
-
-                        <div
-                            class="image-upload-content"
-                            id="image-upload-content"
-                        >
-
-                            <div class="upload-icon">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                            </div>
-
-
-                            <strong>
-                                Drag & drop your image here
-                            </strong>
-
-
-                            <span>
-                                or
-                            </span>
-
-
-                            <button
-                                type="button"
-                                class="upload-button"
-                                id="upload-button"
-                            >
-                                <i class="fa-solid fa-upload"></i>
-                                Click to upload
-                            </button>
-
-
-                            <small>
-                                PNG or JPG • Maximum 5MB
-                            </small>
-
-                        </div>
-
-
-                        <div
-                            class="image-preview"
-                            id="image-preview"
-                            hidden
-                        >
-
-                            <img
-                                id="preview-image"
-                                src=""
-                                alt="Product preview"
-                            >
-
-
-                            <button
-                                type="button"
-                                class="remove-image-button"
-                                id="remove-image-button"
-                                title="Remove image"
-                            >
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-
-
-                            <div class="change-image-button">
-                                <i class="fa-solid fa-camera"></i>
-                                Change Image
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <span
-                        class="field-error"
-                        id="image-error"
-                    ></span>
-
-                </div>
-
-
-                <!-- RIGHT FORM -->
-
-                <div class="product-details-form">
-
-
-                    <!-- PRODUCT NAME -->
-
-                    <div class="form-group">
-
-                        <label
-                            for="product-name"
-                            class="form-label"
-                        >
-                            Product Name
-                            <span class="required-mark">*</span>
-                        </label>
-
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-tag input-icon"></i>
-
-                            <input
-                                type="text"
-                                id="product-name"
-                                name="name"
-                                placeholder="Enter product name"
-                                maxlength="80"
-                                autocomplete="off"
-                            >
-
-                        </div>
-
-
-                        <span
-                            class="field-error"
-                            id="name-error"
-                        ></span>
-
-                    </div>
-
-
-                    <!-- CATEGORY -->
-
-                    <div class="form-group">
-
-                        <label
-                            for="product-category"
-                            class="form-label"
-                        >
-                            Category
-                            <span class="required-mark">*</span>
-                        </label>
-
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-layer-group input-icon"></i>
-
-
-                            <select
-                                id="product-category"
-                                name="category"
-                            >
-
-                                <option value="icedlattes">
-                                    Iced Lattes
-                                </option>
-
-                                <option value="bubbleteas">
-                                    Bubble Teas
-                                </option>
-
-                                <option value="fruitteas">
-                                    Fruit Teas
-                                </option>
-
-                                <option value="noncaffeine">
-                                     Non Caffeine
-                                </option>
-
-                                <option value="amerikano">
-                                    Amerikano
-                                </option>
-
-                            </select>
-
-
-                            <i class="fa-solid fa-chevron-down select-icon"></i>
-
-                        </div>
-
-
-                        <span
-                            class="field-error"
-                            id="category-error"
-                        ></span>
-
-                    </div>
-
-
-                    <!-- PRICE -->
-
-                    <div class="form-group">
-
-                        <label
-                            for="product-price"
-                            class="form-label"
-                        >
-                            Base Price
-                            <span class="required-mark">*</span>
-                        </label>
-
-
-                        <div class="price-input-wrapper">
-
-                            <span class="currency-symbol">
-                                ₱
-                            </span>
-
-
-                            <input
-                                type="number"
-                                id="product-price"
-                                name="price"
-                                placeholder="Enter price"
-                                min="0"
-                                max="999999"
-                                step="0.01"
-                            >
-
-                        </div>
-
-
-                        <span
-                            class="field-error"
-                            id="price-error"
-                        ></span>
-
-                    </div>
-
-
-                    <!-- STATUS -->
-
-                    <div class="form-group">
-
-                        <label
-                            for="product-status"
-                            class="form-label"
-                        >
-                            Status
-                            <span class="required-mark">*</span>
-                        </label>
-
-
-                        <div class="input-wrapper status-wrapper">
-
-                            <i class="fa-solid fa-circle-check input-icon"></i>
-
-
-                            <select
-                                id="product-status"
-                                name="status"
-                            >
-
-                                <option value="active">
-                                    Available
-                                </option>
-
-                                <option value="inactive">
-                                    Unavailable
-                                </option>
-
-                            </select>
-
-
-                            <i class="fa-solid fa-chevron-down select-icon"></i>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-<div id="sizes-section">
-
-    <div class="product-option-group">
-
-        <div class="product-option-title">
-            <div>
-                <span>Sizes</span>
-                <small>Select available sizes and set additional prices.</small>
-            </div>
-        </div>
-
-        <div class="size-options-list">
-
-            <div class="size-option-row">
-
-                <label class="circle-option">
-                    <input type="checkbox" name="sizes[]" value="16oz">
-                    <span class="circle-check"></span>
-                    <span class="circle-option-text">16oz</span>
-                </label>
-
-                <div class="additional-price-input">
-                    <span>₱</span>
-                    <input
-                        type="number"
-                        name="16oz_additional"
-                        min="0"
-                        step="0.01"
-                        value="0"
-                        placeholder="0"
-                        aria-label="Additional price for 16oz"
-                    >
-                </div>
-
-            </div>
-
-            <div class="size-option-row">
-
-                <label class="circle-option">
-                    <input type="checkbox" name="sizes[]" value="22oz">
-                    <span class="circle-check"></span>
-                    <span class="circle-option-text">22oz</span>
-                </label>
-
-                <div class="additional-price-input">
-                    <span>₱</span>
-                    <input
-                        type="number"
-                        name="22oz_additional"
-                        min="0"
-                        step="0.01"
-                        value="0"
-                        placeholder="0"
-                        aria-label="Additional price for 22oz"
-                    >
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-        
-
-<div class="product-option-divider"></div>
-
-<div id="sugar-levels-section">
-
-    <div class="product-option-group">
-
-        <div class="product-option-title">
-            <div>
-                <span>Sugar Levels</span>
-                <small>Select the sugar levels available for this product.</small>
-            </div>
-        </div>
-
-        <div class="sugar-options-list">
-
-            <label class="circle-option sugar-option">
-                <input type="checkbox" name="sugar_levels[]" value="0%">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">0%</span>
-            </label>
-
-            <label class="circle-option sugar-option">
-                <input type="checkbox" name="sugar_levels[]" value="25%">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">25%</span>
-            </label>
-
-            <label class="circle-option sugar-option">
-                <input type="checkbox" name="sugar_levels[]" value="50%">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">50%</span>
-            </label>
-
-            <label class="circle-option sugar-option">
-                <input type="checkbox" name="sugar_levels[]" value="75%">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">75%</span>
-            </label>
-
-            <label class="circle-option sugar-option">
-                <input type="checkbox" name="sugar_levels[]" value="100%">
-                <span class="circle-check"></span>
-                <span class="circle-option-text">100%</span>
-            </label>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-            <!-- DESCRIPTION -->
-
-            <div class="description-form-group">
-
-                <div class="description-label-row">
-
-                    <label
-                        for="product-description"
-                        class="form-label"
-                    >
-                        Description
-                        <span class="optional-text">
-                            Optional
+                        <span>
+                            Add New Product
                         </span>
-                    </label>
+
+                    </div>
 
 
-                    <span
-                        class="character-counter"
-                        id="character-counter"
+                    <a
+                        href="menu-management.php"
+                        class="back-menu-button"
                     >
-                        0 / 300
-                    </span>
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        <span>
+                            Back to Menu Management
+                        </span>
+
+                    </a>
 
                 </div>
 
 
-                <textarea
-                    id="product-description"
-                    name="description"
-                    maxlength="300"
-                    placeholder="Enter a short description of your product..."
-                ></textarea>
-
-            </div>
+                <div class="add-product-card">
 
 
-            <!-- FORM MESSAGE -->
+                    <div class="form-heading">
 
-            <div
-                class="form-message"
-                id="form-message"
-            >
+                        <div class="form-heading-icon">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
 
-                <i class="fa-solid fa-circle-info"></i>
+                        <div>
 
-                <span id="form-message-text"></span>
+                            <h2>
+                                Product Information
+                            </h2>
 
-            </div>
+                            <p>
+                                Add a new product to your KKOPI.TEA menu.
+                            </p>
 
+                        </div>
 
-            <!-- FORM ACTIONS -->
-
-            <div class="form-actions">
-
-                <a
-                    href="menu-management.php"
-                    class="cancel-button"
-                >
-                    Cancel
-                </a>
+                    </div>
 
 
-                <button
-                    type="submit"
-                    class="save-product-button"
-                    id="save-product-button"
-                >
-
-                    <span class="button-icon">
-                        <i class="fa-solid fa-plus"></i>
-                    </span>
-
-                    <span>
-                        Add Product
-                    </span>
-
-                </button>
-
-            </div>
+                    <form
+                        id="add-product-form"
+                        class="add-product-form"
+                    >
 
 
-        </form>
+                        <div class="product-form-layout">
+
+
+                            <!-- PRODUCT IMAGE -->
+
+                            <div class="image-form-group">
+
+                                <label class="form-label">
+                                    Product Image
+                                    <span class="required-mark">*</span>
+                                </label>
+
+
+                                <div
+                                    class="image-upload-box"
+                                    id="image-upload-box"
+                                >
+
+                                    <input
+                                        type="file"
+                                        id="product-image"
+                                        accept="image/png,image/jpeg,image/jpg"
+                                        hidden
+                                    >
+
+
+                                    <div
+                                        class="image-upload-content"
+                                        id="image-upload-content"
+                                    >
+
+                                        <div class="upload-icon">
+                                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                                        </div>
+
+
+                                        <strong>
+                                            Drag & drop your image here
+                                        </strong>
+
+
+                                        <span>
+                                            or
+                                        </span>
+
+
+                                        <button
+                                            type="button"
+                                            class="upload-button"
+                                            id="upload-button"
+                                        >
+                                            <i class="fa-solid fa-upload"></i>
+                                            Click to upload
+                                        </button>
+
+
+                                        <small>
+                                            PNG or JPG • Maximum 5MB
+                                        </small>
+
+                                    </div>
+
+
+                                    <div
+                                        class="image-preview"
+                                        id="image-preview"
+                                        hidden
+                                    >
+
+                                        <img
+                                            id="preview-image"
+                                            src=""
+                                            alt="Product preview"
+                                        >
+
+
+                                        <button
+                                            type="button"
+                                            class="remove-image-button"
+                                            id="remove-image-button"
+                                            title="Remove image"
+                                        >
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+
+
+                                        <div class="change-image-button">
+                                            <i class="fa-solid fa-camera"></i>
+                                            Change Image
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <span
+                                    class="field-error"
+                                    id="image-error"
+                                ></span>
+
+                            </div>
+
+
+                            <!-- RIGHT FORM -->
+
+                            <div class="product-details-form">
+
+
+                                <!-- PRODUCT NAME -->
+
+                                <div class="form-group">
+
+                                    <label
+                                        for="product-name"
+                                        class="form-label"
+                                    >
+                                        Product Name
+                                        <span class="required-mark">*</span>
+                                    </label>
+
+
+                                    <div class="input-wrapper">
+
+                                        <i class="fa-solid fa-tag input-icon"></i>
+
+                                        <input
+                                            type="text"
+                                            id="product-name"
+                                            name="name"
+                                            placeholder="Enter product name"
+                                            maxlength="80"
+                                            autocomplete="off"
+                                        >
+
+                                    </div>
+
+
+                                    <span
+                                        class="field-error"
+                                        id="name-error"
+                                    ></span>
+
+                                </div>
+
+
+                                <!-- CATEGORY -->
+
+                                <div class="form-group">
+
+                                    <label
+                                        for="product-category"
+                                        class="form-label"
+                                    >
+                                        Category
+                                        <span class="required-mark">*</span>
+                                    </label>
+
+
+                                    <div class="input-wrapper">
+
+                                        <i class="fa-solid fa-layer-group input-icon"></i>
+
+
+                                        <select
+                                            id="product-category"
+                                            name="category"
+                                        >
+
+                                            <option value="icedlattes">
+                                                Iced Lattes
+                                            </option>
+
+                                            <option value="bubbleteas">
+                                                Bubble Teas
+                                            </option>
+
+                                            <option value="fruitteas">
+                                                Fruit Teas
+                                            </option>
+
+                                            <option value="noncaffeine">
+                                                Non Caffeine
+                                            </option>
+
+                                            <option value="amerikano">
+                                                Amerikano
+                                            </option>
+
+                                        </select>
+
+
+                                        <i class="fa-solid fa-chevron-down select-icon"></i>
+
+                                    </div>
+
+
+                                    <span
+                                        class="field-error"
+                                        id="category-error"
+                                    ></span>
+
+                                </div>
+
+
+                                <!-- PRICE -->
+
+                                <div class="form-group">
+
+                                    <label
+                                        for="product-price"
+                                        class="form-label"
+                                    >
+                                        Base Price
+                                        <span class="required-mark">*</span>
+                                    </label>
+
+
+                                    <div class="price-input-wrapper">
+
+                                        <span class="currency-symbol">
+                                            ₱
+                                        </span>
+
+
+                                        <input
+                                            type="number"
+                                            id="product-price"
+                                            name="price"
+                                            placeholder="Enter price"
+                                            min="0"
+                                            max="999999"
+                                            step="0.01"
+                                        >
+
+                                    </div>
+
+
+                                    <span
+                                        class="field-error"
+                                        id="price-error"
+                                    ></span>
+
+                                </div>
+
+
+                                <!-- STATUS -->
+
+                                <div class="form-group">
+
+                                    <label
+                                        for="product-status"
+                                        class="form-label"
+                                    >
+                                        Status
+                                        <span class="required-mark">*</span>
+                                    </label>
+
+
+                                    <div class="input-wrapper status-wrapper">
+
+                                        <i class="fa-solid fa-circle-check input-icon"></i>
+
+
+                                        <select
+                                            id="product-status"
+                                            name="status"
+                                        >
+
+                                            <option value="active">
+                                                Available
+                                            </option>
+
+                                            <option value="inactive">
+                                                Unavailable
+                                            </option>
+
+                                        </select>
+
+
+                                        <i class="fa-solid fa-chevron-down select-icon"></i>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SIZES -->
+
+                        <div id="sizes-section">
+
+                            <div class="product-option-group">
+
+                                <div class="product-option-title">
+                                    <div>
+                                        <span>Sizes</span>
+                                        <small>Select available sizes and set additional prices.</small>
+                                    </div>
+                                </div>
+
+                                <div class="size-options-list">
+
+                                    <div class="size-option-row">
+
+                                        <label class="circle-option">
+                                            <input type="checkbox" name="sizes[]" value="16oz">
+                                            <span class="circle-check"></span>
+                                            <span class="circle-option-text">16oz</span>
+                                        </label>
+
+                                        <div class="additional-price-input">
+                                            <span>₱</span>
+                                            <input
+                                                type="number"
+                                                name="16oz_additional"
+                                                min="0"
+                                                step="0.01"
+                                                value="0"
+                                                placeholder="0"
+                                                aria-label="Additional price for 16oz"
+                                            >
+                                        </div>
+
+                                    </div>
+
+                                    <div class="size-option-row">
+
+                                        <label class="circle-option">
+                                            <input type="checkbox" name="sizes[]" value="22oz">
+                                            <span class="circle-check"></span>
+                                            <span class="circle-option-text">22oz</span>
+                                        </label>
+
+                                        <div class="additional-price-input">
+                                            <span>₱</span>
+                                            <input
+                                                type="number"
+                                                name="22oz_additional"
+                                                min="0"
+                                                step="0.01"
+                                                value="0"
+                                                placeholder="0"
+                                                aria-label="Additional price for 22oz"
+                                            >
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="product-option-divider"></div>
+
+
+                        <!-- FIXED ADD-ONS -->
+
+                        <div id="addons-section">
+
+                            <div class="product-option-group">
+
+                                <div class="product-option-title">
+                                    <div>
+                                        <span>Add-ons</span>
+                                        <small>Select the available add-ons for this product.</small>
+                                    </div>
+                                </div>
+
+                                <div class="addons-options-list">
+
+                                    <label class="addon-option">
+
+                                        <input
+                                            type="checkbox"
+                                            name="addons[]"
+                                            value="espresso-shot"
+                                        >
+
+                                        <span class="circle-check"></span>
+
+                                        <span class="addon-option-info">
+                                            <strong>Espresso Shot</strong>
+                                            <small>10cc</small>
+                                        </span>
+
+                                        <span class="addon-option-price">
+                                            ₱5.00
+                                        </span>
+
+                                    </label>
+
+
+                                    <label class="addon-option">
+
+                                        <input
+                                            type="checkbox"
+                                            name="addons[]"
+                                            value="pearl"
+                                        >
+
+                                        <span class="circle-check"></span>
+
+                                        <span class="addon-option-info">
+                                            <strong>Pearl</strong>
+                                            <small>¼ cup</small>
+                                        </span>
+
+                                        <span class="addon-option-price">
+                                            ₱10.00
+                                        </span>
+
+                                    </label>
+
+
+                                    <label class="addon-option">
+
+                                        <input
+                                            type="checkbox"
+                                            name="addons[]"
+                                            value="crystal"
+                                        >
+
+                                        <span class="circle-check"></span>
+
+                                        <span class="addon-option-info">
+                                            <strong>Crystal</strong>
+                                            <small>¼ cup</small>
+                                        </span>
+
+                                        <span class="addon-option-price">
+                                            ₱10.00
+                                        </span>
+
+                                    </label>
+
+
+                                    <label class="addon-option">
+
+                                        <input
+                                            type="checkbox"
+                                            name="addons[]"
+                                            value="creampuff"
+                                        >
+
+                                        <span class="circle-check"></span>
+
+                                        <span class="addon-option-info">
+                                            <strong>Creampuff</strong>
+                                            <small>2 tbsp</small>
+                                        </span>
+
+                                        <span class="addon-option-price">
+                                            ₱10.00
+                                        </span>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="description-form-group">
+
+                            <div class="description-label-row">
+
+                                <label
+                                    for="product-description"
+                                    class="form-label"
+                                >
+                                    Description
+                                    <span class="optional-text">
+                                        Optional
+                                    </span>
+                                </label>
+
+
+                                <span
+                                    class="character-counter"
+                                    id="character-counter"
+                                >
+                                    0 / 300
+                                </span>
+
+                            </div>
+
+
+                            <textarea
+                                id="product-description"
+                                name="description"
+                                maxlength="300"
+                                placeholder="Enter a short description of your product..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- FORM MESSAGE -->
+
+                        <div
+                            class="form-message"
+                            id="form-message"
+                        >
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                            <span id="form-message-text"></span>
+
+                        </div>
+
+
+                        <!-- FORM ACTIONS -->
+
+                        <div class="form-actions">
+
+                            <a
+                                href="menu-management.php"
+                                class="cancel-button"
+                            >
+                                Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="save-product-button"
+                                id="save-product-button"
+                            >
+
+                                <span class="button-icon">
+                                    <i class="fa-solid fa-plus"></i>
+                                </span>
+
+                                <span>
+                                    Add Product
+                                </span>
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <script type="module" src="js/add-product.js?v=12"></script>
+            <script src="js/theme.js?v=1"></script>
+
+        </main>
 
     </div>
 
-</section>
+</body>
 
-
-<script type="module" src="js/add-product.js?v=11"></script>
-<script src="js/theme.js?v=1"></script>
-        </main>
-    </body>
 </html>

@@ -484,9 +484,30 @@ function renderAdvertisementProducts(selectedIds = new Set()) {
             checkbox.addEventListener("change", () => {
 
                 if (checkbox.checked) {
-                    selectedAdvertisementProductIds.add(checkbox.value);
+
+                    // Only one advertisement product can be selected.
+                    selectedAdvertisementProductIds.clear();
+
+                    selectedAdvertisementProductIds.add(
+                        checkbox.value
+                    );
+
+                    // Uncheck every other product.
+                    advertisementProductList
+                        .querySelectorAll('input[type="checkbox"]')
+                        .forEach((otherCheckbox) => {
+
+                            otherCheckbox.checked =
+                                otherCheckbox.value === checkbox.value;
+
+                        });
+
                 } else {
-                    selectedAdvertisementProductIds.delete(checkbox.value);
+
+                    selectedAdvertisementProductIds.delete(
+                        checkbox.value
+                    );
+
                 }
 
                 advertisementProductCount.textContent =
@@ -639,7 +660,10 @@ function openAdvertisementForm(advertisement = null) {
                 ? [advertisement.productId]
                 : [];
 
-        selectedAdvertisementProductIds = new Set(productIds);
+        // Keep only one product when editing an advertisement.
+        selectedAdvertisementProductIds = new Set(
+            productIds.length > 0 ? [productIds[0]] : []
+        );
 
     }
 
@@ -739,6 +763,17 @@ async function saveAdvertisement(event) {
 
         showAdvertisementFormMessage(
             "Select at least one available product.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if (productIds.length > 1) {
+
+        showAdvertisementFormMessage(
+            "An advertisement can only have one selected product.",
             "error"
         );
 

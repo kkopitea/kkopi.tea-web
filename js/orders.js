@@ -6,6 +6,7 @@ import {
     onSnapshot,
     doc,
     getDoc,
+    getDocs,
     updateDoc,
     deleteDoc,
     runTransaction
@@ -31,6 +32,12 @@ const statusButtons = document.querySelectorAll(".status-dropdown-menu button");
 
 const orderTypeFilter = document.getElementById("order-type-filter");
 
+/* PRODUCT DETAILS POPUP ELEMENTS */
+
+const productDetailsModal = document.getElementById("product-details-modal");
+const productDetailsContent = document.getElementById("product-details-content");
+const productDetailsClose = document.getElementById("product-details-close");
+
 /* SUMMARY ELEMENTS */
 
 const totalOrdersElement = document.getElementById("total-orders");
@@ -43,6 +50,78 @@ const totalSalesElement = document.getElementById("total-sales");
 let allOrders = [];
 let selectedStatus = "all";
 let selectedOrderType = "all";
+
+/* FIXED ADD-ON MEASUREMENTS */
+
+const FIXED_ADDONS = {
+    "espressoshot": {
+        name: "Espresso Shot",
+        quantity: 10,
+        unit: "mL"
+    },
+    "pearl": {
+        name: "Pearl",
+        quantity: 40,
+        unit: "g"
+    },
+    "crystal": {
+        name: "Crystal",
+        quantity: 40,
+        unit: "g"
+    },
+    "creampuff": {
+        name: "Creampuff",
+        quantity: 15,
+        unit: "g"
+    }
+};
+
+/* NORMALIZE ADD-ON NAMES */
+
+function normalizeAddonName(name) {
+    return String(name || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+}
+
+/* CONVERT ADD-ON MEASUREMENT TO INVENTORY UNIT */
+
+function convertAddonUnit(quantity, fromUnit, toUnit) {
+    const unitFactors = {
+        ml: 1,
+        l: 1000,
+        g: 1,
+        kg: 1000
+    };
+
+    const from = String(fromUnit || "")
+        .trim()
+        .toLowerCase();
+
+    const to = String(toUnit || "")
+        .trim()
+        .toLowerCase();
+
+    if (!unitFactors[from] || !unitFactors[to]) {
+        throw new Error(
+            `Unsupported add-on unit conversion: "${fromUnit}" to "${toUnit}".`
+        );
+    }
+
+    const fromIsVolume = ["ml", "l"].includes(from);
+    const toIsVolume = ["ml", "l"].includes(to);
+
+    if (fromIsVolume !== toIsVolume) {
+        throw new Error(
+            `Incompatible units for add-on deduction: "${fromUnit}" and "${toUnit}".`
+        );
+    }
+
+    return Number(
+        ((quantity * unitFactors[from]) / unitFactors[to]).toFixed(6)
+    );
+}
 
 /* INITIAL MONTH */
 
@@ -353,34 +432,33 @@ function createOrderRow(order) {
         }).format(orderDate)
         : "—";
 
+    /* INDIVIDUAL ORDER PRODUCTS */
+
     const productsHtml = Array.isArray(order.items) && order.items.length
-        ? (() => {
-            const groupedProducts = new Map();
+        ? order.items.map((item, index) => {
+            const name =
+                item.name ||
+                item.productName ||
+                item.title ||
+                "Unnamed Product";
 
-            order.items.forEach(item => {
-                const name =
-                    item.name ||
-                    item.productName ||
-                    item.title ||
-                    "Unnamed Product";
+            const quantity = Number(item.quantity ?? item.qty ?? 1) || 1;
 
-                const key = name.trim().toLowerCase();
-                const quantity = Number(item.quantity ?? item.qty ?? 1) || 1;
-
-                if (groupedProducts.has(key)) {
-                    groupedProducts.get(key).quantity += quantity;
-                } else {
-                    groupedProducts.set(key, { name, quantity });
-                }
-            });
-
-            return Array.from(groupedProducts.values()).map(item => `
+            return `
                 <div class="order-product">
-                    <span class="order-product-name">${escapeHtml(item.name)}</span>
-                    <span class="order-product-quantity">× ${item.quantity}</span>
+                    <button
+                        type="button"
+                        class="order-product-name product-details-trigger"
+                        data-item-index="${index}"
+                        title="View product details"
+                    >
+                        ${escapeHtml(name)}
+                    </button>
+
+                    <span class="order-product-quantity">× ${quantity}</span>
                 </div>
-            `).join("");
-        })()
+            `;
+        }).join("")
         : `<span class="no-order-products">No product details</span>`;
 
     row.innerHTML = `
@@ -436,6 +514,19 @@ function createOrderRow(order) {
         </td>
     `;
 
+    /* PRODUCT DETAILS CLICK EVENTS */
+
+    row.querySelectorAll(".product-details-trigger").forEach(button => {
+        button.addEventListener("click", () => {
+            const itemIndex = Number(button.dataset.itemIndex);
+            const item = order.items[itemIndex];
+
+            if (item) {
+                showProductDetails(item);
+            }
+        });
+    });
+
     /* EDIT STATUS */
 
     row.querySelector(".edit-order").addEventListener("click", () => {
@@ -467,6 +558,185 @@ function createOrderRow(order) {
 
     return row;
 }
+
+/* PRODUCT DETAILS POPUP */
+
+/* GET ADD-ONS FROM ORDER ITEM */
+
+function getItemAddons(item) {
+    const addons =
+        item.addons ??
+        item.addOns ??
+        item.selectedAddons ??
+        item.selectedAddOns ??
+        item.extras ??
+        item.add_ons ??
+        [];
+
+    if (Array.isArray(addons)) {
+        return addons;
+    }
+
+    if (addons && typeof addons === "object") {
+        return Object.entries(addons).map(([name, value]) => {
+            if (value && typeof value === "object") {
+                return {
+                    ...value,
+                    name: value.name || value.addonName || name
+                };
+            }
+
+            return {
+                name,
+                price: value
+            };
+        });
+    }
+
+    return [];
+}
+
+/* FORMAT ADD-ON PRICE */
+
+function getAddonPrice(addon) {
+    if (typeof addon === "number" || typeof addon === "string") {
+        const price = Number(addon);
+
+        return Number.isFinite(price) ? price : null;
+    }
+
+    const value =
+        addon.additionalPrice ??
+        addon.additional_price ??
+        addon.addonPrice ??
+        addon.addOnPrice ??
+        addon.price ??
+        addon.amount;
+
+    if (value === undefined || value === null || value === "") {
+        return null;
+    }
+
+    const price = Number(String(value).replace(/[^0-9.-]/g, ""));
+
+    return Number.isFinite(price) ? price : null;
+}
+
+/* SHOW PRODUCT DETAILS */
+
+function showProductDetails(item) {
+    if (!productDetailsModal || !productDetailsContent) {
+        console.error(
+            "Product details popup elements were not found. Check the popup HTML in admin-orders.php."
+        );
+        return;
+    }
+
+    const productName =
+        item.name ||
+        item.productName ||
+        item.title ||
+        "Unnamed Product";
+
+    const quantity = Number(item.quantity ?? item.qty ?? 1) || 1;
+
+    const size =
+        item.size ||
+        item.selectedSize ||
+        item.productSize ||
+        "";
+
+    const addons = getItemAddons(item);
+
+    const addonsHtml = addons.length
+        ? addons.map(addon => {
+            const addonName = typeof addon === "string"
+                ? addon
+                : addon.name ||
+                  addon.addonName ||
+                  addon.addOnName ||
+                  addon.title ||
+                  "Unnamed Add-on";
+
+            const addonPrice = getAddonPrice(addon);
+
+            return `
+                <div class="product-detail-row addon-detail-row">
+                    <span>${escapeHtml(addonName)}</span>
+
+                    <strong>
+                        ${addonPrice !== null
+                            ? `+ ₱${addonPrice.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })}`
+                            : ""}
+                    </strong>
+                </div>
+            `;
+        }).join("")
+        : `
+            <p class="no-addons">
+                No add-ons selected
+            </p>
+        `;
+
+    productDetailsContent.innerHTML = `
+        <div class="product-detail-section">
+            <h3>${escapeHtml(productName)}</h3>
+
+            <div class="product-detail-row">
+                <span>Quantity</span>
+                <strong>${quantity}</strong>
+            </div>
+
+            <div class="product-detail-row">
+                <span>Size</span>
+                <strong>${escapeHtml(size || "Not specified")}</strong>
+            </div>
+        </div>
+
+        <div class="product-detail-section">
+            <h4>Add-ons</h4>
+
+            <div class="product-addons-list">
+                ${addonsHtml}
+            </div>
+        </div>
+    `;
+
+    productDetailsModal.hidden = false;
+    document.body.style.overflow = "hidden";
+}
+
+/* CLOSE PRODUCT DETAILS POPUP */
+
+function closeProductDetails() {
+    if (!productDetailsModal) return;
+
+    productDetailsModal.hidden = true;
+    document.body.style.overflow = "";
+}
+
+/* PRODUCT DETAILS POPUP EVENTS */
+
+if (productDetailsClose) {
+    productDetailsClose.addEventListener("click", closeProductDetails);
+}
+
+if (productDetailsModal) {
+    productDetailsModal.addEventListener("click", event => {
+        if (event.target === productDetailsModal) {
+            closeProductDetails();
+        }
+    });
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && productDetailsModal && !productDetailsModal.hidden) {
+        closeProductDetails();
+    }
+});
 
 /* NORMALIZE ORDER SIZE */
 
@@ -533,7 +803,6 @@ function getRecipeQuantity(measurement, selectedSize, ingredientId) {
         const savedQuantity = measurement[quantityKey];
         const savedRecipeQuantity = measurement[recipeQuantityKey];
 
-        // Skip this ingredient if it is not assigned to the ordered size.
         if (
             (savedQuantity === null ||
                 savedQuantity === undefined ||
@@ -545,7 +814,6 @@ function getRecipeQuantity(measurement, selectedSize, ingredientId) {
             return null;
         }
 
-        // Prefer the quantity saved in the inventory's original unit.
         const quantityValue =
             savedQuantity !== null &&
             savedQuantity !== undefined &&
@@ -593,10 +861,55 @@ function getRecipeQuantity(measurement, selectedSize, ingredientId) {
     );
 }
 
+/* ADD REQUIRED QUANTITY TO MAP */
+
+function addRequiredInventoryItem(
+    requiredIngredients,
+    ingredientId,
+    quantity,
+    name,
+    unit
+) {
+    if (requiredIngredients.has(ingredientId)) {
+        const existing = requiredIngredients.get(ingredientId);
+
+        if (
+            String(existing.unit).trim().toLowerCase() !==
+            String(unit).trim().toLowerCase()
+        ) {
+            throw new Error(
+                `Conflicting inventory units for "${name}".`
+            );
+        }
+
+        existing.quantity += quantity;
+
+    } else {
+        requiredIngredients.set(ingredientId, {
+            quantity,
+            name,
+            unit
+        });
+    }
+}
+
 /* DEDUCT INVENTORY WHEN ORDER IS COMPLETED */
 
 async function completeOrderAndDeductInventory(orderId) {
     const orderRef = doc(db, "orders", orderId);
+
+    /*
+     * READ INVENTORY COLLECTION OUTSIDE THE TRANSACTION.
+     * Do not use transaction.get() with a CollectionReference.
+     * Individual matching inventory documents are read inside
+     * the transaction below.
+     */
+
+    const inventoryCollectionSnapshot = await getDocs(
+        collection(db, "inventory")
+    );
+
+    const inventoryDocuments = inventoryCollectionSnapshot.docs;
 
     await runTransaction(db, async transaction => {
 
@@ -626,8 +939,9 @@ async function completeOrderAndDeductInventory(orderId) {
         }
 
         const requiredIngredients = new Map();
+        const selectedAddons = [];
 
-        /* READ RECIPES AND CALCULATE REQUIRED INGREDIENTS */
+        /* READ RECIPES AND COLLECT ADD-ONS */
 
         for (const orderedItem of orderData.items) {
             const productId = orderedItem.productId;
@@ -638,14 +952,61 @@ async function completeOrderAndDeductInventory(orderId) {
 
             if (!productId) {
                 throw new Error(
-                    `Product ID is missing for "${orderedItem.productName || orderedItem.name || "an order item"}".`
+                    `Product ID is missing for "${orderedItem.name || "an order item"}".`
                 );
             }
 
             if (!Number.isFinite(orderQuantity) || orderQuantity <= 0) {
                 throw new Error(
-                    `Invalid quantity for "${orderedItem.productName || orderedItem.name || productId}".`
+                    `Invalid quantity for "${orderedItem.name || productId}".`
                 );
+            }
+
+            /* COLLECT SELECTED ADD-ONS */
+
+            const addons = getItemAddons(orderedItem);
+
+            for (const addon of addons) {
+                const addonName = typeof addon === "string"
+                    ? addon
+                    : addon.name ||
+                      addon.addonName ||
+                      addon.addOnName ||
+                      addon.title ||
+                      "";
+
+                const fixedAddon = FIXED_ADDONS[
+                    normalizeAddonName(addonName)
+                ];
+
+                if (!fixedAddon) {
+                    throw new Error(
+                        `No fixed inventory measurement found for add-on "${addonName}".`
+                    );
+                }
+
+                /*
+                 * Each selected add-on counts separately.
+                 * Do NOT multiply this by the drink's orderQuantity.
+                 */
+
+                const addonCount = Number(
+                    typeof addon === "object" && addon !== null
+                        ? addon.quantity ?? addon.qty ?? 1
+                        : 1
+                );
+
+                if (!Number.isFinite(addonCount) || addonCount <= 0) {
+                    throw new Error(
+                        `Invalid selected quantity for "${fixedAddon.name}".`
+                    );
+                }
+
+                selectedAddons.push({
+                    name: fixedAddon.name,
+                    quantity: fixedAddon.quantity * addonCount,
+                    unit: fixedAddon.unit
+                });
             }
 
             /* GET THE SIZE OF THIS ORDER ITEM */
@@ -660,13 +1021,15 @@ async function completeOrderAndDeductInventory(orderId) {
 
             if (!["16oz", "22oz"].includes(selectedSize)) {
                 throw new Error(
-                    `Missing or invalid size for "${orderedItem.productName || orderedItem.name || productId}". Received: "${rawSize || "empty"}".`
+                    `Missing or invalid size for "${orderedItem.name || productId}". Received: "${rawSize || "empty"}".`
                 );
             }
 
             console.log(
-                `Processing ${orderedItem.productName || orderedItem.name || productId}: ${selectedSize}`
+                `Processing ${orderedItem.name || productId}: ${selectedSize}`
             );
+
+            /* READ PRODUCT RECIPE */
 
             const recipeRef = doc(
                 db,
@@ -678,7 +1041,7 @@ async function completeOrderAndDeductInventory(orderId) {
 
             if (!recipeSnapshot.exists()) {
                 throw new Error(
-                    `No recipe found for "${orderedItem.productName || orderedItem.name || productId}".`
+                    `No recipe found for "${orderedItem.name || productId}".`
                 );
             }
 
@@ -691,7 +1054,7 @@ async function completeOrderAndDeductInventory(orderId) {
                 );
             }
 
-            /* MATCH INGREDIENTS TO THE ORDERED SIZE */
+            /* CALCULATE RECIPE INGREDIENTS */
 
             for (const [measurementKey, measurement] of Object.entries(measurements)) {
                 const ingredientId = measurement.itemId || measurementKey;
@@ -702,53 +1065,134 @@ async function completeOrderAndDeductInventory(orderId) {
                     ingredientId
                 );
 
-                // Do not deduct ingredients not assigned to this size.
                 if (quantityPerServing === null) {
-                    console.log(
-                        `Skipping ${measurement.itemName || ingredientId} for ${selectedSize}.`
-                    );
                     continue;
                 }
 
                 const totalRequired = quantityPerServing * orderQuantity;
 
-                // Combine quantities only for the same inventory item.
-                if (requiredIngredients.has(ingredientId)) {
-                    const existing = requiredIngredients.get(ingredientId);
-
-                    if (existing.unit !== (measurement.unit || "")) {
-                        throw new Error(
-                            `Conflicting recipe units for "${measurement.itemName || ingredientId}".`
-                        );
-                    }
-
-                    existing.quantity += totalRequired;
-                } else {
-                    requiredIngredients.set(ingredientId, {
-                        quantity: totalRequired,
-                        name: measurement.itemName || ingredientId,
-                        unit: measurement.unit || ""
-                    });
-                }
+                addRequiredInventoryItem(
+                    requiredIngredients,
+                    ingredientId,
+                    totalRequired,
+                    measurement.itemName || ingredientId,
+                    measurement.unit || ""
+                );
 
                 console.log(
-                    `Required: ${measurement.itemName || ingredientId} - ${totalRequired} ${measurement.unit || ""}`
+                    `Recipe required: ${measurement.itemName || ingredientId} - ${totalRequired} ${measurement.unit || ""}`
                 );
             }
         }
 
-        if (requiredIngredients.size === 0) {
-            throw new Error("No ingredients were found to deduct.");
+        /* MATCH ADD-ONS TO INVENTORY DOCUMENTS */
+
+        const addonInventorySnapshots = new Map();
+
+        for (const addon of selectedAddons) {
+            const matchingItems = inventoryDocuments.filter(itemDoc => {
+                const inventoryData = itemDoc.data();
+
+                return normalizeAddonName(inventoryData.name) ===
+                    normalizeAddonName(addon.name);
+            });
+
+            if (matchingItems.length === 0) {
+                throw new Error(
+                    `Inventory item "${addon.name}" was not found. Check its name in the inventory collection.`
+                );
+            }
+
+            if (matchingItems.length > 1) {
+                throw new Error(
+                    `Multiple inventory items named "${addon.name}" were found. Please check your inventory.`
+                );
+            }
+
+            const matchingDocument = matchingItems[0];
+            const inventoryRef = doc(
+                db,
+                "inventory",
+                matchingDocument.id
+            );
+
+            /*
+             * Read the individual inventory document through
+             * the transaction instead of reading the collection.
+             */
+
+            if (!addonInventorySnapshots.has(matchingDocument.id)) {
+                const inventorySnapshot = await transaction.get(inventoryRef);
+
+                addonInventorySnapshots.set(
+                    matchingDocument.id,
+                    inventorySnapshot
+                );
+            }
+
+            const inventorySnapshot = addonInventorySnapshots.get(
+                matchingDocument.id
+            );
+
+            if (!inventorySnapshot.exists()) {
+                throw new Error(
+                    `Inventory item "${addon.name}" no longer exists.`
+                );
+            }
+
+            const inventoryData = inventorySnapshot.data();
+
+            const inventoryUnit = String(
+                inventoryData.unit || ""
+            ).trim();
+
+            if (!inventoryUnit) {
+                throw new Error(
+                    `No inventory unit configured for "${addon.name}".`
+                );
+            }
+
+            const convertedQuantity = convertAddonUnit(
+                addon.quantity,
+                addon.unit,
+                inventoryUnit
+            );
+
+            addRequiredInventoryItem(
+                requiredIngredients,
+                matchingDocument.id,
+                convertedQuantity,
+                inventoryData.name,
+                inventoryUnit
+            );
+
+            console.log(
+                `Add-on required: ${addon.name} - ${convertedQuantity} ${inventoryUnit}`
+            );
         }
 
-        /* READ AND VALIDATE INVENTORY */
+        if (requiredIngredients.size === 0) {
+            throw new Error("No ingredients or add-ons were found to deduct.");
+        }
+
+        /* READ AND VALIDATE ALL INVENTORY DOCUMENTS */
 
         const inventoryUpdates = [];
 
         for (const [ingredientId, required] of requiredIngredients) {
-            const inventoryRef = doc(db, "inventory", ingredientId);
+            let inventorySnapshot;
 
-            const inventorySnapshot = await transaction.get(inventoryRef);
+            if (addonInventorySnapshots.has(ingredientId)) {
+                inventorySnapshot = addonInventorySnapshots.get(ingredientId);
+            } else {
+                const inventoryRef = doc(
+                    db,
+                    "inventory",
+                    ingredientId
+                );
+
+                inventorySnapshot = await transaction.get(inventoryRef);
+            }
 
             if (!inventorySnapshot.exists()) {
                 throw new Error(
@@ -757,15 +1201,22 @@ async function completeOrderAndDeductInventory(orderId) {
             }
 
             const inventoryData = inventorySnapshot.data();
+
+            const inventoryRef = doc(
+                db,
+                "inventory",
+                ingredientId
+            );
+
             const currentStock = Number(inventoryData.stock);
 
-            const inventoryUnit = String(inventoryData.unit || "")
-                .trim()
-                .toLowerCase();
+            const inventoryUnit = String(
+                inventoryData.unit || ""
+            ).trim().toLowerCase();
 
-            const recipeUnit = String(required.unit || "")
-                .trim()
-                .toLowerCase();
+            const requiredUnit = String(
+                required.unit || ""
+            ).trim().toLowerCase();
 
             if (!Number.isFinite(currentStock) || currentStock < 0) {
                 throw new Error(
@@ -773,9 +1224,9 @@ async function completeOrderAndDeductInventory(orderId) {
                 );
             }
 
-            if (inventoryUnit !== recipeUnit) {
+            if (inventoryUnit !== requiredUnit) {
                 throw new Error(
-                    `Unit mismatch for "${required.name}": inventory uses "${inventoryData.unit || "unspecified"}", but the recipe uses "${required.unit || "unspecified"}".`
+                    `Unit mismatch for "${required.name}": inventory uses "${inventoryData.unit || "unspecified"}", but the required unit is "${required.unit || "unspecified"}".`
                 );
             }
 
@@ -783,17 +1234,19 @@ async function completeOrderAndDeductInventory(orderId) {
                 throw new Error(
                     `Not enough stock for "${required.name}". ` +
                     `Available: ${currentStock} ${inventoryData.unit || ""}; ` +
-                    `needed: ${required.quantity} ${inventoryData.unit || ""}.`
+                    `Needed: ${required.quantity} ${inventoryData.unit || ""}.`
                 );
             }
 
             inventoryUpdates.push({
                 ref: inventoryRef,
-                newStock: currentStock - required.quantity
+                newStock: Number(
+                    (currentStock - required.quantity).toFixed(6)
+                )
             });
         }
 
-        /* UPDATE INVENTORY AFTER ALL CHECKS */
+        /* UPDATE INVENTORY AFTER ALL VALIDATIONS */
 
         for (const item of inventoryUpdates) {
             transaction.update(item.ref, {
@@ -869,17 +1322,14 @@ function editOrderStatus(row, order) {
 
         try {
             if (newStatus === "completed") {
-                // Deduct inventory exactly once.
                 await completeOrderAndDeductInventory(order.id);
             } else {
-                // Other statuses do not deduct inventory.
                 await updateDoc(doc(db, "orders", order.id), {
                     status: newStatus,
                     updatedAt: new Date()
                 });
             }
 
-            // Firestore listener refreshes the table.
         } catch (error) {
             console.error("Error updating order or inventory:", error);
 
